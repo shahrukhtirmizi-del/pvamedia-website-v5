@@ -5,7 +5,11 @@
 
 export const SITE = {
   name: "PVA Media",
-  domain: "https://pvamedia.co.uk",
+  /**
+   * The host that actually serves a 200. The apex 307s to www, so canonical
+   * tags and the sitemap have to point at www or every canonical is a redirect.
+   */
+  domain: "https://www.pvamedia.co.uk",
   tagline:
     "We take landscapers from 3 booked jobs a month to 12, without lifting a finger.",
   email: "admin@pvamedia.co.uk",
