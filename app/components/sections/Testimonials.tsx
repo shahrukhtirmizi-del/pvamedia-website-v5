@@ -6,7 +6,7 @@ export default function Testimonials() {
   return (
     <section
       className="border-y"
-      style={{ borderColor: "var(--line)", background: "var(--bg-raised)" }}
+      style={{ borderColor: "var(--line)" }}
     >
       <div className="mx-auto max-w-[1240px] px-5 py-24 md:px-8 md:py-32">
         <Reveal>

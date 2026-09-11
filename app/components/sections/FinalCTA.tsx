@@ -1,18 +1,18 @@
-import Link from "next/link";
 import LaserBackground from "../fx/LaserBackground";
-import RotatingBadge from "../ui/RotatingBadge";
+import OrbButton from "../ui/OrbButton";
 import Reveal from "../ui/Reveal";
 import { SITE } from "../../lib/site";
 
 export default function FinalCTA() {
   return (
     <section id="contact" className="relative scroll-mt-24 overflow-hidden">
-      {/* the beams converge left of the headline and react to the pointer */}
-      <div className="absolute inset-0" aria-hidden>
+      {/* the beams converge left of the headline and react to the pointer;
+          z-0 keeps them behind everything, including the orb's solid disc */}
+      <div className="absolute inset-0 z-0" aria-hidden>
         <LaserBackground centerX={-0.78} centerY={-0.12} opacity={0.85} />
       </div>
 
-      <div className="relative mx-auto flex min-h-[76vh] max-w-[1240px] flex-col items-center justify-center px-5 py-28 text-center md:px-8 md:py-36">
+      <div className="relative z-10 mx-auto flex min-h-[80vh] max-w-[1240px] flex-col items-center justify-center px-5 py-28 text-center md:px-8 md:py-36">
         <Reveal>
           <h2
             className="font-display max-w-[15ch] font-semibold"
@@ -36,32 +36,20 @@ export default function FinalCTA() {
         </Reveal>
 
         <Reveal delay={180}>
-          <div className="mt-11 flex flex-col items-center gap-8">
-            <Link href="/bookings" className="btn btn-primary !px-9 !py-[18px] !text-[16px]">
-              Book a free call
-            </Link>
-
-            <Link href="/bookings" aria-label="Book a free call">
-              <RotatingBadge text="BOOK A FREE CALL  ·  60 DAY GUARANTEE  ·  " />
-            </Link>
+          <div className="mt-14">
+            <OrbButton href="/bookings" label="Book a free call" sub="60 day guarantee" />
           </div>
         </Reveal>
 
         <Reveal delay={240}>
           <div
-            className="mt-14 flex flex-col items-center gap-2 text-[15px] sm:flex-row sm:gap-8"
+            className="mt-16 flex flex-col items-center gap-2 text-[15px] sm:flex-row sm:gap-8"
             style={{ color: "var(--ink-60)" }}
           >
-            <a
-              href={`mailto:${SITE.email}`}
-              className="transition-colors hover:text-[color:var(--ink)]"
-            >
+            <a href={`mailto:${SITE.email}`} className="transition-colors hover:text-[color:var(--ink)]">
               {SITE.email}
             </a>
-            <a
-              href={`tel:${SITE.phoneHref}`}
-              className="transition-colors hover:text-[color:var(--ink)]"
-            >
+            <a href={`tel:${SITE.phoneHref}`} className="transition-colors hover:text-[color:var(--ink)]">
               {SITE.phone}
             </a>
           </div>

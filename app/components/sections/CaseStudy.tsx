@@ -1,100 +1,58 @@
-import Image from "next/image";
 import Reveal from "../ui/Reveal";
 import CountUp from "../ui/CountUp";
 import FillBar from "../ui/FillBar";
-import LiveGraph from "../ui/LiveGraph";
+import ScrollWords from "../ui/ScrollWords";
 import { CASE_STUDY } from "../../lib/site";
 
+/**
+ * One client, one quote, three numbers. No photograph, no chart: the words
+ * light up as they pass the middle of the screen, and the numbers count in
+ * beneath them.
+ */
 export default function CaseStudy() {
   return (
-    <section
-      className="border-y"
-      style={{ borderColor: "var(--line)", background: "var(--bg-raised)" }}
-    >
-      <div className="mx-auto max-w-[1240px] px-5 py-24 md:px-8 md:py-32">
-        <div className="grid items-center gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
-          {/* photo, with the live chart overlapping its lower corner */}
-          <Reveal className="relative">
-            <div
-              className="relative overflow-hidden"
-              style={{ borderRadius: "var(--radius-card)", aspectRatio: "4 / 5" }}
-            >
-              <Image
-                src={CASE_STUDY.image}
-                alt="A completed residential landscaping project by one of our clients"
-                fill
-                sizes="(max-width: 1024px) 100vw, 42vw"
-                className="object-cover"
-              />
-              <div
-                aria-hidden
-                className="absolute inset-0"
-                style={{
-                  background:
-                    "linear-gradient(180deg, rgba(5,11,31,0.25), rgba(5,11,31,0.75))",
-                }}
-              />
-            </div>
+    <section className="border-y" style={{ borderColor: "var(--line)" }}>
+      <div className="mx-auto max-w-[1240px] px-5 py-28 md:px-8 md:py-40">
+        <ScrollWords
+          as="blockquote"
+          text={`“${CASE_STUDY.quote}”`}
+          className="font-display mx-auto max-w-[22ch] text-center font-medium"
+          style={{ fontSize: "clamp(28px, 4.6vw, 62px)", lineHeight: 1.12, letterSpacing: "-0.03em" }}
+        />
 
-            <div
-              className="surface relative z-10 mx-auto -mt-16 w-[86%] p-5 md:absolute md:-bottom-10 md:-right-8 md:mt-0 md:w-[62%] md:p-6"
-              style={{
-                borderRadius: "var(--radius-card)",
-                background: "rgba(8,17,43,0.94)",
-                backdropFilter: "blur(12px)",
-                WebkitBackdropFilter: "blur(12px)",
-              }}
-            >
-              <LiveGraph height={110} label="Enquiries after launch" />
-            </div>
-          </Reveal>
+        <Reveal delay={60}>
+          <p className="mt-10 text-center text-[15px] md:mt-12" style={{ color: "var(--ink-60)" }}>
+            <span style={{ color: "var(--ink)" }}>{CASE_STUDY.name}</span>, {CASE_STUDY.detail}
+          </p>
+        </Reveal>
 
-          <div>
-            <Reveal>
-              <blockquote
-                className="font-display max-w-[46ch] font-medium"
-                style={{ fontSize: "clamp(21px, 2.2vw, 30px)", lineHeight: 1.28 }}
-              >
-                {"“"}
-                {CASE_STUDY.quote}
-                {"”"}
-              </blockquote>
+        <div className="mx-auto mt-20 grid max-w-[960px] gap-10 sm:grid-cols-3 md:mt-28 md:gap-14">
+          {CASE_STUDY.stats.map((stat, i) => (
+            <Reveal key={stat.label} delay={i * 110}>
+              <div>
+                <div
+                  className="font-display font-semibold"
+                  style={{ fontSize: "clamp(48px, 6.4vw, 92px)", lineHeight: 1, letterSpacing: "-0.04em" }}
+                >
+                  <CountUp to={stat.value} suffix={stat.suffix} />
+                </div>
+                <div className="mt-5">
+                  <FillBar
+                    percent={stat.percent}
+                    delay={i * 130}
+                    height={3}
+                    label={`${stat.value}${stat.suffix} ${stat.label}`}
+                  />
+                </div>
+                <div
+                  className="font-mono mt-4 text-[10.5px] uppercase leading-relaxed tracking-[0.16em]"
+                  style={{ color: "var(--ink-45)" }}
+                >
+                  {stat.label}
+                </div>
+              </div>
             </Reveal>
-
-            <Reveal delay={90}>
-              <p className="mt-7 text-[15px]" style={{ color: "var(--ink-60)" }}>
-                <span style={{ color: "var(--ink)" }}>{CASE_STUDY.name}</span>, {CASE_STUDY.detail}
-              </p>
-            </Reveal>
-
-            <div className="mt-12 grid gap-8 sm:grid-cols-3">
-              {CASE_STUDY.stats.map((stat, i) => (
-                <Reveal key={stat.label} delay={i * 100}>
-                  <div>
-                    <div
-                      className="font-display font-semibold"
-                      style={{ fontSize: "clamp(34px, 4vw, 48px)", lineHeight: 1 }}
-                    >
-                      <CountUp to={stat.value} suffix={stat.suffix} />
-                    </div>
-                    <div className="mt-3">
-                      <FillBar
-                        percent={stat.percent}
-                        delay={i * 120}
-                        label={`${stat.value}${stat.suffix} ${stat.label}`}
-                      />
-                    </div>
-                    <div
-                      className="font-mono mt-3 text-[10.5px] uppercase leading-relaxed tracking-[0.16em]"
-                      style={{ color: "var(--ink-45)" }}
-                    >
-                      {stat.label}
-                    </div>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>

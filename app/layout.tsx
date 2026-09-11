@@ -9,6 +9,9 @@ import Grain from "./components/site/Grain";
 import SmoothScroll from "./components/site/SmoothScroll";
 import CookieBanner from "./components/site/CookieBanner";
 import IntroReveal from "./components/site/IntroReveal";
+import Atmosphere from "./components/site/Atmosphere";
+import Cursor from "./components/site/Cursor";
+import GlowCursor from "./components/fx/GlowCursor";
 import { SITE } from "./lib/site";
 
 const sans = Geist({
@@ -30,7 +33,7 @@ const mono = Geist_Mono({
 const serif = Cormorant_Garamond({
   subsets: ["latin"],
   weight: ["500", "600"],
-  style: ["italic"],
+  style: ["normal", "italic"],
   variable: "--font-serif",
   display: "swap",
 });
@@ -85,15 +88,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <style>{`.intro-root{display:none !important}`}</style>
         </noscript>
 
-        <a
-          href="#main"
-          className="btn btn-primary sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[110]"
-        >
+        <a href="#main" className="skip-link">
           Skip to content
         </a>
 
         <SmoothScroll />
         <IntroReveal />
+        <Atmosphere />
         <Grain />
 
         <Nav />
@@ -101,6 +102,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Footer />
 
         <CookieBanner />
+        <Cursor />
+        <GlowCursor />
         <Analytics />
       </body>
     </html>

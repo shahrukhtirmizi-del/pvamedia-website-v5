@@ -6,7 +6,7 @@ import { Check } from "lucide-react";
 import Modal from "../ui/Modal";
 import Reveal from "../ui/Reveal";
 import Stagger from "../ui/Stagger";
-import Gauge from "../ui/Gauge";
+import ResponseDial from "../ui/ResponseDial";
 import TiltCard from "../ui/TiltCard";
 import { TIERS, type Tier } from "../../lib/site";
 
@@ -17,7 +17,7 @@ export default function Pricing() {
     <section
       id="ai-receptionist"
       className="scroll-mt-24 border-y"
-      style={{ borderColor: "var(--line)", background: "var(--bg-raised)" }}
+      style={{ borderColor: "var(--line)" }}
     >
       <div className="mx-auto max-w-[1240px] px-5 py-24 md:px-8 md:py-32">
         <div className="grid gap-14 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
@@ -44,13 +44,10 @@ export default function Pricing() {
               </p>
             </Reveal>
 
-            {/* a speedometer because the number it reports is a speed */}
+            {/* a dial because the number it reports is a time */}
             <Reveal delay={140}>
-              <div
-                className="surface mt-12 inline-block p-7"
-                style={{ borderRadius: "var(--radius-card)" }}
-              >
-                <Gauge label="Average lead response" valueLabel="Under 60s" size={190} />
+              <div className="mt-12 inline-block">
+                <ResponseDial value="<60s" label="Average lead response" size={270} />
               </div>
             </Reveal>
           </div>

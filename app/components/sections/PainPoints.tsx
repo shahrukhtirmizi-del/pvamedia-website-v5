@@ -1,13 +1,18 @@
 import Image from "next/image";
 import Reveal from "../ui/Reveal";
+import ScrollWords from "../ui/ScrollWords";
 import TiltCard from "../ui/TiltCard";
 import { PAIN_POINTS, PAIN_CLOSER } from "../../lib/site";
 
-/** Two of the six cells carry photography so the grid is not six text boxes. */
-const PHOTO: Record<number, string> = {
-  1: "/images/portfolio/t2-hero.jpg",
-  3: "/images/portfolio/t5-hero.jpg",
-};
+/** Every cell sits on a photograph, sunk deep into the palette. */
+const PHOTO = [
+  "/images/portfolio/t2-hero.jpg",
+  "/images/portfolio/t5-hero.jpg",
+  "/images/portfolio/t9-hero.jpg",
+  "/images/portfolio/t10-real.jpg",
+  "/images/portfolio/t6-gallery-1.jpg",
+  "/images/portfolio/t8-hero.jpg",
+];
 
 const SPANS = [
   "lg:col-span-7",
@@ -32,7 +37,7 @@ export default function PainPoints() {
 
       <div className="mt-14 grid gap-4 md:mt-20 lg:grid-cols-12">
         {PAIN_POINTS.map((point, i) => {
-          const photo = PHOTO[i];
+          const photo = PHOTO[i % PHOTO.length];
           return (
             <Reveal key={point.title} delay={(i % 2) * 70} className={SPANS[i]}>
               <TiltCard maxTilt={4} lift={5} className="h-full">
@@ -49,7 +54,7 @@ export default function PainPoints() {
                         fill
                         sizes="(max-width: 1024px) 100vw, 50vw"
                         className="object-cover"
-                        style={{ opacity: 0.62 }}
+                        style={{ opacity: 0.55 }}
                       />
                       <div
                         aria-hidden
@@ -84,12 +89,11 @@ export default function PainPoints() {
       </div>
 
       <Reveal delay={120}>
-        <p
-          className="font-display mx-auto mt-16 max-w-[24ch] text-center font-medium md:mt-20"
-          style={{ fontSize: "clamp(24px, 3.4vw, 40px)", lineHeight: 1.18 }}
-        >
-          {PAIN_CLOSER}
-        </p>
+        <ScrollWords
+          text={PAIN_CLOSER}
+          className="font-display mx-auto mt-16 max-w-[22ch] text-center font-medium md:mt-24"
+          style={{ fontSize: "clamp(26px, 4vw, 52px)", lineHeight: 1.14 }}
+        />
       </Reveal>
     </section>
   );

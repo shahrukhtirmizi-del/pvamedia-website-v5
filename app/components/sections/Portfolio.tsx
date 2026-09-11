@@ -1,164 +1,128 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import OrbitHeading from "../fx/OrbitHeading";
 import Modal from "../ui/Modal";
 import Reveal from "../ui/Reveal";
-import TiltCard from "../ui/TiltCard";
-import { PROJECTS, type Project } from "../../lib/site";
+import { MOCKUPS, type Mockup } from "../mockups";
 
+const RING_IMAGES = MOCKUPS.map((m) => m.cover);
+
+/**
+ * Eight directions a landscaping site can take, drifting past on a rail that
+ * stops under the pointer. Each opens larger, with a note on who it suits.
+ */
 export default function Portfolio() {
-  const [active, setActive] = useState<Project | null>(null);
+  const [active, setActive] = useState<Mockup | null>(null);
 
   return (
     <section id="work" className="scroll-mt-24 py-20 md:py-28">
       <div className="mx-auto max-w-[1240px] px-5 md:px-8">
-        {/* the plates orbiting the headline carry the same four clients the
-            cards below do, so the animation is the section, not decoration */}
         <OrbitHeading
-          lineOne="FOUR CLIENTS,"
-          lineTwo="REAL RESULTS."
-          images={PROJECTS.map((p) => p.image)}
+          lineOne="HOW YOURS"
+          lineTwo="COULD LOOK."
+          images={RING_IMAGES}
           className="mx-auto max-w-[1000px]"
         />
 
-        <div className="mt-6 grid gap-5 md:mt-2 md:grid-cols-2 md:gap-6">
-          {PROJECTS.map((project, i) => (
-            <Reveal
-              key={project.slug}
-              delay={(i % 2) * 90}
-              className={i % 2 === 1 ? "md:mt-14" : ""}
-            >
-              <TiltCard maxTilt={4} lift={6} className="h-full">
+        <Reveal>
+          <p
+            className="mx-auto -mt-2 max-w-[52ch] text-center text-[16px] leading-relaxed md:text-[18px]"
+            style={{ color: "var(--ink-60)" }}
+          >
+            Eight directions a landscaping site can take. Every one is built around the crew{"’"}s
+            own work, and none of them is a template.
+          </p>
+        </Reveal>
+      </div>
+
+      <div className="rail relative mt-14 overflow-hidden md:mt-20">
+        <div className="rail-track">
+          {[0, 1].map((copy) => (
+            <div key={copy} className="flex shrink-0 gap-6 pr-6" aria-hidden={copy === 1}>
+              {MOCKUPS.map((m) => (
                 <button
+                  key={`${copy}-${m.slug}`}
                   type="button"
-                  onClick={() => setActive(project)}
+                  tabIndex={copy === 1 ? -1 : 0}
+                  onClick={() => setActive(m)}
                   aria-haspopup="dialog"
-                  className="surface card-lift group h-full w-full overflow-hidden p-3 text-left"
+                  aria-label={`${m.name}, ${m.direction}. Open larger.`}
+                  className="surface card-lift group w-[78vw] shrink-0 p-2.5 text-left sm:w-[56vw] md:w-[520px]"
                   style={{ borderRadius: "var(--radius-card)" }}
                 >
-                  <div
-                    className="relative overflow-hidden"
-                    style={{ borderRadius: "var(--radius-tile)", aspectRatio: "4 / 3" }}
-                  >
-                    <Image
-                      src={project.image}
-                      alt={`Landscaping work by ${project.client}`}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 45vw"
-                      className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                    />
-                    <div
-                      aria-hidden
-                      className="absolute inset-0"
-                      style={{
-                        background:
-                          "linear-gradient(180deg, rgba(5,11,31,0.2), rgba(5,11,31,0.72))",
-                      }}
-                    />
-                  </div>
-
-                  <div className="flex items-start justify-between gap-5 px-4 pb-4 pt-6">
+                  <m.Component />
+                  <div className="flex items-center justify-between px-3 pb-2 pt-4">
                     <div>
-                      <h3 className="font-display text-[19px] font-semibold md:text-[21px]">
-                        {project.client}
-                      </h3>
-                      <p
-                        className="font-mono mt-2 text-[10.5px] uppercase tracking-[0.16em]"
+                      <div className="font-display text-[16px] font-semibold">{m.name}</div>
+                      <div
+                        className="font-mono mt-1 text-[10px] uppercase tracking-[0.16em]"
                         style={{ color: "var(--ink-45)" }}
                       >
-                        {project.service}
-                      </p>
-                      <p className="mt-4 text-[15px]" style={{ color: "var(--ink-80)" }}>
-                        {project.headline}
-                      </p>
+                        {m.direction}
+                      </div>
                     </div>
-
                     <span
                       aria-hidden
-                      className="grid h-10 w-10 shrink-0 place-items-center rounded-full border transition-all duration-300 group-hover:bg-[color:var(--ink)] group-hover:text-[color:var(--bg)]"
+                      className="grid h-9 w-9 place-items-center rounded-full border transition-all duration-300 group-hover:bg-[color:var(--ink)] group-hover:text-[color:var(--bg)]"
                       style={{ borderColor: "var(--line-strong)" }}
                     >
-                      <ArrowUpRight size={16} strokeWidth={1.6} />
+                      <ArrowUpRight size={15} strokeWidth={1.6} />
                     </span>
                   </div>
                 </button>
-              </TiltCard>
-            </Reveal>
+              ))}
+            </div>
           ))}
         </div>
+
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-y-0 left-0 w-10 md:w-24"
+          style={{ background: "linear-gradient(90deg, var(--bg), transparent)" }}
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-y-0 right-0 w-10 md:w-24"
+          style={{ background: "linear-gradient(270deg, var(--bg), transparent)" }}
+        />
       </div>
 
-      <Modal
-        open={active !== null}
-        onClose={() => setActive(null)}
-        label={active ? `${active.client} case study` : "Case study"}
-      >
+      <Reveal>
+        <p
+          className="font-mono mx-auto mt-10 max-w-[60ch] px-5 text-center text-[11px] uppercase leading-relaxed tracking-[0.16em] md:px-8"
+          style={{ color: "var(--ink-30)" }}
+        >
+          Concept directions. Yours is designed from scratch around your photography.
+        </p>
+      </Reveal>
+
+      <Modal open={active !== null} onClose={() => setActive(null)} label={active ? active.name : "Concept"}>
         {active && (
           <div>
-            <div
-              className="relative mb-8 overflow-hidden"
-              style={{ borderRadius: "var(--radius-tile)", aspectRatio: "16 / 9" }}
-            >
-              <Image
-                src={active.image}
-                alt={`Landscaping work by ${active.client}`}
-                fill
-                sizes="720px"
-                className="object-cover"
-              />
+            <div className="-mx-2 sm:-mx-3">
+              <active.Component />
             </div>
-
             <p
-              className="font-mono text-[10.5px] uppercase tracking-[0.18em]"
+              className="font-mono mt-7 text-[10.5px] uppercase tracking-[0.18em]"
               style={{ color: "var(--ink-45)" }}
             >
-              {active.service}
+              {active.direction}
             </p>
-
             <h3
-              className="font-display mt-4 font-semibold"
+              className="font-display mt-3 font-semibold"
               style={{ fontSize: "clamp(26px, 4vw, 36px)", lineHeight: 1.12 }}
             >
-              {active.client}
+              {active.name}
             </h3>
-
-            <p className="mt-4 text-[16px] leading-relaxed" style={{ color: "var(--ink-80)" }}>
-              {active.summary}
+            <p className="mt-4 text-[15.5px] leading-relaxed" style={{ color: "var(--ink-80)" }}>
+              {active.note}
             </p>
-
-            <div className="mt-8 grid grid-cols-3 gap-4">
-              {active.outcomes.map((outcome) => (
-                <div
-                  key={outcome.label}
-                  className="p-4"
-                  style={{
-                    borderRadius: "var(--radius-tile)",
-                    background: "rgba(242,238,223,0.05)",
-                  }}
-                >
-                  <div className="font-display text-[24px] font-semibold md:text-[28px]">
-                    {outcome.value}
-                  </div>
-                  <div
-                    className="font-mono mt-2 text-[9.5px] uppercase leading-relaxed tracking-[0.14em]"
-                    style={{ color: "var(--ink-45)" }}
-                  >
-                    {outcome.label}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-8 space-y-4">
-              {active.detail.map((para, i) => (
-                <p key={i} className="text-[15px] leading-relaxed" style={{ color: "var(--ink-60)" }}>
-                  {para}
-                </p>
-              ))}
-            </div>
+            <Link href="/bookings" className="btn btn-primary mt-8 w-full sm:w-auto">
+              Book a free call
+            </Link>
           </div>
         )}
       </Modal>
