@@ -64,14 +64,14 @@ export default function ParticleField({
 
     function seedFree() {
       const target = Math.round(
-        Math.min(170, Math.max(40, ((W * H) / (dpr * dpr) / 13000) * density))
+        Math.min(320, Math.max(40, ((W * H) / (dpr * dpr) / 13000) * density))
       );
       parts = [];
       for (let i = 0; i < target; i++) {
         parts.push({
           x: Math.random() * W,
           y: Math.random() * H,
-          r: (0.5 + Math.random() * 1.5) * dpr,
+          r: (0.4 + Math.pow(Math.random(), 2.2) * 1.9) * dpr,
           // a visible drift: sideways sway plus a steady rise
           vx: (Math.random() - 0.5) * 0.22 * dpr,
           vy: -(0.16 + Math.random() * 0.42) * dpr,
