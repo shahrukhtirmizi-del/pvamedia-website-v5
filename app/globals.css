@@ -475,6 +475,11 @@ body {
   background: #0a1533;
 }
 
+@keyframes hero-bob {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, 6px); }
+}
+
 /* --------------------------------------------------------------------------
    Reduced motion. Everything decorative collapses to static.
    -------------------------------------------------------------------------- */

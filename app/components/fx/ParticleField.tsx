@@ -57,9 +57,11 @@ export default function ParticleField({
     let py = -9999;
 
     type P = { x: number; y: number; r: number; vx: number; vy: number; a: number; tw: number; ph: number };
-    type F = { bx: number; by: number; jx: number; jy: number; r: number; a: number; tw: number; ph: number };
+    type F = { t: number; v: number; jx: number; jy: number; r: number; a: number; tw: number; ph: number; ox: number; oy: number };
     let parts: P[] = [];
     let ring: F[] = [];
+    let halo: { x: number; y: number; r: number; a: number; tw: number; ph: number }[] = [];
+    let framePoint: ((t: number) => [number, number]) | null = null;
     let starC = { x: 0, y: 0 };
 
     function seedFree() {
@@ -92,7 +94,7 @@ export default function ParticleField({
       const h = frame.h * H;
       const r = Math.min((frame.r ?? 0.08) * Math.min(w, h) * 2, w / 2, h / 2);
       const perim = 2 * (w - 2 * r) + 2 * (h - 2 * r) + 2 * Math.PI * r;
-      const count = Math.round(perim / (2.1 * dpr));
+      const count = Math.round(perim / (1.15 * dpr));
 
       // walk the perimeter: top edge, top-right arc, right edge, ... clockwise
       function pointAt(t: number): [number, number] {
@@ -114,23 +116,40 @@ export default function ParticleField({
         return [x0 + r, y0];
       }
 
+      framePoint = pointAt;
       for (let i = 0; i < count; i++) {
-        const t = i / count;
-        const [bx, by] = pointAt(t);
         // scatter: most hug the line, some drift a few px out
-        const spread = Math.random() < 0.72 ? 1.2 : 6;
+        const spread = Math.random() < 0.66 ? 1.6 : Math.random() < 0.7 ? 8 : 16;
         ring.push({
-          bx,
-          by,
+          t: i / count,
+          // a slow crawl along the border, a few going the other way
+          v: (0.00002 + Math.random() * 0.00005) * (Math.random() < 0.85 ? 1 : -1),
           jx: (Math.random() - 0.5) * spread * dpr,
           jy: (Math.random() - 0.5) * spread * dpr,
-          r: (0.45 + Math.random() * 1.1) * dpr,
-          a: 0.25 + Math.random() * 0.6,
+          r: (0.45 + Math.random() * 1.2) * dpr,
+          a: 0.35 + Math.random() * 0.6,
           tw: 0.6 + Math.random() * 1.8,
+          ph: Math.random() * Math.PI * 2,
+          ox: 0,
+          oy: 0,
+        });
+      }
+      starC = { x: x0 + w * 0.22, y: y0 + h * 0.09 };
+
+      // a cloud of light gathered around the star, thickest at its centre
+      halo = [];
+      for (let i = 0; i < 140; i++) {
+        const ang = Math.random() * Math.PI * 2;
+        const rad = Math.pow(Math.random(), 0.6) * 46 * dpr;
+        halo.push({
+          x: Math.cos(ang) * rad,
+          y: Math.sin(ang) * rad * 0.9,
+          r: (0.4 + Math.random() * 1.3) * dpr,
+          a: 0.3 + Math.random() * 0.6,
+          tw: 0.8 + Math.random() * 2,
           ph: Math.random() * Math.PI * 2,
         });
       }
-      starC = { x: x0 + w * 0.62, y: y0 + h * 0.1 };
     }
 
     function resize() {
@@ -175,8 +194,8 @@ export default function ParticleField({
     }
     buildDot();
     function buildStar() {
-      const s = 13 * dpr;
-      const pad = 30 * dpr;
+      const s = 24 * dpr;
+      const pad = 48 * dpr;
       const c = document.createElement("canvas");
       c.width = c.height = Math.ceil((s + pad) * 2);
       const x = c.getContext("2d");
@@ -234,16 +253,45 @@ export default function ParticleField({
         ctx.drawImage(dotSprite!, p.x - size / 2, p.y - size / 2, size, size);
       }
 
+      const repel = 110 * dpr;
       for (const f of ring) {
+        if (!framePoint) break;
+        f.t = (f.t + f.v * 16 + 1) % 1;
+        const [bx, by] = framePoint(f.t);
+        let x = bx + f.jx + Math.sin(t * 0.0007 + f.ph) * 0.6 * dpr;
+        let y = by + f.jy + Math.cos(t * 0.0009 + f.ph) * 0.6 * dpr;
+
+        // the pointer pushes the light aside and it eases back when it leaves
+        const dx = x - px;
+        const dy = y - py;
+        const d = Math.hypot(dx, dy);
+        let tx = 0;
+        let ty = 0;
+        if (d < repel && d > 0.001) {
+          const push = ((repel - d) / repel) * 34 * dpr;
+          tx = (dx / d) * push;
+          ty = (dy / d) * push;
+        }
+        f.ox += (tx - f.ox) * 0.12;
+        f.oy += (ty - f.oy) * 0.12;
+        x += f.ox;
+        y += f.oy;
+
+        const disturbed = Math.min(1, Math.hypot(f.ox, f.oy) / (18 * dpr));
         const twinkle = 0.55 + 0.45 * Math.sin(t * 0.0012 * f.tw + f.ph);
-        const x = f.bx + f.jx + Math.sin(t * 0.0007 + f.ph) * 0.6 * dpr;
-        const y = f.by + f.jy + Math.cos(t * 0.0009 + f.ph) * 0.6 * dpr;
-        const size = f.r * 2.4;
-        ctx.globalAlpha = f.a * twinkle;
+        const size = f.r * 2.4 * (1 + disturbed * 0.8);
+        ctx.globalAlpha = Math.min(1, f.a * twinkle + disturbed * 0.5);
         ctx.drawImage(dotSprite!, x - size / 2, y - size / 2, size, size);
       }
       ctx.globalAlpha = 1;
 
+      for (const h of halo) {
+        const twinkle = 0.5 + 0.5 * Math.sin(t * 0.0014 * h.tw + h.ph);
+        const size = h.r * 2.4;
+        ctx.globalAlpha = h.a * twinkle;
+        ctx.drawImage(dotSprite!, starC.x + h.x - size / 2, starC.y + h.y - size / 2, size, size);
+      }
+      ctx.globalAlpha = 1;
       drawStar(t);
     }
 

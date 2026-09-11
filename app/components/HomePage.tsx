@@ -1,4 +1,5 @@
 import Hero from "./sections/Hero";
+import Statement from "./sections/Statement";
 import Ticker from "./ui/Ticker";
 import PainPoints from "./sections/PainPoints";
 import CaseStudy from "./sections/CaseStudy";
@@ -35,6 +36,7 @@ export default function HomePage() {
 
       <SectionRouter />
       <Hero />
+      <Statement />
       <Ticker items={TICKER} />
 
       {/* the beams run behind two sections at a time and dissolve at each
