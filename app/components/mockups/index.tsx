@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { CSSProperties, ReactNode } from "react";
+import { TiltedPlate, SerifLandscape, WordmarkCaption } from "./replacements";
 
 /**
  * Eight hero concepts for landscaping companies. Each is a self-contained
@@ -113,107 +114,6 @@ function Northline() {
             {w}
           </span>
         ))}
-      </div>
-    </div>
-  );
-}
-
-/* 2 ─ editorial index: pale ground, mono meta, one tilted plate, a big number */
-function SableStone() {
-  const meta: CSSProperties = { fontFamily: MONO, fontSize: "1.35cqw", letterSpacing: "0.04em", lineHeight: 1.6, color: "#141414" };
-  return (
-    <div className="mock" style={{ background: "#ecebe6" }}>
-      <div style={abs({ top: "3cqw", left: "3.5cqw", fontFamily: SANS, fontSize: "3.2cqw", fontWeight: 700, lineHeight: 0.9, letterSpacing: "-0.05em", color: "#111" })}>
-        <Blur amount={0.9}>S&amp;S</Blur>
-        <br />
-        26
-      </div>
-      <div style={abs({ top: "3cqw", left: "18cqw", ...meta })}>
-        TAKING PROJECTS FOR SPRING
-        <br />
-        <Blur amount={0.4}><u>HELLO@SABLEANDSTONE.CO</u></Blur>
-        <br />
-        <u>+1 512 555 0148</u>
-      </div>
-      <div style={abs({ top: "3cqw", left: "52cqw", ...meta })}>
-        HARDSCAPE / PLANTING
-        <br />
-        POOLS / OUTDOOR ROOMS
-        <br />
-        LIGHTING
-      </div>
-      <div style={abs({ top: "3cqw", right: "3.5cqw", textAlign: "right", ...meta })}>
-        {"->"} WRK
-        <br />
-        ABT
-      </div>
-
-      <div
-        style={abs({
-          top: "19cqw",
-          left: "30cqw",
-          width: "33cqw",
-          height: "33cqw",
-          transform: "rotate(-1.6deg)",
-          boxShadow: "0 30px 60px -30px rgba(0,0,0,0.45)",
-        })}
-      >
-        <Photo src="/images/portfolio/t3-hero-960.jpg" />
-      </div>
-      <div
-        style={abs({
-          top: "29cqw",
-          left: "58cqw",
-          fontFamily: SANS,
-          fontSize: "12.5cqw",
-          fontWeight: 700,
-          lineHeight: 0.88,
-          letterSpacing: "-0.06em",
-          color: "#111",
-        })}
-      >
-        NO.01
-        <br />
-        <span style={{ paddingLeft: "3cqw" }}>/08</span>
-      </div>
-      <div style={abs({ top: "56cqw", left: "66cqw", fontFamily: SANS, fontSize: "1.9cqw", fontWeight: 600, lineHeight: 1.2, color: "#111" })}>
-        Cedar Court,
-        <br />
-        Westlake Hills
-      </div>
-      <div style={abs({ bottom: "3cqw", left: "18cqw", ...meta })}>
-        © <Blur amount={0.4}>SABLE &amp; STONE</Blur>
-        <br />
-        LANDSCAPE CO.
-      </div>
-      <div style={abs({ bottom: "3cqw", right: "3.5cqw", textAlign: "right", ...meta })}>
-        LIC. 07186749
-        <br />
-        AUSTIN, TX
-      </div>
-    </div>
-  );
-}
-
-/* 3 ─ letterboxed cinema: night garden, one title, one caption */
-function Verdant() {
-  return (
-    <div className="mock" style={{ background: "#000" }}>
-      <div style={abs({ top: "10cqw", bottom: "10cqw", left: "9cqw", right: "9cqw" })}>
-        <Photo src="/images/portfolio/t7-hero-960.jpg" style={{ filter: "brightness(0.9)" }} />
-        <div style={abs({ inset: 0, background: "linear-gradient(180deg, transparent 55%, rgba(0,0,0,0.75))" })} />
-      </div>
-      <div style={abs({ top: "3.2cqw", left: "0", right: "0", display: "flex", justifyContent: "center", gap: "8cqw", alignItems: "baseline", color: "#fff" })}>
-        <Blur><span style={{ fontFamily: SANS, fontSize: "3cqw", fontWeight: 600, letterSpacing: "-0.03em" }}>Verdant</span></Blur>
-        <span style={{ fontFamily: MONO, fontSize: "1.5cqw", letterSpacing: "0.06em", opacity: 0.9 }}>SAN DIEGO CA 08:42:02 PM</span>
-      </div>
-      <div style={abs({ bottom: "13cqw", left: "9cqw", fontFamily: SANS, fontSize: "5.4cqw", fontWeight: 600, letterSpacing: "-0.035em", color: "#fff", textShadow: "0 2px 30px rgba(0,0,0,0.5)" })}>
-        Canyon Ridge Residence
-      </div>
-      <div style={abs({ bottom: "13.4cqw", right: "9cqw", textAlign: "right", fontFamily: MONO, fontSize: "1.55cqw", letterSpacing: "0.08em", lineHeight: 1.7, color: "#fff" })}>
-        LA JOLLA, CA
-        <br />
-        <span style={{ opacity: 0.6 }}>NIGHT GARDEN, 2026</span>
       </div>
     </div>
   );
@@ -342,36 +242,6 @@ function TerraForma() {
   );
 }
 
-/* 7 ─ loud: motion-blurred ground, three-line shout, one hot colour */
-function BluffCreek() {
-  const green = "#21d35b";
-  return (
-    <div className="mock" style={{ background: "#0a0c0a" }}>
-      <Photo src="/images/portfolio/t2-hero-480.jpg" style={{ filter: "blur(7px) brightness(0.42) saturate(1.2)", transform: "scale(1.15)" }} />
-      <div style={abs({ inset: 0, background: "linear-gradient(90deg, rgba(0,0,0,0.55), transparent 50%, rgba(0,0,0,0.4))" })} />
-      <div style={abs({ top: "3.5cqw", left: "4cqw", right: "4cqw", display: "flex", justifyContent: "space-between", alignItems: "center", color: "#fff" })}>
-        <Blur amount={0.8}><span style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: "4.4cqw" }}>Bluff Creek</span></Blur>
-        <span style={{ background: "#f4f4f0", color: "#111", borderRadius: "0.6cqw", padding: "1.2cqw 2cqw", width: "22cqw", display: "flex", justifyContent: "space-between", fontFamily: SANS, fontSize: "1.5cqw", fontWeight: 700 }}>
-          <span>Menu</span>
-          <span>≡</span>
-        </span>
-        <span style={{ fontFamily: SANS, fontSize: "1.3cqw", letterSpacing: "0.22em", fontWeight: 700 }}>START A CONVERSATION</span>
-      </div>
-      <div style={abs({ top: "21cqw", left: "0", right: "0", textAlign: "center", color: "#fff", fontFamily: SANS, fontWeight: 800, fontSize: "8.2cqw", lineHeight: 1, letterSpacing: "-0.02em" })}>
-        WE BUILD
-        <br />
-        <span style={{ color: green }}>LAWNS PEOPLE</span>
-        <br />
-        REMEMBER.
-      </div>
-      <div style={abs({ bottom: "6cqw", left: "0", right: "0", display: "flex", justifyContent: "center", gap: "1.5cqw", fontFamily: SANS, fontSize: "1.3cqw", letterSpacing: "0.2em", fontWeight: 700 })}>
-        <span style={{ background: green, color: "#062", padding: "1.6cqw 3cqw" }}>VIEW SELECTED WORK {"->"}</span>
-        <span style={{ border: "1px solid rgba(255,255,255,0.5)", color: "#fff", padding: "1.6cqw 3cqw" }}>START A CONVERSATION</span>
-      </div>
-    </div>
-  );
-}
-
 /* 8 ─ warm and lowercase: one photograph, one soft sentence */
 function Oakhaven() {
   return (
@@ -423,19 +293,19 @@ export const MOCKUPS: Mockup[] = [
     slug: "sable-stone",
     client: "Marcus",
     state: "TX",
-    direction: "Editorial index",
-    note: "A pale ground, monospaced details, one tilted plate and a large project number. Reads like a print portfolio and suits a high-end hardscape studio.",
-    cover: "/images/portfolio/t3-hero-960.jpg",
-    Component: SableStone,
+    direction: "Tilted plate",
+    note: "One photograph turned in space with the studio name set across it in serif. Dark, quiet and cinematic, for a design and build studio that lets one image carry the page.",
+    cover: "/images/portfolio/t6-gallery-2-960.jpg",
+    Component: TiltedPlate,
   },
   {
     slug: "verdant",
     client: "Elena",
     state: "CA",
-    direction: "Cinema letterbox",
-    note: "One night photograph, one project title, one caption. Everything else is dark. For a company whose lighting work speaks for itself.",
-    cover: "/images/portfolio/t7-hero-960.jpg",
-    Component: Verdant,
+    direction: "Serif over landscape",
+    note: "A wide view framed by soft foreground, a two line serif headline and one button. Calm and premium, for a coastal garden studio selling the feeling of the place.",
+    cover: "/images/portfolio/t6-featured-960.jpg",
+    Component: SerifLandscape,
   },
   {
     slug: "ridgeway",
@@ -468,10 +338,10 @@ export const MOCKUPS: Mockup[] = [
     slug: "bluff-creek",
     client: "Cody",
     state: "GA",
-    direction: "Loud",
-    note: "A blurred ground, a three line shout and one hot colour. For a lawn care company that wants to own the neighbourhood.",
-    cover: "/images/portfolio/t2-hero-960.jpg",
-    Component: BluffCreek,
+    direction: "Wordmark and caption",
+    note: "A giant wordmark in one corner, a note across from it and a caption box below, all over one top-down scene. Confident and product-like, for a lawn company with a strong name.",
+    cover: "/images/portfolio/t10-real-960.jpg",
+    Component: WordmarkCaption,
   },
   {
     slug: "oakhaven",
