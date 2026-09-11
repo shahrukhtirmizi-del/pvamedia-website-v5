@@ -5,7 +5,7 @@ import { SITE } from "../../lib/site";
 
 export default function FinalCTA() {
   return (
-    <section id="contact" className="relative scroll-mt-24 overflow-hidden">
+    <section id="contact" className="relative overflow-hidden">
       {/* the beams converge left of the headline and react to the pointer;
           z-0 keeps them behind everything, including the orb's solid disc */}
       <div

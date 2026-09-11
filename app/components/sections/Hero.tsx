@@ -86,7 +86,7 @@ export default function Hero() {
                 <Link href="/bookings" className="btn btn-primary">
                   Book a free call
                 </Link>
-                <Link href="#work" className="btn btn-secondary">
+                <Link href="/work" className="btn btn-secondary">
                   See the work
                 </Link>
               </div>

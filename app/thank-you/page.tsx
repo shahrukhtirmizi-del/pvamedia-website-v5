@@ -49,7 +49,7 @@ export default function ThankYouPage() {
             <Link href="/" className="btn btn-primary">
               Back to home
             </Link>
-            <Link href="/#work" className="btn btn-secondary">
+            <Link href="/work" className="btn btn-secondary">
               See the work
             </Link>
           </div>

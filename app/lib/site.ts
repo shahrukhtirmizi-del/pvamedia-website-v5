@@ -20,11 +20,11 @@ export const SITE = {
 };
 
 export const NAV = [
-  { label: "Work", href: "/#work" },
-  { label: "Services", href: "/#services" },
-  { label: "AI Receptionist", href: "/#ai-receptionist" },
-  { label: "Pricing", href: "/#pricing" },
-  { label: "Contact", href: "/#contact" },
+  { label: "Work", href: "/work" },
+  { label: "Services", href: "/services" },
+  { label: "AI Receptionist", href: "/ai-receptionist" },
+  { label: "Pricing", href: "/pricing" },
+  { label: "Contact", href: "/contact" },
 ];
 
 /* -------------------------------------------------------------------------- */

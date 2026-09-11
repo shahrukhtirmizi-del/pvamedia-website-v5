@@ -25,7 +25,7 @@ export default function Services() {
   const [active, setActive] = useState<Service | null>(null);
 
   return (
-    <section id="services" className="scroll-mt-24 py-24 md:py-32">
+    <section id="services" className="py-24 md:py-32">
       <div className="mx-auto max-w-[1240px] px-5 md:px-8">
         <Reveal>
           <h2

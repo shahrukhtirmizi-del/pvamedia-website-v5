@@ -19,7 +19,7 @@ export default function Portfolio() {
   const [active, setActive] = useState<Mockup | null>(null);
 
   return (
-    <section id="work" className="scroll-mt-24 py-20 md:py-28">
+    <section id="work" className="py-20 md:py-28">
       <div className="mx-auto max-w-[1240px] px-5 md:px-8">
         <OrbitHeading
           lineOne="HOW YOURS"

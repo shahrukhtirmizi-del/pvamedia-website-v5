@@ -23,6 +23,8 @@ export default function SmoothScroll() {
         easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         touchMultiplier: 1.6,
       });
+      // the section router scrolls through Lenis so it keeps the same feel
+      window.__lenis = lenis as unknown as Window["__lenis"];
 
       function loop(time: number) {
         lenis?.raf(time);
@@ -35,6 +37,7 @@ export default function SmoothScroll() {
       cancelled = true;
       if (raf) cancelAnimationFrame(raf);
       lenis?.destroy();
+      delete window.__lenis;
     };
   }, []);
 
