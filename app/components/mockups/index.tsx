@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type { CSSProperties, ReactNode } from "react";
-import { TiltedPlate, SerifLandscape, WordmarkCaption } from "./replacements";
+import { GlassCard, SerifLandscape, WordmarkCaption } from "./replacements";
 
 /**
  * Eight hero concepts for landscaping companies. Each is a self-contained
@@ -207,7 +207,7 @@ function Halcyon() {
 
 /* 6 ─ dark stills: pill nav, serif title, a stack of rounded frames */
 function TerraForma() {
-  const pill: CSSProperties = { border: "1px solid rgba(255,255,255,0.45)", borderRadius: 999, padding: "0.5cqw 1.5cqw", fontSize: "1.25cqw", letterSpacing: "0.08em" };
+  const pill: CSSProperties = { padding: "0.5cqw 0.9cqw", fontSize: "1.25cqw", letterSpacing: "0.14em", opacity: 0.85 };
   const frame = (src: string, s: CSSProperties) => (
     <div style={abs({ borderRadius: "2cqw", overflow: "hidden", boxShadow: "0 30px 60px -30px rgba(0,0,0,0.8)", ...s })}>
       <Photo src={src} />
@@ -293,10 +293,10 @@ export const MOCKUPS: Mockup[] = [
     slug: "sable-stone",
     client: "Marcus",
     state: "TX",
-    direction: "Tilted plate",
-    note: "One photograph turned in space with the studio name set across it in serif. Dark, quiet and cinematic, for a design and build studio that lets one image carry the page.",
-    cover: "/images/portfolio/t6-gallery-2-960.jpg",
-    Component: TiltedPlate,
+    direction: "Glass card",
+    note: "A glass navigation pill, a serif name over the scene, and a frosted panel that carries the message. Polished and calm, for an established garden company.",
+    cover: "/images/portfolio/t9-hero-960.jpg",
+    Component: GlassCard,
   },
   {
     slug: "verdant",

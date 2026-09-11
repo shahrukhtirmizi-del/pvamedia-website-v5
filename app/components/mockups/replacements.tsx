@@ -36,99 +36,6 @@ function Blur({ children, amount = 0.55 }: { children: ReactNode; amount?: numbe
   );
 }
 
-/* A ─ tilted plate: one photograph turned in space, the studio's name across it */
-export function TiltedPlate() {
-  return (
-    <div className="mock" style={{ background: "#08090c", perspective: "120cqw" }}>
-      <div
-        style={abs({
-          top: "4cqw",
-          left: "4cqw",
-          right: "4cqw",
-          display: "flex",
-          justifyContent: "space-between",
-          fontFamily: SANS,
-          fontSize: "1.45cqw",
-          lineHeight: 1.5,
-          color: "#fff",
-        })}
-      >
-        <span>
-          <Blur amount={0.4}>Marcus Delgado</Blur>
-          <br />
-          <span style={{ opacity: 0.6 }}>Landscape design and build</span>
-        </span>
-        <span style={{ display: "flex", gap: "2cqw" }}>
-          <span>Index</span>
-          <span style={{ opacity: 0.5 }}>About</span>
-        </span>
-      </div>
-
-      <div
-        style={abs({
-          top: "14cqw",
-          left: "17cqw",
-          width: "66cqw",
-          height: "42cqw",
-          transform: "rotateY(-14deg) rotateX(8deg) rotateZ(-3deg)",
-          transformStyle: "preserve-3d",
-          boxShadow: "0 40px 80px -30px rgba(0,0,0,0.9)",
-          overflow: "hidden",
-          borderRadius: "0.6cqw",
-        })}
-      >
-        <Photo src="/images/portfolio/t6-gallery-2-960.jpg" style={{ filter: "saturate(0.85) brightness(0.8)" }} />
-        <div style={abs({ inset: 0, background: "radial-gradient(circle at 50% 45%, rgba(0,0,0,0.05), rgba(0,0,0,0.5))" })} />
-      </div>
-
-      <div
-        style={abs({
-          top: "22cqw",
-          left: 0,
-          right: 0,
-          textAlign: "center",
-          color: "#fff",
-          textShadow: "0 4px 40px rgba(0,0,0,0.6)",
-        })}
-      >
-        <div style={{ fontFamily: SANS, fontSize: "1.5cqw", fontWeight: 600, letterSpacing: "0.02em" }}>Landscape Design Studio</div>
-        <div style={{ fontFamily: SERIF, fontSize: "13cqw", lineHeight: 0.95, letterSpacing: "-0.02em", marginTop: "0.6cqw" }}>
-          <Blur amount={0.45}>Stonefield</Blur>
-        </div>
-      </div>
-
-      <div
-        style={abs({
-          top: "36cqw",
-          left: "47.5cqw",
-          width: "5cqw",
-          height: "5cqw",
-          borderRadius: 999,
-          background: "rgba(0,0,0,0.55)",
-          display: "grid",
-          placeItems: "center",
-          color: "#fff",
-          fontSize: "2.2cqw",
-          fontFamily: SANS,
-        })}
-      >
-        {"->"}
-      </div>
-
-      <div style={abs({ bottom: "4cqw", left: "4cqw", fontFamily: SANS, fontSize: "1.45cqw", lineHeight: 1.5, color: "#fff" })}>
-        Taking projects
-        <br />
-        <span style={{ opacity: 0.6 }}>Spring 2026 {"↗"}</span>
-      </div>
-      <div style={abs({ bottom: "4cqw", right: "4cqw", display: "flex", flexDirection: "column", gap: "0.5cqw" })}>
-        {[0, 1, 2, 3].map((i) => (
-          <span key={i} style={{ width: "1.8cqw", height: "1.2cqw", border: "1px solid rgba(255,255,255,0.55)", borderRadius: "0.2cqw", background: i === 0 ? "rgba(255,255,255,0.6)" : "transparent" }} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
 /* B ─ serif over landscape: a framed view, a two-line serif headline, one button */
 export function SerifLandscape() {
   return (
@@ -231,6 +138,91 @@ export function WordmarkCaption() {
         </div>
         <div style={{ marginTop: "1.8cqw", borderTop: "1px dotted rgba(255,255,255,0.5)", paddingTop: "1.2cqw", fontSize: "1.2cqw", opacity: 0.85, textAlign: "right" }}>
           The state{"’"}s most
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* D ─ glass card: a centred glass nav, a serif headline over the scene, a frosted panel below */
+export function GlassCard() {
+  return (
+    <div className="mock" style={{ background: "#1f2a1e" }}>
+      <Photo src="/images/portfolio/t9-hero-960.jpg" style={{ filter: "saturate(0.95) brightness(0.9)" }} />
+      <div style={abs({ inset: 0, background: "linear-gradient(180deg, rgba(10,16,12,0.25), transparent 40%, rgba(10,16,12,0.55))" })} />
+
+      {/* the centred glass pill */}
+      <div
+        style={abs({
+          top: "3cqw",
+          left: "50%",
+          transform: "translateX(-50%)",
+          display: "flex",
+          alignItems: "center",
+          gap: "2.4cqw",
+          padding: "1cqw 1.2cqw 1cqw 2cqw",
+          borderRadius: "1.2cqw",
+          background: "rgba(255,255,255,0.14)",
+          border: "1px solid rgba(255,255,255,0.3)",
+          backdropFilter: "blur(8px)",
+          color: "#fff",
+          fontFamily: SANS,
+          fontSize: "1.45cqw",
+          whiteSpace: "nowrap",
+        })}
+      >
+        <span style={{ width: "2cqw", height: "2cqw", borderRadius: "0.5cqw", background: "rgba(255,255,255,0.7)" }} />
+        <span style={{ opacity: 0.9 }}>About</span>
+        <span style={{ opacity: 0.9 }}>Projects</span>
+        <span style={{ opacity: 0.9 }}>Care plans</span>
+        <span style={{ background: "#151a15", color: "#fff", borderRadius: "0.7cqw", padding: "0.7cqw 1.6cqw", fontWeight: 600 }}>Get a quote {"->"}</span>
+      </div>
+      <div style={abs({ top: "3.6cqw", right: "4cqw", fontFamily: MONO, fontSize: "1.1cqw", letterSpacing: "0.1em", color: "rgba(255,255,255,0.8)" })}>
+        AUSTIN, TX
+      </div>
+
+      <div
+        style={abs({
+          top: "16cqw",
+          left: 0,
+          right: 0,
+          textAlign: "center",
+          color: "#fff",
+          fontFamily: SERIF,
+          fontSize: "7.4cqw",
+          lineHeight: 1.05,
+          letterSpacing: "-0.01em",
+          textShadow: "0 4px 40px rgba(0,0,0,0.45)",
+        })}
+      >
+        The <Blur amount={0.5}>Fairmont</Blur> Garden
+        <br />
+        Company of Austin
+      </div>
+
+      <div
+        style={abs({
+          left: "4cqw",
+          bottom: "4cqw",
+          width: "40cqw",
+          padding: "2.4cqw 2.6cqw",
+          borderRadius: "1.4cqw",
+          background: "rgba(20,26,20,0.42)",
+          border: "1px solid rgba(255,255,255,0.22)",
+          backdropFilter: "blur(10px)",
+          color: "#fff",
+        })}
+      >
+        <div style={{ fontFamily: SERIF, fontSize: "3.4cqw", lineHeight: 1.12 }}>
+          Gardens that run
+          <br />
+          themselves
+        </div>
+        <div style={{ fontFamily: SANS, fontSize: "1.4cqw", lineHeight: 1.55, marginTop: "1.4cqw", opacity: 0.85 }}>
+          Design, planting and year-round care from one crew, so the garden looks like this every month, not just the first.
+        </div>
+        <div style={{ fontFamily: SANS, fontSize: "1.35cqw", marginTop: "1.8cqw", fontWeight: 600 }}>
+          Get to know us <span style={{ opacity: 0.6 }}>{"->"}</span>
         </div>
       </div>
     </div>

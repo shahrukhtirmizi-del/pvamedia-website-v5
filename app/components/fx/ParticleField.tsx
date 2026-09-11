@@ -72,8 +72,9 @@ export default function ParticleField({
           x: Math.random() * W,
           y: Math.random() * H,
           r: (0.5 + Math.random() * 1.5) * dpr,
-          vx: (Math.random() - 0.5) * 0.08 * dpr,
-          vy: -(0.05 + Math.random() * 0.2) * dpr,
+          // a visible drift: sideways sway plus a steady rise
+          vx: (Math.random() - 0.5) * 0.22 * dpr,
+          vy: -(0.16 + Math.random() * 0.42) * dpr,
           a: 0.14 + Math.random() * 0.46,
           tw: 0.4 + Math.random() * 1.5,
           ph: Math.random() * Math.PI * 2,
@@ -212,7 +213,8 @@ export default function ParticleField({
       const reach = 150 * dpr;
 
       for (const p of parts) {
-        p.x += p.vx;
+        // each particle weaves a little as it rises, so the field reads as air
+        p.x += p.vx + Math.sin(t * 0.0009 + p.ph) * 0.18 * dpr;
         p.y += p.vy;
         if (p.y < -8) {
           p.y = H + 8;
@@ -252,9 +254,8 @@ export default function ParticleField({
         raf = 0;
         return;
       }
-      // the page-wide dust drifts slowly; every other frame is plenty, and
       // nothing at all while the intro has the screen
-      if (!introPlaying() && (!fixed || now - lastDraw >= 30)) {
+      if (!introPlaying() && (!fixed || now - lastDraw >= 15)) {
         lastDraw = now;
         draw(now);
       }
