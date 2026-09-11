@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { introPlaying } from "../../lib/intro";
+import { isCoarse } from "../../lib/device";
 
 /**
  * Slow atmospheric dust, optionally gathered into a frame.
@@ -46,6 +47,8 @@ export default function ParticleField({
     if (!ctx) return;
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // phones get the same picture from far fewer particles and half the frames
+    const coarse = isCoarse();
 
     let W = 0;
     let H = 0;
@@ -62,13 +65,17 @@ export default function ParticleField({
     let ring: F[] = [];
     let halo: { x: number; y: number; r: number; a: number; tw: number; ph: number }[] = [];
     let framePoint: ((t: number) => [number, number]) | null = null;
+    /* on touch there is no pointer to scatter the light, so the frame and
+       halo are baked into three shimmer layers once and crossfaded, instead
+       of hundreds of sprites drawn every frame */
+    let baked: HTMLCanvasElement[] = [];
     let starC = { x: 0, y: 0 };
     let starHome = { x: 0, y: 0 };
     let frameBox = { x0: 0, y0: 0, x1: 0, y1: 0 };
 
     function seedFree() {
       const target = Math.round(
-        Math.min(520, Math.max(40, ((W * H) / (dpr * dpr) / 13000) * density))
+        Math.min(520, Math.max(40, ((W * H) / (dpr * dpr) / 13000) * density * (coarse && fixed ? 0.6 : 1)))
       );
       parts = [];
       for (let i = 0; i < target; i++) {
@@ -96,7 +103,7 @@ export default function ParticleField({
       const h = frame.h * H;
       const r = Math.min((frame.r ?? 0.08) * Math.min(w, h) * 2, w / 2, h / 2);
       const perim = 2 * (w - 2 * r) + 2 * (h - 2 * r) + 2 * Math.PI * r;
-      const count = Math.round(perim / (1.15 * dpr));
+      const count = Math.min(coarse ? 650 : 1600, Math.round(perim / ((coarse ? 2.4 : 1.15) * dpr)));
 
       // walk the perimeter: top edge, top-right arc, right edge, ... clockwise
       function pointAt(t: number): [number, number] {
@@ -143,7 +150,7 @@ export default function ParticleField({
 
       // a cloud of light gathered around the star, thickest at its centre
       halo = [];
-      for (let i = 0; i < 180; i++) {
+      for (let i = 0; i < (coarse ? 90 : 180); i++) {
         const ang = Math.random() * Math.PI * 2;
         const rad = Math.pow(Math.random(), 0.6) * 58 * dpr;
         halo.push({
@@ -155,11 +162,12 @@ export default function ParticleField({
           ph: Math.random() * Math.PI * 2,
         });
       }
+      if (coarse) bakeLayers();
     }
 
     function resize() {
       if (!cv) return;
-      dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
+      dpr = Math.min(window.devicePixelRatio || 1, coarse ? 1 : maxDpr);
       W = Math.max(1, Math.round(cv.clientWidth * dpr));
       H = Math.max(1, Math.round(cv.clientHeight * dpr));
       cv.width = W;
@@ -238,6 +246,34 @@ export default function ParticleField({
       starSprite = c;
     }
 
+    function bakeLayers() {
+      baked = [];
+      if (!framePoint || !dotSprite) return;
+      for (let k = 0; k < 3; k++) {
+        const c = document.createElement("canvas");
+        c.width = W;
+        c.height = H;
+        const x = c.getContext("2d");
+        if (!x) continue;
+        const phase = (k / 3) * Math.PI * 2;
+        for (const f of ring) {
+          const [bx, by] = framePoint(f.t);
+          const tw = 0.55 + 0.45 * Math.sin(phase * f.tw + f.ph);
+          const size = f.r * 2.4;
+          x.globalAlpha = f.a * tw;
+          x.drawImage(dotSprite, bx + f.jx - size / 2, by + f.jy - size / 2, size, size);
+        }
+        for (const h of halo) {
+          const tw = 0.5 + 0.5 * Math.sin(phase * h.tw + h.ph);
+          const size = h.r * 2.4;
+          x.globalAlpha = h.a * tw;
+          x.drawImage(mintSprite ?? dotSprite, starHome.x + h.x - size / 2, starHome.y + h.y - size / 2, size, size);
+        }
+        x.globalAlpha = 1;
+        baked.push(c);
+      }
+    }
+
     function drawStar(t: number) {
       if (!ctx || !star || !frame || !starSprite) return;
       const breathe = 0.85 + 0.15 * Math.sin(t * 0.0016);
@@ -270,6 +306,20 @@ export default function ParticleField({
         const size = p.r * 2.6 * (1 + near * 0.9);
         ctx.globalAlpha = alpha;
         ctx.drawImage(dotSprite!, p.x - size / 2, p.y - size / 2, size, size);
+      }
+
+      if (coarse && baked.length === 3) {
+        // crossfade between the three shimmer layers, then the star on top
+        const ph = ((t * 0.0005) % 3 + 3) % 3;
+        const i = Math.floor(ph);
+        const fr = ph - i;
+        ctx.globalAlpha = 1 - fr;
+        ctx.drawImage(baked[i], 0, 0);
+        ctx.globalAlpha = fr;
+        ctx.drawImage(baked[(i + 1) % 3], 0, 0);
+        ctx.globalAlpha = 1;
+        drawStar(t);
+        return;
       }
 
       const repel = 110 * dpr;
@@ -332,7 +382,9 @@ export default function ParticleField({
         return;
       }
       // nothing at all while the intro has the screen
-      if (!introPlaying() && (!fixed || now - lastDraw >= 15)) {
+      // 60 frames a second on desktop; phones draw every other frame
+      const interval = coarse ? (fixed ? 50 : 30) : fixed ? 15 : 0;
+      if (!introPlaying() && now - lastDraw >= interval) {
         lastDraw = now;
         draw(now);
       }

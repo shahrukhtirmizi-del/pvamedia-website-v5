@@ -126,7 +126,7 @@ export function WordmarkCaption() {
         Designed to be lived in, mowed once a week, and looked at every evening. We make the simplest yard feel considered.
       </div>
 
-      <div style={abs({ bottom: "0", left: "5cqw", width: "24cqw", padding: "2.4cqw 2cqw 2cqw", background: "rgba(40,36,30,0.72)", backdropFilter: "blur(6px)", color: "#fff", fontFamily: SANS })}>
+      <div style={abs({ bottom: "0", left: "5cqw", width: "24cqw", padding: "2.4cqw 2cqw 2cqw", background: "rgba(40,36,30,0.86)", color: "#fff", fontFamily: SANS })}>
         <div style={{ fontSize: "1.55cqw", fontWeight: 700, lineHeight: 1.35, letterSpacing: "0.02em" }}>
           DESIGNED
           <br />
@@ -162,9 +162,8 @@ export function GlassCard() {
           gap: "2.4cqw",
           padding: "1cqw 1.2cqw 1cqw 2cqw",
           borderRadius: "1.2cqw",
-          background: "rgba(255,255,255,0.14)",
+          background: "rgba(40,48,42,0.72)",
           border: "1px solid rgba(255,255,255,0.3)",
-          backdropFilter: "blur(8px)",
           color: "#fff",
           fontFamily: SANS,
           fontSize: "1.45cqw",
@@ -207,9 +206,8 @@ export function GlassCard() {
           width: "40cqw",
           padding: "2.4cqw 2.6cqw",
           borderRadius: "1.4cqw",
-          background: "rgba(20,26,20,0.42)",
+          background: "rgba(20,26,20,0.78)",
           border: "1px solid rgba(255,255,255,0.22)",
-          backdropFilter: "blur(10px)",
           color: "#fff",
         })}
       >

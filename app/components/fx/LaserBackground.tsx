@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { introPlaying } from "../../lib/intro";
+import { isCoarse } from "../../lib/device";
 
 /**
  * Pointer-reactive laser beams meeting at a vanishing point.
@@ -48,6 +49,9 @@ export default function LaserBackground({
     if (!gl) return;
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const coarse = isCoarse();
+    // phones render the beams at a third of the size and half the frames
+    const renderScale = coarse ? Math.min(scale, 0.35) : scale;
 
     const vsSource = `
       attribute vec4 aVertexPosition;
@@ -219,7 +223,7 @@ export default function LaserBackground({
       const el = canvasRef.current;
       if (!el) return;
       const rect = el.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2) * scale;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2) * renderScale;
       mouseX = (e.clientX - rect.left) * dpr;
       mouseY = (rect.height - (e.clientY - rect.top)) * dpr;
       lastMouseMove = Date.now();
@@ -240,7 +244,7 @@ export default function LaserBackground({
     function resize() {
       const el = canvasRef.current;
       if (!el || !gl) return false;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2) * scale;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2) * renderScale;
       const w = Math.max(1, Math.round(el.clientWidth * dpr));
       const h = Math.max(1, Math.round(el.clientHeight * dpr));
       if (el.width !== w || el.height !== h) {
@@ -277,12 +281,17 @@ export default function LaserBackground({
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     }
 
+    let lastDraw = 0;
     function render() {
       if (!visible) {
         raf = 0;
         return;
       }
-      if (!introPlaying()) draw((Date.now() - startTime) * 0.001);
+      const now = Date.now();
+      if (!introPlaying() && now - lastDraw >= (coarse ? 30 : 0)) {
+        lastDraw = now;
+        draw((now - startTime) * 0.001);
+      }
       raf = requestAnimationFrame(render);
     }
 

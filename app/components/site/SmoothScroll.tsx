@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { isCoarse } from "../../lib/device";
 
 /**
  * Slightly weighted scroll, site-wide. Lenis drives real window scroll from
@@ -10,6 +11,8 @@ import { useEffect } from "react";
 export default function SmoothScroll() {
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // phones scroll natively; the weighted feel is a mouse-wheel thing
+    if (isCoarse()) return;
 
     let lenis: { raf: (t: number) => void; destroy: () => void } | null = null;
     let raf = 0;

@@ -235,7 +235,7 @@ function TerraForma() {
       {frame("/images/portfolio/t5-hero-960.jpg", { top: "27cqw", left: "68cqw", width: "16cqw", height: "12cqw" })}
       {frame("/images/portfolio/t9-hero-960.jpg", { top: "46cqw", left: "62cqw", width: "16cqw", height: "12cqw" })}
       {frame("/images/portfolio/t6-gallery-2-960.jpg", { top: "38cqw", left: "18cqw", width: "16cqw", height: "12cqw" })}
-      <div style={abs({ top: "40.5cqw", left: "46cqw", width: "8cqw", height: "8cqw", borderRadius: 999, background: "rgba(255,255,255,0.18)", backdropFilter: "blur(6px)", display: "grid", placeItems: "center" })}>
+      <div style={abs({ top: "40.5cqw", left: "46cqw", width: "8cqw", height: "8cqw", borderRadius: 999, background: "rgba(255,255,255,0.22)", display: "grid", placeItems: "center" })}>
         <span style={{ width: 0, height: 0, borderLeft: "2.2cqw solid #fff", borderTop: "1.3cqw solid transparent", borderBottom: "1.3cqw solid transparent", marginLeft: "0.6cqw" }} />
       </div>
     </div>
