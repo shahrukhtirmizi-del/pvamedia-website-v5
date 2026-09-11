@@ -66,10 +66,10 @@ function Northline() {
   return (
     <div className="mock" style={{ background: "#07101f" }}>
       <div style={abs({ inset: 0, width: "50%" })}>
-        <Photo src="/images/portfolio/t6-featured.jpg" style={{ filter: "brightness(0.62) saturate(0.85)" }} />
+        <Photo src="/images/portfolio/t6-featured-960.jpg" style={{ filter: "brightness(0.62) saturate(0.85)" }} />
       </div>
       <div style={abs({ inset: 0, left: "50%" })}>
-        <Photo src="/images/portfolio/t4-hero.jpg" style={{ filter: "brightness(1.05) saturate(0.7)" }} />
+        <Photo src="/images/portfolio/t4-hero-960.jpg" style={{ filter: "brightness(1.05) saturate(0.7)" }} />
         <div style={abs({ inset: 0, background: "rgba(205,224,214,0.55)", mixBlendMode: "screen" })} />
       </div>
       <div
@@ -158,7 +158,7 @@ function SableStone() {
           boxShadow: "0 30px 60px -30px rgba(0,0,0,0.45)",
         })}
       >
-        <Photo src="/images/portfolio/t3-hero.jpg" />
+        <Photo src="/images/portfolio/t3-hero-960.jpg" />
       </div>
       <div
         style={abs({
@@ -200,7 +200,7 @@ function Verdant() {
   return (
     <div className="mock" style={{ background: "#000" }}>
       <div style={abs({ top: "10cqw", bottom: "10cqw", left: "9cqw", right: "9cqw" })}>
-        <Photo src="/images/portfolio/t7-hero.jpg" style={{ filter: "brightness(0.9)" }} />
+        <Photo src="/images/portfolio/t7-hero-960.jpg" style={{ filter: "brightness(0.9)" }} />
         <div style={abs({ inset: 0, background: "linear-gradient(180deg, transparent 55%, rgba(0,0,0,0.75))" })} />
       </div>
       <div style={abs({ top: "3.2cqw", left: "0", right: "0", display: "flex", justifyContent: "center", gap: "8cqw", alignItems: "baseline", color: "#fff" })}>
@@ -245,7 +245,7 @@ function Ridgeway() {
           clipPath: "polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)",
         })}
       >
-        <Photo src="/images/portfolio/t4-hero.jpg" style={{ filter: "saturate(0.6) brightness(0.8)" }} />
+        <Photo src="/images/portfolio/t4-hero-960.jpg" style={{ filter: "saturate(0.6) brightness(0.8)" }} />
         <div style={abs({ inset: 0, background: "rgba(20,30,20,0.25)" })} />
         <div style={abs({ inset: 0, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontFamily: SANS, fontSize: "4.6cqw", fontWeight: 700, lineHeight: 1.1, letterSpacing: "-0.02em", textAlign: "center" })}>
           <span>
@@ -285,10 +285,10 @@ function Halcyon() {
           <span>CONTACT</span>
         </span>
       </div>
-      {plate("/images/portfolio/t6-gallery-1.jpg", { top: "18cqw", left: "14cqw", width: "22cqw", height: "30cqw" })}
-      {plate("/images/portfolio/t6-hero.jpg", { top: "13cqw", left: "58cqw", width: "16cqw", height: "24cqw" })}
-      {plate("/images/portfolio/t6-gallery-2.jpg", { top: "36cqw", left: "22cqw", width: "12cqw", height: "16cqw" })}
-      {plate("/images/portfolio/t1-hero.jpg", { top: "30cqw", left: "66cqw", width: "20cqw", height: "26cqw" })}
+      {plate("/images/portfolio/t6-gallery-1-960.jpg", { top: "18cqw", left: "14cqw", width: "22cqw", height: "30cqw" })}
+      {plate("/images/portfolio/t6-hero-960.jpg", { top: "13cqw", left: "58cqw", width: "16cqw", height: "24cqw" })}
+      {plate("/images/portfolio/t6-gallery-2-960.jpg", { top: "36cqw", left: "22cqw", width: "12cqw", height: "16cqw" })}
+      {plate("/images/portfolio/t1-hero-960.jpg", { top: "30cqw", left: "66cqw", width: "20cqw", height: "26cqw" })}
       <div style={abs({ top: "22cqw", left: "0", right: "0", textAlign: "center", color: "#fff", fontFamily: SERIF, fontSize: "9.2cqw", lineHeight: 0.98, fontWeight: 500, textShadow: "0 2px 30px rgba(60,30,30,0.35)" })}>
         Making
         <br />
@@ -331,10 +331,10 @@ function TerraForma() {
         <div style={{ fontFamily: MONO, fontSize: "1.35cqw", letterSpacing: "0.12em", opacity: 0.8 }}>SPRING 2026 {"->"} RANCHO SANTA FE</div>
         <div style={{ fontFamily: SERIF, fontSize: "9cqw", lineHeight: 1, marginTop: "1cqw", letterSpacing: "-0.02em" }}>Estancia</div>
       </div>
-      {frame("/images/portfolio/t1-hero.jpg", { top: "31cqw", left: "27cqw", width: "46cqw", height: "27cqw" })}
-      {frame("/images/portfolio/t5-hero.jpg", { top: "27cqw", left: "68cqw", width: "16cqw", height: "12cqw" })}
-      {frame("/images/portfolio/t9-hero.jpg", { top: "46cqw", left: "62cqw", width: "16cqw", height: "12cqw" })}
-      {frame("/images/portfolio/t6-gallery-2.jpg", { top: "38cqw", left: "18cqw", width: "16cqw", height: "12cqw" })}
+      {frame("/images/portfolio/t1-hero-960.jpg", { top: "31cqw", left: "27cqw", width: "46cqw", height: "27cqw" })}
+      {frame("/images/portfolio/t5-hero-960.jpg", { top: "27cqw", left: "68cqw", width: "16cqw", height: "12cqw" })}
+      {frame("/images/portfolio/t9-hero-960.jpg", { top: "46cqw", left: "62cqw", width: "16cqw", height: "12cqw" })}
+      {frame("/images/portfolio/t6-gallery-2-960.jpg", { top: "38cqw", left: "18cqw", width: "16cqw", height: "12cqw" })}
       <div style={abs({ top: "40.5cqw", left: "46cqw", width: "8cqw", height: "8cqw", borderRadius: 999, background: "rgba(255,255,255,0.18)", backdropFilter: "blur(6px)", display: "grid", placeItems: "center" })}>
         <span style={{ width: 0, height: 0, borderLeft: "2.2cqw solid #fff", borderTop: "1.3cqw solid transparent", borderBottom: "1.3cqw solid transparent", marginLeft: "0.6cqw" }} />
       </div>
@@ -347,7 +347,7 @@ function BluffCreek() {
   const green = "#21d35b";
   return (
     <div className="mock" style={{ background: "#0a0c0a" }}>
-      <Photo src="/images/portfolio/t2-hero.jpg" style={{ filter: "blur(14px) brightness(0.42) saturate(1.2)", transform: "scale(1.15)" }} />
+      <Photo src="/images/portfolio/t2-hero-480.jpg" style={{ filter: "blur(7px) brightness(0.42) saturate(1.2)", transform: "scale(1.15)" }} />
       <div style={abs({ inset: 0, background: "linear-gradient(90deg, rgba(0,0,0,0.55), transparent 50%, rgba(0,0,0,0.4))" })} />
       <div style={abs({ top: "3.5cqw", left: "4cqw", right: "4cqw", display: "flex", justifyContent: "space-between", alignItems: "center", color: "#fff" })}>
         <Blur amount={0.8}><span style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: "4.4cqw" }}>Bluff Creek</span></Blur>
@@ -376,7 +376,7 @@ function BluffCreek() {
 function Oakhaven() {
   return (
     <div className="mock" style={{ background: "#2a1e12" }}>
-      <Photo src="/images/portfolio/t10-real.jpg" style={{ filter: "brightness(0.78) saturate(0.9)" }} />
+      <Photo src="/images/portfolio/t10-real-960.jpg" style={{ filter: "brightness(0.78) saturate(0.9)" }} />
       <div style={abs({ inset: 0, background: "linear-gradient(180deg, rgba(40,26,14,0.35), rgba(40,26,14,0.15) 50%, rgba(40,26,14,0.55))" })} />
       <div style={abs({ top: "4cqw", left: "5cqw", right: "5cqw", display: "flex", justifyContent: "space-between", alignItems: "center", color: "#fff", fontFamily: SANS })}>
         <span style={{ fontSize: "2.4cqw" }}>
@@ -416,7 +416,7 @@ export const MOCKUPS: Mockup[] = [
     state: "TX",
     direction: "Split screen",
     note: "Two photographs meet at a seam, with the three things the company does set across both. Built for a design and build firm with strong before and after work.",
-    cover: "/images/portfolio/t6-featured.jpg",
+    cover: "/images/portfolio/t6-featured-960.jpg",
     Component: Northline,
   },
   {
@@ -425,7 +425,7 @@ export const MOCKUPS: Mockup[] = [
     state: "TX",
     direction: "Editorial index",
     note: "A pale ground, monospaced details, one tilted plate and a large project number. Reads like a print portfolio and suits a high-end hardscape studio.",
-    cover: "/images/portfolio/t3-hero.jpg",
+    cover: "/images/portfolio/t3-hero-960.jpg",
     Component: SableStone,
   },
   {
@@ -434,7 +434,7 @@ export const MOCKUPS: Mockup[] = [
     state: "CA",
     direction: "Cinema letterbox",
     note: "One night photograph, one project title, one caption. Everything else is dark. For a company whose lighting work speaks for itself.",
-    cover: "/images/portfolio/t7-hero.jpg",
+    cover: "/images/portfolio/t7-hero-960.jpg",
     Component: Verdant,
   },
   {
@@ -443,7 +443,7 @@ export const MOCKUPS: Mockup[] = [
     state: "TX",
     direction: "Cut photograph",
     note: "A hexagon cut out of a bright ground with a headline across it and a news column beside. Clean, corporate, trusted by architects.",
-    cover: "/images/portfolio/t4-hero.jpg",
+    cover: "/images/portfolio/t4-hero-960.jpg",
     Component: Ridgeway,
   },
   {
@@ -452,7 +452,7 @@ export const MOCKUPS: Mockup[] = [
     state: "NC",
     direction: "Collage",
     note: "Overlapping plates on a dusty ground with a serif headline laid over the lot. Warm and personal, for a husband and wife garden design practice.",
-    cover: "/images/portfolio/t6-gallery-1.jpg",
+    cover: "/images/portfolio/t6-gallery-1-960.jpg",
     Component: Halcyon,
   },
   {
@@ -461,7 +461,7 @@ export const MOCKUPS: Mockup[] = [
     state: "CA",
     direction: "Dark stills",
     note: "Pill navigation, a serif title, and a stack of rounded frames with a play button. For a firm that films its builds.",
-    cover: "/images/portfolio/t1-hero.jpg",
+    cover: "/images/portfolio/t1-hero-960.jpg",
     Component: TerraForma,
   },
   {
@@ -470,7 +470,7 @@ export const MOCKUPS: Mockup[] = [
     state: "GA",
     direction: "Loud",
     note: "A blurred ground, a three line shout and one hot colour. For a lawn care company that wants to own the neighbourhood.",
-    cover: "/images/portfolio/t2-hero.jpg",
+    cover: "/images/portfolio/t2-hero-960.jpg",
     Component: BluffCreek,
   },
   {
@@ -479,7 +479,7 @@ export const MOCKUPS: Mockup[] = [
     state: "CA",
     direction: "Warm and lowercase",
     note: "One golden hour photograph and one soft sentence in lowercase. For a studio selling calm rather than scale.",
-    cover: "/images/portfolio/t10-real.jpg",
+    cover: "/images/portfolio/t10-real-960.jpg",
     Component: Oakhaven,
   },
 ];

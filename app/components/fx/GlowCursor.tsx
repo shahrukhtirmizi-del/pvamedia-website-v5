@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { introPlaying } from "../../lib/intro";
 
 /**
  * A glowing trail that follows the pointer.
@@ -247,6 +248,11 @@ export default function GlowCursor() {
 
       const render = (now: number) => {
         if (destroyed) return;
+        if (introPlaying()) {
+          lastFrameTime = now;
+          raf = requestAnimationFrame(render);
+          return;
+        }
         const delta = Math.min((now - lastFrameTime) / 16.667, 3);
         lastFrameTime = now;
 

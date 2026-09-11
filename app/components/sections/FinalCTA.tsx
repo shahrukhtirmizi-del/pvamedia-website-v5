@@ -8,7 +8,14 @@ export default function FinalCTA() {
     <section id="contact" className="relative scroll-mt-24 overflow-hidden">
       {/* the beams converge left of the headline and react to the pointer;
           z-0 keeps them behind everything, including the orb's solid disc */}
-      <div className="absolute inset-0 z-0" aria-hidden>
+      <div
+        className="absolute inset-0 z-0"
+        aria-hidden
+        style={{
+          maskImage: "linear-gradient(to bottom, transparent, black 22%)",
+          WebkitMaskImage: "linear-gradient(to bottom, transparent, black 22%)",
+        }}
+      >
         <LaserBackground centerX={-0.78} centerY={-0.12} opacity={0.85} />
       </div>
 

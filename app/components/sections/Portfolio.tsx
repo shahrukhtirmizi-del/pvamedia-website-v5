@@ -8,7 +8,8 @@ import Modal from "../ui/Modal";
 import Reveal from "../ui/Reveal";
 import { MOCKUPS, type Mockup } from "../mockups";
 
-const RING_IMAGES = MOCKUPS.map((m) => m.cover);
+// the plates are at most 420px, so the 480px cuts are plenty
+const RING_IMAGES = MOCKUPS.map((m) => m.cover.replace("-960.jpg", "-480.jpg"));
 
 /**
  * Eight directions a landscaping site can take, drifting past on a rail that

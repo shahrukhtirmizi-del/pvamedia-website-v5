@@ -2,25 +2,27 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import LogoMark from "../LogoMark";
+import { INTRO_DONE } from "../../lib/intro";
 
 /**
- * The wordmark assembles once on first load, then hands over to the page.
+ * The wordmark assembles on load, then hands over to the page.
  *
  * The motion is the reference keynote study's opening beat, math intact: the
  * same seeded per-letter jitter, the same `eOut(clamp(seg(p,.02,.5)*1.5 -
  * j[2]*.5, 0, 1))` arrival curve, the same 1.24 to 1 scale settle, the same
  * chromatic three-way text-shadow separation collapsing as each letter lands,
- * and the mark fading up on `smooth(seg(p,.26,.5))` behind it.
+ * and the mark fading up on `smooth(seg(p,.26,.5))` beside it.
  *
- * Changed for this project: the chromatic fringes are cool blue and platinum
- * rather than the reference's red and green neon, and the beat resolves into
- * the homepage instead of continuing into twenty more.
+ * Changed for this project: the chromatic fringes are cool blue and platinum,
+ * the mark sits to the left of the wordmark at the height of its capitals,
+ * and the exit is a slow lift and fade with the page's own reveals held until
+ * it is over, so nothing behind it arrives already finished.
  */
 
 const WORD = "PVA MEDIA";
 const ASSEMBLE_MS = 2100;
-const HOLD_MS = 380;
-const FADE_MS = 620;
+const HOLD_MS = 700;
+const EXIT_MS = 1150;
 
 const clamp = (v: number, a: number, b: number) => (v < a ? a : v > b ? b : v);
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -53,8 +55,8 @@ export default function IntroReveal() {
   const skip = useSyncExternalStore(noopSubscribe, shouldSkip, () => false);
   const [finished, setFinished] = useState(false);
   const [leaving, setLeaving] = useState(false);
-  const rootRef = useRef<HTMLDivElement>(null);
   const markRef = useRef<HTMLDivElement>(null);
+  const lockupRef = useRef<HTMLDivElement>(null);
   const charRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
   useEffect(() => {
@@ -110,7 +112,7 @@ export default function IntroReveal() {
       } else {
         leaveTimer = window.setTimeout(() => {
           setLeaving(true);
-          doneTimer = window.setTimeout(finish, FADE_MS);
+          doneTimer = window.setTimeout(finish, EXIT_MS);
         }, HOLD_MS);
       }
     }
@@ -118,6 +120,7 @@ export default function IntroReveal() {
     function finish() {
       document.body.style.overflow = prevOverflow;
       document.documentElement.removeAttribute("data-intro");
+      window.dispatchEvent(new Event(INTRO_DONE));
       setFinished(true);
     }
 
@@ -128,7 +131,10 @@ export default function IntroReveal() {
       clearTimeout(leaveTimer);
       clearTimeout(doneTimer);
       document.body.style.overflow = prevOverflow;
-      document.documentElement.removeAttribute("data-intro");
+      if (document.documentElement.getAttribute("data-intro") === "playing") {
+        document.documentElement.removeAttribute("data-intro");
+        window.dispatchEvent(new Event(INTRO_DONE));
+      }
     };
   }, [skip]);
 
@@ -136,35 +142,40 @@ export default function IntroReveal() {
 
   return (
     <div
-      ref={rootRef}
       aria-hidden
       className="intro-root fixed inset-0 z-[100] flex items-center justify-center px-6"
       style={{
         background: "var(--bg)",
         opacity: leaving ? 0 : 1,
-        transition: `opacity ${FADE_MS}ms cubic-bezier(0.4,0,0.2,1)`,
+        transition: `opacity ${EXIT_MS}ms cubic-bezier(0.65, 0, 0.35, 1)`,
         pointerEvents: leaving ? "none" : "auto",
       }}
     >
-      <div className="flex flex-col items-center gap-6">
+      <div
+        ref={lockupRef}
+        className="font-display flex items-center"
+        style={{
+          fontWeight: 600,
+          fontSize: "clamp(34px, 8.5vw, 92px)",
+          lineHeight: 1,
+          color: "var(--ink)",
+          gap: "0.28em",
+          // the exit: a slow lift, a slight loosening, and the fade above
+          transform: leaving ? "translateY(-0.35em) scale(1.04)" : "none",
+          letterSpacing: leaving ? "0.02em" : "-0.02em",
+          transition: `transform ${EXIT_MS}ms cubic-bezier(0.65, 0, 0.35, 1), letter-spacing ${EXIT_MS}ms cubic-bezier(0.65, 0, 0.35, 1)`,
+        } as React.CSSProperties}
+      >
+        {/* the mark sits to the left at the height of the capitals */}
         <div
           ref={markRef}
-          style={{ opacity: 0, color: "var(--accent)" }}
           className="will-change-transform"
+          style={{ opacity: 0, color: "var(--accent)", height: "0.78em", width: "0.78em" }}
         >
-          <LogoMark className="h-9 w-9 md:h-11 md:w-11" />
+          <LogoMark className="h-full w-full" />
         </div>
 
-        <div
-          className="font-display flex"
-          style={{
-            fontWeight: 600,
-            letterSpacing: "-0.02em",
-            fontSize: "clamp(34px, 8.5vw, 92px)",
-            lineHeight: 1,
-            color: "var(--ink)",
-          }}
-        >
+        <div className="flex">
           {WORD.split("").map((ch, i) => (
             <span
               key={i}

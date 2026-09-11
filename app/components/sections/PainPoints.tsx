@@ -6,12 +6,12 @@ import { PAIN_POINTS, PAIN_CLOSER } from "../../lib/site";
 
 /** Every cell sits on a photograph, sunk deep into the palette. */
 const PHOTO = [
-  "/images/portfolio/t2-hero.jpg",
-  "/images/portfolio/t5-hero.jpg",
-  "/images/portfolio/t9-hero.jpg",
-  "/images/portfolio/t10-real.jpg",
-  "/images/portfolio/t6-gallery-1.jpg",
-  "/images/portfolio/t6-hero.jpg",
+  "/images/portfolio/t2-hero-960.jpg",
+  "/images/portfolio/t5-hero-960.jpg",
+  "/images/portfolio/t9-hero-960.jpg",
+  "/images/portfolio/t10-real-960.jpg",
+  "/images/portfolio/t6-gallery-1-960.jpg",
+  "/images/portfolio/t6-hero-960.jpg",
 ];
 
 const SPANS = [

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { afterIntro } from "../../lib/intro";
 
 const noopSubscribe = () => () => {};
 
@@ -51,10 +52,13 @@ export function useInView<T extends HTMLElement>({
     const el = ref.current;
     if (!el) return;
 
+    let release: (() => void) | null = null;
     const io = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setInView(true);
+          // hold the reveal until the intro has handed over
+          release?.();
+          release = afterIntro(() => setInView(true));
           if (once) io.disconnect();
         } else if (!once) {
           setInView(false);
@@ -64,7 +68,10 @@ export function useInView<T extends HTMLElement>({
     );
 
     io.observe(el);
-    return () => io.disconnect();
+    return () => {
+      io.disconnect();
+      release?.();
+    };
   }, [threshold, rootMargin, once]);
 
   return { ref, inView };

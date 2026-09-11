@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { introPlaying } from "../../lib/intro";
 
 /**
  * Slow atmospheric dust, optionally gathered into a frame.
@@ -251,8 +252,9 @@ export default function ParticleField({
         raf = 0;
         return;
       }
-      // the page-wide dust drifts slowly; every other frame is plenty
-      if (!fixed || now - lastDraw >= 30) {
+      // the page-wide dust drifts slowly; every other frame is plenty, and
+      // nothing at all while the intro has the screen
+      if (!introPlaying() && (!fixed || now - lastDraw >= 30)) {
         lastDraw = now;
         draw(now);
       }

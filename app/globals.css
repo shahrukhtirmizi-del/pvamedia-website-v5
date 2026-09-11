@@ -280,9 +280,11 @@ body {
   will-change: transform;
 }
 
-.ticker:hover .ticker-track,
-.ticker:focus-within .ticker-track {
-  animation-play-state: paused;
+@media (hover: hover) {
+  .ticker:hover .ticker-track,
+  .ticker:has(:focus-visible) .ticker-track {
+    animation-play-state: paused;
+  }
 }
 
 /* Hide scrollbars on the horizontal service rail while keeping it scrollable */
@@ -570,9 +572,13 @@ body {
   animation: ticker-slide 70s linear infinite;
   will-change: transform;
 }
-.rail:hover .rail-track,
-.rail:focus-within .rail-track {
-  animation-play-state: paused;
+/* pause under a real hover only: on touch, a tap focuses the card and a
+   focus-within rule would stop the rail for good */
+@media (hover: hover) {
+  .rail:hover .rail-track,
+  .rail:has(:focus-visible) .rail-track {
+    animation-play-state: paused;
+  }
 }
 
 /* mockups size their type with container units so each one scales as a

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { introPlaying } from "../../lib/intro";
 
 /**
  * Pointer-reactive laser beams meeting at a vanishing point.
@@ -281,7 +282,7 @@ export default function LaserBackground({
         raf = 0;
         return;
       }
-      draw((Date.now() - startTime) * 0.001);
+      if (!introPlaying()) draw((Date.now() - startTime) * 0.001);
       raf = requestAnimationFrame(render);
     }
 

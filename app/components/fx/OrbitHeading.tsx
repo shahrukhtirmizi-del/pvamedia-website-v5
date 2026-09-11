@@ -213,7 +213,7 @@ export default function OrbitHeading({
     }
 
     function drawTile(i: number, psi: number) {
-      if (!ctx || front.length === 0) return;
+      if (!ctx) return;
       const c = Math.cos(psi);
       const s = Math.sin(psi);
       const C = [c * U[0] + s * V[0], c * U[1] + s * V[1], c * U[2] + s * V[2]];
@@ -234,7 +234,7 @@ export default function OrbitHeading({
 
       const facing = C[2] > 0;
       const set = facing ? front : back;
-      const img = set[i % set.length];
+      const img = set[i % images.length];
       if (!img) return;
 
       ctx.save();
@@ -330,36 +330,40 @@ export default function OrbitHeading({
       }
       if (disposed) return;
 
-      const loaded = await Promise.all(
-        images.map(
-          (src) =>
-            new Promise<HTMLImageElement | null>((resolve) => {
-              const im = new Image();
-              im.onload = () => resolve(im);
-              im.onerror = () => resolve(null);
-              im.src = src;
-            })
-        )
-      );
-      if (disposed) return;
-
-      for (const im of loaded) {
-        if (!im) continue;
-        const tex = buildTexture(im);
-        if (tex) {
-          front.push(tex.front);
-          back.push(tex.back);
-        }
-      }
-
       resize();
       ro.observe(wrap!);
-      if (reduce) {
-        render(0);
-      } else {
-        t0 = performance.now();
-        raf = requestAnimationFrame(frame);
-      }
+
+      // start the ring as soon as the first plate is ready and let the rest
+      // join as they arrive, rather than waiting on the slowest download
+      let started = false;
+      const begin = () => {
+        if (started || disposed) return;
+        started = true;
+        if (reduce) {
+          render(0);
+        } else {
+          t0 = performance.now();
+          raf = requestAnimationFrame(frame);
+        }
+      };
+
+      images.forEach((src, i) => {
+        const im = new Image();
+        im.decoding = "async";
+        im.onload = () => {
+          if (disposed) return;
+          const tex = buildTexture(im);
+          if (tex) {
+            // keep plate order stable so the same photo always sits in the same slot
+            front[i] = tex.front;
+            back[i] = tex.back;
+          }
+          begin();
+          if (reduce) render(0);
+        };
+        im.onerror = () => begin();
+        im.src = src;
+      });
     }
 
     start();

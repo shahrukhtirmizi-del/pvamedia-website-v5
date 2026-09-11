@@ -9,6 +9,7 @@ import Pricing from "./components/sections/Pricing";
 import WhatYouGet from "./components/sections/WhatYouGet";
 import Testimonials from "./components/sections/Testimonials";
 import FinalCTA from "./components/sections/FinalCTA";
+import LaserBand from "./components/fx/LaserBand";
 import { SITE, TICKER } from "./lib/site";
 
 export const metadata: Metadata = {
@@ -41,12 +42,22 @@ export default function Home() {
 
       <Hero />
       <Ticker items={TICKER} />
-      <PainPoints />
-      <CaseStudy />
+
+      {/* the beams run behind two sections at a time and dissolve at each
+          end of the band, so nothing ends on a line. Every other pair. */}
+      <LaserBand centerX={0.55} centerY={-0.25} opacity={0.5}>
+        <PainPoints />
+        <CaseStudy />
+      </LaserBand>
+
       <Portfolio />
       <Services />
-      <Pricing />
-      <WhatYouGet />
+
+      <LaserBand centerX={-0.6} centerY={0.3} opacity={0.42}>
+        <Pricing />
+        <WhatYouGet />
+      </LaserBand>
+
       <Testimonials />
       <FinalCTA />
     </>

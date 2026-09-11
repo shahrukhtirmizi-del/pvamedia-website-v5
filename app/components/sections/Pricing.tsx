@@ -16,8 +16,7 @@ export default function Pricing() {
   return (
     <section
       id="ai-receptionist"
-      className="scroll-mt-24 border-y"
-      style={{ borderColor: "var(--line)" }}
+      className="scroll-mt-24"
     >
       <div className="mx-auto max-w-[1240px] px-5 py-24 md:px-8 md:py-32">
         <div className="grid gap-14 lg:grid-cols-[0.85fr_1.15fr] lg:items-start lg:gap-20">
