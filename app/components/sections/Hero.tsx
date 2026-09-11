@@ -1,7 +1,6 @@
 "use client";
 
-import { useRef, useSyncExternalStore } from "react";
-import type { PointerEvent as ReactPointerEvent } from "react";
+import { useEffect, useRef, useSyncExternalStore } from "react";
 import { ChevronDown } from "lucide-react";
 import ParticleField from "../fx/ParticleField";
 import Reveal from "../ui/Reveal";
@@ -29,34 +28,75 @@ export default function Hero() {
 
   const letters = useRef<(HTMLSpanElement | null)[]>([]);
 
-  /* Light catches the letters near the pointer. Each letter brightens, gains a
-     soft platinum glow and lifts a few pixels, falling off with distance, and
-     everything eases back when the pointer leaves. Styles go straight to the
-     spans from the event, no state, and the transitions do the smoothing. */
-  function onNameMove(e: ReactPointerEvent<HTMLHeadingElement>) {
-    if (e.pointerType !== "mouse") return;
-    for (const el of letters.current) {
-      if (!el) continue;
-      const r = el.getBoundingClientRect();
-      const cx = r.left + r.width / 2;
-      const d = Math.abs(e.clientX - cx);
-      const g = Math.max(0, 1 - d / (r.width * 1.9));
-      el.style.color = `rgba(242,238,223,${(0.5 + 0.5 * g).toFixed(3)})`;
-      el.style.textShadow =
-        g > 0.02
-          ? `0 0 ${(30 * g).toFixed(0)}px rgba(199,206,220,${(0.75 * g).toFixed(3)}), 0 0 ${(70 * g).toFixed(0)}px rgba(199,206,220,${(0.35 * g).toFixed(3)})`
-          : "none";
-      el.style.transform = `translateY(${(-5 * g).toFixed(2)}px)`;
+  /* Light catches the letters near the pointer, from anywhere on the page.
+     A frame loop eases each letter toward its target brightness, so the glow
+     tracks the pointer with no transition lag, and the colour is the site's
+     own: a platinum core blooming into cool blue. */
+  useEffect(() => {
+    const fine = window.matchMedia("(pointer: fine)").matches;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!fine || reduce) return;
+
+    let px = -9999;
+    let py = -9999;
+    let raf = 0;
+    const cur = new Array(letters.current.length).fill(0);
+    let idle = 0;
+
+    function onMove(e: PointerEvent) {
+      px = e.clientX;
+      py = e.clientY;
+      idle = 0;
+      if (!raf) raf = requestAnimationFrame(tick);
     }
-  }
-  function onNameLeave() {
-    for (const el of letters.current) {
-      if (!el) continue;
-      el.style.color = "rgba(242,238,223,0.5)";
-      el.style.textShadow = "none";
-      el.style.transform = "translateY(0)";
+    function onLeave() {
+      px = -9999;
+      py = -9999;
+      if (!raf) raf = requestAnimationFrame(tick);
     }
-  }
+
+    function tick() {
+      let live = false;
+      for (let i = 0; i < letters.current.length; i++) {
+        const el = letters.current[i];
+        if (!el) continue;
+        const r = el.getBoundingClientRect();
+        const cx = r.left + r.width / 2;
+        const cy = r.top + r.height / 2;
+        const dx = (px - cx) / (r.width * 1.7);
+        const dy = (py - cy) / (r.height * 1.1);
+        const target = Math.max(0, 1 - Math.sqrt(dx * dx + dy * dy));
+        const g = cur[i] + (target - cur[i]) * 0.32;
+        cur[i] = Math.abs(g) < 0.002 ? 0 : g;
+        if (cur[i] > 0 || target > 0) live = true;
+
+        const v = cur[i];
+        const rC = Math.round(242 - 20 * v);
+        const gC = Math.round(238 + 4 * v);
+        const bC = Math.round(223 + 25 * v);
+        el.style.color = `rgba(${rC},${gC},${bC},${(0.5 + 0.5 * v).toFixed(3)})`;
+        el.style.textShadow =
+          v > 0.01
+            ? `0 0 ${(16 * v).toFixed(1)}px rgba(199,206,220,${(0.95 * v).toFixed(3)}), ` +
+              `0 0 ${(46 * v).toFixed(1)}px rgba(122,152,235,${(0.6 * v).toFixed(3)}), ` +
+              `0 0 ${(110 * v).toFixed(1)}px rgba(122,152,235,${(0.32 * v).toFixed(3)})`
+            : "none";
+        el.style.transform = `translateY(${(-5 * v).toFixed(2)}px)`;
+      }
+      idle++;
+      // keep easing while anything is lit or the pointer just moved
+      if (live || idle < 2) raf = requestAnimationFrame(tick);
+      else raf = 0;
+    }
+
+    window.addEventListener("pointermove", onMove, { passive: true });
+    document.documentElement.addEventListener("mouseleave", onLeave);
+    return () => {
+      window.removeEventListener("pointermove", onMove);
+      document.documentElement.removeEventListener("mouseleave", onLeave);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
 
   const frame = wide
     ? { x: 0.5 - 0.065, y: 0.2, w: 0.13, h: 0.64, r: 0.02 }
@@ -75,8 +115,6 @@ export default function Hero() {
             <h1
               className="font-display w-full whitespace-nowrap font-bold uppercase"
               aria-label={NAME}
-              onPointerMove={onNameMove}
-              onPointerLeave={onNameLeave}
               style={{
                 fontSize: "clamp(44px, 15.2vw, 262px)",
                 lineHeight: 0.9,
@@ -91,11 +129,7 @@ export default function Hero() {
                   ref={(el) => {
                     letters.current[i] = el;
                   }}
-                  className="inline-block"
-                  style={{
-                    transition:
-                      "color 0.4s ease, text-shadow 0.5s ease, transform 0.6s cubic-bezier(0.22,1,0.36,1)",
-                  }}
+                  className="inline-block will-change-transform"
                 >
                   {ch === " " ? "\u00a0" : ch}
                 </span>
