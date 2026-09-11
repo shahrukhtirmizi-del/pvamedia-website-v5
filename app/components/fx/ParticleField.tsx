@@ -63,6 +63,8 @@ export default function ParticleField({
     let halo: { x: number; y: number; r: number; a: number; tw: number; ph: number }[] = [];
     let framePoint: ((t: number) => [number, number]) | null = null;
     let starC = { x: 0, y: 0 };
+    let starHome = { x: 0, y: 0 };
+    let frameBox = { x0: 0, y0: 0, x1: 0, y1: 0 };
 
     function seedFree() {
       const target = Math.round(
@@ -134,7 +136,10 @@ export default function ParticleField({
           oy: 0,
         });
       }
-      starC = { x: x0 + w * 0.22, y: y0 + h * 0.09 };
+      starHome = { x: x0 + w * 0.22, y: y0 + h * 0.09 };
+      starC = { ...starHome };
+      const inset = 26 * dpr;
+      frameBox = { x0: x0 + inset, y0: y0 + inset, x1: x0 + w - inset, y1: y0 + h - inset };
 
       // a cloud of light gathered around the star, thickest at its centre
       halo = [];
@@ -284,6 +289,16 @@ export default function ParticleField({
         ctx.drawImage(dotSprite!, x - size / 2, y - size / 2, size, size);
       }
       ctx.globalAlpha = 1;
+
+      // the star goes where the pointer goes, but only inside the frame;
+      // outside it, it drifts back to its place at the head
+      if (frame) {
+        const inside = px > frameBox.x0 && px < frameBox.x1 && py > frameBox.y0 && py < frameBox.y1;
+        const tx = inside ? px : starHome.x;
+        const ty = inside ? py : starHome.y;
+        starC.x += (tx - starC.x) * 0.08;
+        starC.y += (ty - starC.y) * 0.08;
+      }
 
       for (const h of halo) {
         const twinkle = 0.5 + 0.5 * Math.sin(t * 0.0014 * h.tw + h.ph);

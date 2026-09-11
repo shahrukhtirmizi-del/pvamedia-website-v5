@@ -1,10 +1,12 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useRef, useSyncExternalStore } from "react";
+import type { PointerEvent as ReactPointerEvent } from "react";
 import { ChevronDown } from "lucide-react";
 import ParticleField from "../fx/ParticleField";
 import Reveal from "../ui/Reveal";
 
+const NAME = "PVA MEDIA";
 const WIDE = "(min-width: 768px)";
 function subscribeWide(cb: () => void) {
   const mq = window.matchMedia(WIDE);
@@ -25,6 +27,37 @@ export default function Hero() {
     () => true
   );
 
+  const letters = useRef<(HTMLSpanElement | null)[]>([]);
+
+  /* Light catches the letters near the pointer. Each letter brightens, gains a
+     soft platinum glow and lifts a few pixels, falling off with distance, and
+     everything eases back when the pointer leaves. Styles go straight to the
+     spans from the event, no state, and the transitions do the smoothing. */
+  function onNameMove(e: ReactPointerEvent<HTMLHeadingElement>) {
+    if (e.pointerType !== "mouse") return;
+    for (const el of letters.current) {
+      if (!el) continue;
+      const r = el.getBoundingClientRect();
+      const cx = r.left + r.width / 2;
+      const d = Math.abs(e.clientX - cx);
+      const g = Math.max(0, 1 - d / (r.width * 1.9));
+      el.style.color = `rgba(242,238,223,${(0.5 + 0.5 * g).toFixed(3)})`;
+      el.style.textShadow =
+        g > 0.02
+          ? `0 0 ${(30 * g).toFixed(0)}px rgba(199,206,220,${(0.75 * g).toFixed(3)}), 0 0 ${(70 * g).toFixed(0)}px rgba(199,206,220,${(0.35 * g).toFixed(3)})`
+          : "none";
+      el.style.transform = `translateY(${(-5 * g).toFixed(2)}px)`;
+    }
+  }
+  function onNameLeave() {
+    for (const el of letters.current) {
+      if (!el) continue;
+      el.style.color = "rgba(242,238,223,0.5)";
+      el.style.textShadow = "none";
+      el.style.transform = "translateY(0)";
+    }
+  }
+
   const frame = wide
     ? { x: 0.5 - 0.065, y: 0.2, w: 0.13, h: 0.64, r: 0.02 }
     : { x: 0.5 - 0.2, y: 0.2, w: 0.4, h: 0.58, r: 0.03 };
@@ -33,7 +66,7 @@ export default function Hero() {
     <section className="relative overflow-hidden">
       <div className="relative min-h-[calc(100dvh-64px)] md:min-h-[calc(100dvh-72px)]">
         {/* the light paints over the name, as it does in the reference */}
-        <div className="absolute inset-0 z-10" aria-hidden>
+        <div className="pointer-events-none absolute inset-0 z-10" aria-hidden>
           <ParticleField frame={frame} star density={0.5} maxDpr={1.5} />
         </div>
 
@@ -41,6 +74,9 @@ export default function Hero() {
           <Reveal className="w-full">
             <h1
               className="font-display w-full whitespace-nowrap font-bold uppercase"
+              aria-label={NAME}
+              onPointerMove={onNameMove}
+              onPointerLeave={onNameLeave}
               style={{
                 fontSize: "clamp(44px, 15.2vw, 262px)",
                 lineHeight: 0.9,
@@ -48,7 +84,22 @@ export default function Hero() {
                 color: "rgba(242,238,223,0.5)",
               }}
             >
-              PVA Media
+              {NAME.split("").map((ch, i) => (
+                <span
+                  key={i}
+                  aria-hidden
+                  ref={(el) => {
+                    letters.current[i] = el;
+                  }}
+                  className="inline-block"
+                  style={{
+                    transition:
+                      "color 0.4s ease, text-shadow 0.5s ease, transform 0.6s cubic-bezier(0.22,1,0.36,1)",
+                  }}
+                >
+                  {ch === " " ? "\u00a0" : ch}
+                </span>
+              ))}
             </h1>
           </Reveal>
 
