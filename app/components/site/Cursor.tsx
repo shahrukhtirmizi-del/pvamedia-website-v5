@@ -27,6 +27,7 @@ export default function Cursor() {
     let ty = -100;
     let rx = -100;
     let ry = -100;
+    let scale = 1;
     let raf = 0;
     let shown = false;
 
@@ -42,13 +43,16 @@ export default function Cursor() {
       }
       const target = (e.target as Element | null)?.closest(INTERACTIVE);
       ring!.classList.toggle("is-hover", !!target);
+      readScale();
     }
 
     function onDown() {
       ring!.classList.add("is-down");
+      readScale();
     }
     function onUp() {
       ring!.classList.remove("is-down");
+      readScale();
     }
     function onLeave() {
       dot!.classList.add("is-hidden");
@@ -61,11 +65,19 @@ export default function Cursor() {
       }
     }
 
+    let targetScale = 1;
+    function readScale() {
+      targetScale = ring!.classList.contains("is-down") ? 0.72 : ring!.classList.contains("is-hover") ? 1.8 : 1;
+    }
+
     function loop() {
-      rx += (tx - rx) * 0.16;
-      ry += (ty - ry) * 0.16;
+      // the dot is the pointer, so it never lags; only the ring trails, and
+      // its size is a transform so hover costs no layout
+      rx += (tx - rx) * 0.3;
+      ry += (ty - ry) * 0.3;
+      scale += (targetScale - scale) * 0.2;
       dot!.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
-      ring!.style.transform = `translate3d(${rx}px, ${ry}px, 0)`;
+      ring!.style.transform = `translate3d(${rx}px, ${ry}px, 0) scale(${scale.toFixed(3)})`;
       raf = requestAnimationFrame(loop);
     }
 

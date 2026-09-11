@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Check } from "lucide-react";
-import ParticleField from "../components/fx/ParticleField";
 import Reveal from "../components/ui/Reveal";
 import { SITE } from "../lib/site";
 
@@ -15,9 +14,6 @@ export const metadata: Metadata = {
 export default function ThankYouPage() {
   return (
     <section className="relative overflow-hidden">
-      <div className="absolute inset-0" aria-hidden>
-        <ParticleField />
-      </div>
 
       <div className="relative mx-auto flex min-h-[74vh] max-w-[760px] flex-col items-center justify-center px-5 py-24 text-center md:px-8">
         <Reveal>

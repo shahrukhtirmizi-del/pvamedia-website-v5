@@ -11,7 +11,7 @@ const PHOTO = [
   "/images/portfolio/t9-hero.jpg",
   "/images/portfolio/t10-real.jpg",
   "/images/portfolio/t6-gallery-1.jpg",
-  "/images/portfolio/t8-hero.jpg",
+  "/images/portfolio/t6-hero.jpg",
 ];
 
 const SPANS = [

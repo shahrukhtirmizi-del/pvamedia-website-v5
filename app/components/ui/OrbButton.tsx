@@ -46,12 +46,14 @@ export default function OrbButton({
       onPointerLeave={reset}
       style={{ transition: "translate 0.5s cubic-bezier(0.22,1,0.36,1), transform 0.5s cubic-bezier(0.22,1,0.36,1)" }}
     >
+      <span className="orb__halo" aria-hidden />
       <span className="orb__ring" aria-hidden />
       <span className="orb__sweep" aria-hidden />
       <span className="orb__comet" aria-hidden />
       <span className="orb__disc" aria-hidden />
+      <span className="orb__inner" aria-hidden />
       <span className="orb__label">
-        <span className="font-display text-[15px] font-semibold leading-tight">{label}</span>
+        <span className="font-display text-[17px] font-semibold leading-tight">{label}</span>
         {sub && (
           <span className="font-mono text-[9.5px] uppercase tracking-[0.16em]" style={{ color: "var(--ink-45)" }}>
             {sub}

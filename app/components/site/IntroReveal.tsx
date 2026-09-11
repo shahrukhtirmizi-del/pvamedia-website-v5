@@ -42,20 +42,14 @@ function rng(s: number) {
 
 const noopSubscribe = () => () => {};
 
-/** Play once per session, and never when the user has asked for less motion. */
+/** Plays on every full page load. Skipped only when the user has asked the OS for less motion. */
 function shouldSkip() {
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return true;
-  try {
-    return sessionStorage.getItem("pva-intro") === "1";
-  } catch {
-    /* storage blocked, treat as unseen and just play it */
-    return false;
-  }
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
 export default function IntroReveal() {
-  // read during render, not from an effect, so a repeat visit never paints
-  // the overlay at all
+  // read during render, not from an effect, so a reduced-motion visit never
+  // paints the overlay at all
   const skip = useSyncExternalStore(noopSubscribe, shouldSkip, () => false);
   const [finished, setFinished] = useState(false);
   const [leaving, setLeaving] = useState(false);
@@ -122,11 +116,6 @@ export default function IntroReveal() {
     }
 
     function finish() {
-      try {
-        sessionStorage.setItem("pva-intro", "1");
-      } catch {
-        /* nothing to do, the intro simply plays again next load */
-      }
       document.body.style.overflow = prevOverflow;
       document.documentElement.removeAttribute("data-intro");
       setFinished(true);

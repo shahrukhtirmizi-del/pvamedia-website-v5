@@ -282,15 +282,13 @@ export const TESTIMONIALS = [
     quote:
       "The site paid for itself in the first fortnight. We stopped chasing work and started picking it.",
     name: "James",
-    company: "Austin Landscaping",
-    location: "TX",
+    location: "Texas",
   },
   {
     quote:
       "Every call gets answered now, even when the whole crew is out. That alone changed the month.",
     name: "Ryan",
-    company: "California Green Landscaping",
-    location: "CA",
+    location: "California",
   },
 ];
 

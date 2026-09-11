@@ -1,5 +1,4 @@
 import Link from "next/link";
-import ParticleField from "./components/fx/ParticleField";
 import Reveal from "./components/ui/Reveal";
 import { NAV } from "./lib/site";
 
@@ -11,9 +10,6 @@ export const metadata = {
 export default function NotFound() {
   return (
     <section className="relative overflow-hidden">
-      <div className="absolute inset-0" aria-hidden>
-        <ParticleField />
-      </div>
 
       <div className="relative mx-auto flex min-h-[78vh] max-w-[760px] flex-col items-center justify-center px-5 py-24 text-center md:px-8">
         <Reveal>

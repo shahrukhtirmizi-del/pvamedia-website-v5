@@ -1,14 +1,15 @@
 import Reveal from "../ui/Reveal";
+import LaserBackground from "../fx/LaserBackground";
 import Stars from "../ui/Stars";
 import { TESTIMONIALS } from "../../lib/site";
 
 export default function Testimonials() {
   return (
-    <section
-      className="border-y"
-      style={{ borderColor: "var(--line)" }}
-    >
-      <div className="mx-auto max-w-[1240px] px-5 py-24 md:px-8 md:py-32">
+    <section className="relative overflow-hidden border-y" style={{ borderColor: "var(--line)" }}>
+      <div className="absolute inset-0 z-0" aria-hidden>
+        <LaserBackground centerX={-1.1} centerY={0.55} opacity={0.38} scale={0.5} />
+      </div>
+      <div className="relative z-10 mx-auto max-w-[1240px] px-5 py-24 md:px-8 md:py-32">
         <Reveal>
           <p
             className="font-mono mb-12 text-[11px] uppercase tracking-[0.2em] md:mb-16"
@@ -37,9 +38,9 @@ export default function Testimonials() {
                 </blockquote>
 
                 <figcaption className="mt-auto pt-8 text-[14px]" style={{ color: "var(--ink-60)" }}>
-                  <span style={{ color: "var(--ink)" }}>{item.name}</span>
+                  <span style={{ color: "var(--ink)" }}>{item.name}</span>, {item.location}
                   <br />
-                  {item.company}, {item.location}
+                  Landscaping company owner
                 </figcaption>
               </figure>
             </Reveal>

@@ -1,4 +1,5 @@
 import Reveal from "../ui/Reveal";
+import LaserBackground from "../fx/LaserBackground";
 import CountUp from "../ui/CountUp";
 import FillBar from "../ui/FillBar";
 import ScrollWords from "../ui/ScrollWords";
@@ -11,8 +12,12 @@ import { CASE_STUDY } from "../../lib/site";
  */
 export default function CaseStudy() {
   return (
-    <section className="border-y" style={{ borderColor: "var(--line)" }}>
-      <div className="mx-auto max-w-[1240px] px-5 py-28 md:px-8 md:py-40">
+    <section className="relative overflow-hidden border-y" style={{ borderColor: "var(--line)" }}>
+      {/* the beams meet off to the right this time, low, so the quote sits in their light */}
+      <div className="absolute inset-0 z-0" aria-hidden>
+        <LaserBackground centerX={0.95} centerY={-0.35} opacity={0.5} scale={0.5} />
+      </div>
+      <div className="relative z-10 mx-auto max-w-[1240px] px-5 py-28 md:px-8 md:py-40">
         <ScrollWords
           as="blockquote"
           text={`“${CASE_STUDY.quote}”`}

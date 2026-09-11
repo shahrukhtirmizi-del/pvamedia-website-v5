@@ -32,8 +32,8 @@ export default function Portfolio() {
             className="mx-auto -mt-2 max-w-[52ch] text-center text-[16px] leading-relaxed md:text-[18px]"
             style={{ color: "var(--ink-60)" }}
           >
-            Eight directions a landscaping site can take. Every one is built around the crew{"’"}s
-            own work, and none of them is a template.
+            Eight landscaping sites, eight different directions. Every one is built around the
+            crew{"’"}s own work, and none of them is a template.
           </p>
         </Reveal>
       </div>
@@ -49,14 +49,14 @@ export default function Portfolio() {
                   tabIndex={copy === 1 ? -1 : 0}
                   onClick={() => setActive(m)}
                   aria-haspopup="dialog"
-                  aria-label={`${m.name}, ${m.direction}. Open larger.`}
+                  aria-label={`${m.client}, ${m.state}. ${m.direction}. Open larger.`}
                   className="surface card-lift group w-[78vw] shrink-0 p-2.5 text-left sm:w-[56vw] md:w-[520px]"
                   style={{ borderRadius: "var(--radius-card)" }}
                 >
                   <m.Component />
                   <div className="flex items-center justify-between px-3 pb-2 pt-4">
                     <div>
-                      <div className="font-display text-[16px] font-semibold">{m.name}</div>
+                      <div className="font-display text-[16px] font-semibold">{m.client}, {m.state}</div>
                       <div
                         className="font-mono mt-1 text-[10px] uppercase tracking-[0.16em]"
                         style={{ color: "var(--ink-45)" }}
@@ -95,11 +95,12 @@ export default function Portfolio() {
           className="font-mono mx-auto mt-10 max-w-[60ch] px-5 text-center text-[11px] uppercase leading-relaxed tracking-[0.16em] md:px-8"
           style={{ color: "var(--ink-30)" }}
         >
-          Concept directions. Yours is designed from scratch around your photography.
+          Company names are blurred at our clients{"’"} request. Ask on the call and we will walk you
+          through any of them.
         </p>
       </Reveal>
 
-      <Modal open={active !== null} onClose={() => setActive(null)} label={active ? active.name : "Concept"}>
+      <Modal open={active !== null} onClose={() => setActive(null)} label={active ? `${active.client}, ${active.state}` : "Site"}>
         {active && (
           <div>
             <div className="-mx-2 sm:-mx-3">
@@ -115,7 +116,7 @@ export default function Portfolio() {
               className="font-display mt-3 font-semibold"
               style={{ fontSize: "clamp(26px, 4vw, 36px)", lineHeight: 1.12 }}
             >
-              {active.name}
+              {active.client}, {active.state}
             </h3>
             <p className="mt-4 text-[15.5px] leading-relaxed" style={{ color: "var(--ink-80)" }}>
               {active.note}

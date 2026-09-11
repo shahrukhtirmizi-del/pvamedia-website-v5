@@ -22,6 +22,7 @@ export default function ParticleField({
   frame,
   star = false,
   fixed = false,
+  maxDpr = 2,
 }: {
   className?: string;
   /** multiplier on the free-particle count */
@@ -32,6 +33,8 @@ export default function ParticleField({
   star?: boolean;
   /** rendering behind a scrolling page: keep going even when "not visible" */
   fixed?: boolean;
+  /** cap on device pixel ratio; the page-wide layer runs at 1 */
+  maxDpr?: number;
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
 
@@ -130,13 +133,14 @@ export default function ParticleField({
 
     function resize() {
       if (!cv) return;
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
       W = Math.max(1, Math.round(cv.clientWidth * dpr));
       H = Math.max(1, Math.round(cv.clientHeight * dpr));
       cv.width = W;
       cv.height = H;
       seedFree();
       seedFrame();
+      if (star) buildStar();
     }
 
     function onPointerMove(e: PointerEvent) {
@@ -146,29 +150,59 @@ export default function ParticleField({
       py = (e.clientY - rect.top) * dpr;
     }
 
-    function drawStar(t: number) {
-      if (!ctx || !star || !frame) return;
-      const breathe = 0.85 + 0.15 * Math.sin(t * 0.0016);
-      const s = 13 * dpr * breathe;
-      const { x, y } = starC;
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.shadowColor = "rgba(199,206,220,0.9)";
-      ctx.shadowBlur = 22 * dpr;
-      ctx.fillStyle = "rgba(226,232,242,0.95)";
-      ctx.beginPath();
+    /* the star's glow is a shadowBlur, which is expensive per frame, so it is
+       drawn once to a sprite and only scaled while breathing */
+    let starSprite: HTMLCanvasElement | null = null;
+
+    /* one soft dot, blitted for every particle: drawImage is far cheaper than
+       an arc + fill per particle per frame */
+    let dotSprite: HTMLCanvasElement | null = null;
+    const DOT = 16;
+    function buildDot() {
+      const c = document.createElement("canvas");
+      c.width = c.height = DOT;
+      const x = c.getContext("2d");
+      if (!x) return;
+      const g = x.createRadialGradient(DOT / 2, DOT / 2, 0, DOT / 2, DOT / 2, DOT / 2);
+      g.addColorStop(0, "rgba(214,222,236,1)");
+      g.addColorStop(0.45, "rgba(214,222,236,0.55)");
+      g.addColorStop(1, "rgba(214,222,236,0)");
+      x.fillStyle = g;
+      x.fillRect(0, 0, DOT, DOT);
+      dotSprite = c;
+    }
+    buildDot();
+    function buildStar() {
+      const s = 13 * dpr;
+      const pad = 30 * dpr;
+      const c = document.createElement("canvas");
+      c.width = c.height = Math.ceil((s + pad) * 2);
+      const x = c.getContext("2d");
+      if (!x) return;
+      x.translate(c.width / 2, c.height / 2);
+      x.shadowColor = "rgba(199,206,220,0.9)";
+      x.shadowBlur = 22 * dpr;
+      x.fillStyle = "rgba(226,232,242,0.95)";
+      x.beginPath();
       // four-point star: long spikes, pinched waist
       for (let i = 0; i < 8; i++) {
         const ang = (i * Math.PI) / 4 - Math.PI / 2;
         const rad = i % 2 === 0 ? s : s * 0.22;
         const xx = Math.cos(ang) * rad;
         const yy = Math.sin(ang) * rad;
-        if (i === 0) ctx.moveTo(xx, yy);
-        else ctx.lineTo(xx, yy);
+        if (i === 0) x.moveTo(xx, yy);
+        else x.lineTo(xx, yy);
       }
-      ctx.closePath();
-      ctx.fill();
-      ctx.restore();
+      x.closePath();
+      x.fill();
+      starSprite = c;
+    }
+
+    function drawStar(t: number) {
+      if (!ctx || !star || !frame || !starSprite) return;
+      const breathe = 0.85 + 0.15 * Math.sin(t * 0.0016);
+      const w = starSprite.width * breathe;
+      ctx.drawImage(starSprite, starC.x - w / 2, starC.y - w / 2, w, w);
     }
 
     function draw(t: number) {
@@ -192,33 +226,36 @@ export default function ParticleField({
         const d2 = dx * dx + dy * dy;
         const near = d2 < reach * reach ? 1 - Math.sqrt(d2) / reach : 0;
         const alpha = Math.min(1, p.a * twinkle + near * 0.55);
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r * (1 + near * 0.9), 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(199,206,220,${alpha.toFixed(3)})`;
-        ctx.fill();
+        const size = p.r * 2.6 * (1 + near * 0.9);
+        ctx.globalAlpha = alpha;
+        ctx.drawImage(dotSprite!, p.x - size / 2, p.y - size / 2, size, size);
       }
 
       for (const f of ring) {
         const twinkle = 0.55 + 0.45 * Math.sin(t * 0.0012 * f.tw + f.ph);
         const x = f.bx + f.jx + Math.sin(t * 0.0007 + f.ph) * 0.6 * dpr;
         const y = f.by + f.jy + Math.cos(t * 0.0009 + f.ph) * 0.6 * dpr;
-        ctx.beginPath();
-        ctx.arc(x, y, f.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(214,222,236,${(f.a * twinkle).toFixed(3)})`;
-        ctx.fill();
+        const size = f.r * 2.4;
+        ctx.globalAlpha = f.a * twinkle;
+        ctx.drawImage(dotSprite!, x - size / 2, y - size / 2, size, size);
       }
+      ctx.globalAlpha = 1;
 
       drawStar(t);
     }
 
+    let lastDraw = 0;
     function frameLoop(now: number) {
       if (disposed) return;
       if (!visible && !fixed) {
         raf = 0;
         return;
       }
-      draw(now);
+      // the page-wide dust drifts slowly; every other frame is plenty
+      if (!fixed || now - lastDraw >= 30) {
+        lastDraw = now;
+        draw(now);
+      }
       raf = requestAnimationFrame(frameLoop);
     }
 

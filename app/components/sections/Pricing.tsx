@@ -6,7 +6,7 @@ import { Check } from "lucide-react";
 import Modal from "../ui/Modal";
 import Reveal from "../ui/Reveal";
 import Stagger from "../ui/Stagger";
-import ResponseDial from "../ui/ResponseDial";
+import CallTimeline from "../ui/CallTimeline";
 import TiltCard from "../ui/TiltCard";
 import { TIERS, type Tier } from "../../lib/site";
 
@@ -20,7 +20,7 @@ export default function Pricing() {
       style={{ borderColor: "var(--line)" }}
     >
       <div className="mx-auto max-w-[1240px] px-5 py-24 md:px-8 md:py-32">
-        <div className="grid gap-14 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
+        <div className="grid gap-14 lg:grid-cols-[0.85fr_1.15fr] lg:items-start lg:gap-20">
           <div>
             <Reveal>
               <p
@@ -44,10 +44,10 @@ export default function Pricing() {
               </p>
             </Reveal>
 
-            {/* a dial because the number it reports is a time */}
+            {/* the number, then the call it describes, replaying */}
             <Reveal delay={140}>
-              <div className="mt-12 inline-block">
-                <ResponseDial value="<60s" label="Average lead response" size={270} />
+              <div className="mt-12">
+                <CallTimeline value="<60s" label="Average lead response" />
               </div>
             </Reveal>
           </div>

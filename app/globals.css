@@ -357,7 +357,6 @@ body {
    -------------------------------------------------------------------------- */
 .sw > span {
   display: inline-block;
-  will-change: opacity;
 }
 
 @supports (animation-timeline: view()) {
@@ -416,32 +415,28 @@ body {
   mix-blend-mode: difference;
 }
 
+/* the ring scales with a transform, never width or height, so hover
+   changes cost no layout */
 .cursor-ring {
+  --s: 1;
   width: 38px;
   height: 38px;
   margin: -19px 0 0 -19px;
   border: 1px solid rgba(242, 238, 223, 0.55);
   transition:
-    width 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    height 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    margin 0.35s cubic-bezier(0.22, 1, 0.36, 1),
     background-color 0.35s ease,
     border-color 0.35s ease,
     opacity 0.3s ease;
 }
 
 .cursor-ring.is-hover {
-  width: 68px;
-  height: 68px;
-  margin: -34px 0 0 -34px;
+  --s: 1.8;
   border-color: rgba(199, 206, 220, 0.9);
   background: rgba(199, 206, 220, 0.1);
 }
 
 .cursor-ring.is-down {
-  width: 28px;
-  height: 28px;
-  margin: -14px 0 0 -14px;
+  --s: 0.72;
 }
 
 .cursor-dot.is-hidden,
@@ -617,5 +612,75 @@ body {
   }
   .sw > span {
     opacity: 1 !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Orb, second pass: larger, a soft halo behind it, a slow float, and the
+   disc inverts to ivory on hover.
+   -------------------------------------------------------------------------- */
+@keyframes orb-float {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -7px; }
+}
+
+.orb {
+  width: 224px;
+  height: 224px;
+}
+
+.orb__halo {
+  position: absolute;
+  inset: -34px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(199, 206, 220, 0.16), rgba(199, 206, 220, 0.04) 45%, transparent 68%);
+  filter: blur(6px);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.orb__disc {
+  inset: 18px;
+  background: radial-gradient(circle at 38% 32%, rgba(24, 38, 78, 0.98), rgba(6, 13, 34, 0.98) 70%);
+  transition:
+    box-shadow 0.5s ease,
+    border-color 0.5s ease,
+    background 0.5s ease;
+}
+
+.orb__label {
+  color: var(--ink);
+  transition: color 0.4s ease;
+}
+
+.orb__inner {
+  position: absolute;
+  inset: 24px;
+  border-radius: 999px;
+  border: 1px dashed rgba(242, 238, 223, 0.14);
+  animation: orb-spin 60s linear infinite reverse;
+}
+
+.orb__float {
+  animation: orb-float 6s ease-in-out infinite;
+}
+
+.orb:hover .orb__disc {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+.orb:hover .orb__label,
+.orb:hover .orb__label .orb__arrow,
+.orb:hover .orb__label span {
+  color: var(--bg) !important;
+}
+.orb:hover .orb__halo {
+  opacity: 1;
+  transform: scale(1.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orb__float,
+  .orb__inner {
+    animation: none !important;
   }
 }

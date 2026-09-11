@@ -16,7 +16,9 @@ const SERIF = "var(--font-serif), Georgia, serif";
 
 export type Mockup = {
   slug: string;
-  name: string;
+  /** shown on the card: the client's first name and their state */
+  client: string;
+  state: string;
   direction: string;
   note: string;
   cover: string;
@@ -50,6 +52,15 @@ function Photo({
 
 const abs = (s: CSSProperties): CSSProperties => ({ position: "absolute", ...s });
 
+/** Company and personal names are softened out of every concept for privacy. */
+function Blur({ children, amount = 0.55 }: { children: ReactNode; amount?: number }) {
+  return (
+    <span aria-hidden style={{ filter: `blur(${amount}cqw)`, userSelect: "none", display: "inline-block" }}>
+      {children}
+    </span>
+  );
+}
+
 /* 1 ─ split screen, two photographs meeting at the seam, type across both */
 function Northline() {
   return (
@@ -75,7 +86,7 @@ function Northline() {
           letterSpacing: "0.22em",
         })}
       >
-        <span style={{ fontWeight: 600 }}>NORTHLINE</span>
+        <Blur><span style={{ fontWeight: 600 }}>NORTHLINE</span></Blur>
         <span style={{ display: "flex", gap: "3cqw", fontSize: "1.6cqw", letterSpacing: "0.08em", color: "#0b1220", fontWeight: 600 }}>
           <span>Work</span>
           <span>Services</span>
@@ -113,14 +124,14 @@ function SableStone() {
   return (
     <div className="mock" style={{ background: "#ecebe6" }}>
       <div style={abs({ top: "3cqw", left: "3.5cqw", fontFamily: SANS, fontSize: "3.2cqw", fontWeight: 700, lineHeight: 0.9, letterSpacing: "-0.05em", color: "#111" })}>
-        S&amp;S
+        <Blur amount={0.9}>S&amp;S</Blur>
         <br />
         26
       </div>
       <div style={abs({ top: "3cqw", left: "18cqw", ...meta })}>
         TAKING PROJECTS FOR SPRING
         <br />
-        <u>HELLO@SABLEANDSTONE.CO</u>
+        <Blur amount={0.4}><u>HELLO@SABLEANDSTONE.CO</u></Blur>
         <br />
         <u>+1 512 555 0148</u>
       </div>
@@ -171,7 +182,7 @@ function SableStone() {
         Westlake Hills
       </div>
       <div style={abs({ bottom: "3cqw", left: "18cqw", ...meta })}>
-        © SABLE &amp; STONE
+        © <Blur amount={0.4}>SABLE &amp; STONE</Blur>
         <br />
         LANDSCAPE CO.
       </div>
@@ -193,7 +204,7 @@ function Verdant() {
         <div style={abs({ inset: 0, background: "linear-gradient(180deg, transparent 55%, rgba(0,0,0,0.75))" })} />
       </div>
       <div style={abs({ top: "3.2cqw", left: "0", right: "0", display: "flex", justifyContent: "center", gap: "8cqw", alignItems: "baseline", color: "#fff" })}>
-        <span style={{ fontFamily: SANS, fontSize: "3cqw", fontWeight: 600, letterSpacing: "-0.03em" }}>Verdant</span>
+        <Blur><span style={{ fontFamily: SANS, fontSize: "3cqw", fontWeight: 600, letterSpacing: "-0.03em" }}>Verdant</span></Blur>
         <span style={{ fontFamily: MONO, fontSize: "1.5cqw", letterSpacing: "0.06em", opacity: 0.9 }}>SAN DIEGO CA 08:42:02 PM</span>
       </div>
       <div style={abs({ bottom: "13cqw", left: "9cqw", fontFamily: SANS, fontSize: "5.4cqw", fontWeight: 600, letterSpacing: "-0.035em", color: "#fff", textShadow: "0 2px 30px rgba(0,0,0,0.5)" })}>
@@ -215,7 +226,7 @@ function Ridgeway() {
       <div style={abs({ top: "4cqw", left: "5cqw", right: "5cqw", display: "flex", justifyContent: "space-between", alignItems: "center", fontFamily: SANS, color: "#1c1c1c" })}>
         <span style={{ display: "flex", alignItems: "center", gap: "1.2cqw", fontSize: "2.3cqw", fontWeight: 500 }}>
           <span style={{ width: "3cqw", height: "3cqw", background: "#1c1c1c", clipPath: "polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)" }} />
-          Ridgeway
+          <Blur>Ridgeway</Blur>
         </span>
         <span style={{ display: "flex", gap: "3.4cqw", fontSize: "1.75cqw", opacity: 0.8 }}>
           <span>Work</span>
@@ -249,7 +260,7 @@ function Ridgeway() {
         <div style={{ fontSize: "1.6cqw", opacity: 0.55, marginBottom: "2cqw" }}>News</div>
         <div style={{ fontSize: "2.1cqw", fontWeight: 600, lineHeight: 1.25 }}>Barton Creek pool house.</div>
         <div style={{ fontSize: "1.55cqw", opacity: 0.6, lineHeight: 1.5, marginTop: "1.4cqw" }}>
-          Ridgeway completes a two acre hill country garden with a spring fed pool.
+          The studio completes a two acre hill country garden with a spring fed pool.
         </div>
       </div>
     </div>
@@ -266,7 +277,7 @@ function Halcyon() {
   return (
     <div className="mock" style={{ background: "#b1a5a0" }}>
       <div style={abs({ top: "4cqw", left: "6cqw", right: "6cqw", display: "flex", justifyContent: "space-between", alignItems: "center", color: "#fff", fontFamily: SERIF })}>
-        <span style={{ fontSize: "3.6cqw", letterSpacing: "0.5em" }}>HALCYON</span>
+        <Blur amount={0.8}><span style={{ fontSize: "3.6cqw", letterSpacing: "0.5em" }}>HALCYON</span></Blur>
         <span style={{ display: "flex", gap: "3cqw", fontFamily: SANS, fontSize: "1.45cqw", letterSpacing: "0.3em" }}>
           <span>ABOUT</span>
           <span>PORTFOLIO</span>
@@ -286,9 +297,9 @@ function Halcyon() {
         Rooms
       </div>
       <div style={abs({ top: "52cqw", left: "0", right: "0", textAlign: "center", color: "#fff", fontFamily: SANS, fontSize: "1.45cqw", letterSpacing: "0.42em", lineHeight: 1.9 })}>
-        LEONA MARCH
+        <Blur amount={0.4}>LEONA MARCH</Blur>
         <br />
-        &amp; TOBIAS HALE
+        &amp; <Blur amount={0.4}>TOBIAS HALE</Blur>
       </div>
     </div>
   );
@@ -310,7 +321,7 @@ function TerraForma() {
           <span style={pill}>PROCESS</span>
           <span style={pill}>ABOUT</span>
         </span>
-        <span style={{ fontFamily: SERIF, fontSize: "3.2cqw", letterSpacing: "-0.01em" }}>Terra Forma</span>
+        <Blur><span style={{ fontFamily: SERIF, fontSize: "3.2cqw", letterSpacing: "-0.01em" }}>Terra Forma</span></Blur>
         <span style={{ display: "flex", gap: "0.8cqw" }}>
           <span style={pill}>INSTAGRAM</span>
           <span style={pill}>EMAIL</span>
@@ -339,7 +350,7 @@ function BluffCreek() {
       <Photo src="/images/portfolio/t2-hero.jpg" style={{ filter: "blur(14px) brightness(0.42) saturate(1.2)", transform: "scale(1.15)" }} />
       <div style={abs({ inset: 0, background: "linear-gradient(90deg, rgba(0,0,0,0.55), transparent 50%, rgba(0,0,0,0.4))" })} />
       <div style={abs({ top: "3.5cqw", left: "4cqw", right: "4cqw", display: "flex", justifyContent: "space-between", alignItems: "center", color: "#fff" })}>
-        <span style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: "4.4cqw" }}>Bluff Creek</span>
+        <Blur amount={0.8}><span style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: "4.4cqw" }}>Bluff Creek</span></Blur>
         <span style={{ background: "#f4f4f0", color: "#111", borderRadius: "0.6cqw", padding: "1.2cqw 2cqw", width: "22cqw", display: "flex", justifyContent: "space-between", fontFamily: SANS, fontSize: "1.5cqw", fontWeight: 700 }}>
           <span>Menu</span>
           <span>≡</span>
@@ -369,7 +380,7 @@ function Oakhaven() {
       <div style={abs({ inset: 0, background: "linear-gradient(180deg, rgba(40,26,14,0.35), rgba(40,26,14,0.15) 50%, rgba(40,26,14,0.55))" })} />
       <div style={abs({ top: "4cqw", left: "5cqw", right: "5cqw", display: "flex", justifyContent: "space-between", alignItems: "center", color: "#fff", fontFamily: SANS })}>
         <span style={{ fontSize: "2.4cqw" }}>
-          <b>oakhaven</b> landscapes
+          <Blur><b>oakhaven</b></Blur> landscapes
         </span>
         <span style={{ display: "flex", gap: "3cqw", fontSize: "2cqw", opacity: 0.9 }}>
           <span>projects</span>
@@ -384,7 +395,7 @@ function Oakhaven() {
       </div>
       <div style={abs({ bottom: "4cqw", left: "5cqw", color: "#fff", fontFamily: SANS, fontSize: "1.6cqw", lineHeight: 1.6, display: "flex", gap: "4cqw" })}>
         <span>
-          hello@oakhaven.co
+          <Blur amount={0.4}>hello@oakhaven.co</Blur>
           <br />
           +1 619 555 0193
         </span>
@@ -401,7 +412,8 @@ function Oakhaven() {
 export const MOCKUPS: Mockup[] = [
   {
     slug: "northline",
-    name: "Northline Landscapes",
+    client: "Daniel",
+    state: "TX",
     direction: "Split screen",
     note: "Two photographs meet at a seam, with the three things the company does set across both. Built for a design and build firm with strong before and after work.",
     cover: "/images/portfolio/t6-featured.jpg",
@@ -409,7 +421,8 @@ export const MOCKUPS: Mockup[] = [
   },
   {
     slug: "sable-stone",
-    name: "Sable & Stone",
+    client: "Marcus",
+    state: "TX",
     direction: "Editorial index",
     note: "A pale ground, monospaced details, one tilted plate and a large project number. Reads like a print portfolio and suits a high-end hardscape studio.",
     cover: "/images/portfolio/t3-hero.jpg",
@@ -417,7 +430,8 @@ export const MOCKUPS: Mockup[] = [
   },
   {
     slug: "verdant",
-    name: "Verdant Co.",
+    client: "Elena",
+    state: "CA",
     direction: "Cinema letterbox",
     note: "One night photograph, one project title, one caption. Everything else is dark. For a company whose lighting work speaks for itself.",
     cover: "/images/portfolio/t7-hero.jpg",
@@ -425,7 +439,8 @@ export const MOCKUPS: Mockup[] = [
   },
   {
     slug: "ridgeway",
-    name: "Ridgeway Outdoor",
+    client: "Tom",
+    state: "TX",
     direction: "Cut photograph",
     note: "A hexagon cut out of a bright ground with a headline across it and a news column beside. Clean, corporate, trusted by architects.",
     cover: "/images/portfolio/t4-hero.jpg",
@@ -433,7 +448,8 @@ export const MOCKUPS: Mockup[] = [
   },
   {
     slug: "halcyon",
-    name: "Halcyon Gardens",
+    client: "Sarah",
+    state: "NC",
     direction: "Collage",
     note: "Overlapping plates on a dusty ground with a serif headline laid over the lot. Warm and personal, for a husband and wife garden design practice.",
     cover: "/images/portfolio/t6-gallery-1.jpg",
@@ -441,7 +457,8 @@ export const MOCKUPS: Mockup[] = [
   },
   {
     slug: "terra-forma",
-    name: "Terra Forma",
+    client: "Javier",
+    state: "CA",
     direction: "Dark stills",
     note: "Pill navigation, a serif title, and a stack of rounded frames with a play button. For a firm that films its builds.",
     cover: "/images/portfolio/t1-hero.jpg",
@@ -449,7 +466,8 @@ export const MOCKUPS: Mockup[] = [
   },
   {
     slug: "bluff-creek",
-    name: "Bluff Creek Lawn Co.",
+    client: "Cody",
+    state: "GA",
     direction: "Loud",
     note: "A blurred ground, a three line shout and one hot colour. For a lawn care company that wants to own the neighbourhood.",
     cover: "/images/portfolio/t2-hero.jpg",
@@ -457,7 +475,8 @@ export const MOCKUPS: Mockup[] = [
   },
   {
     slug: "oakhaven",
-    name: "Oakhaven Landscapes",
+    client: "Priya",
+    state: "CA",
     direction: "Warm and lowercase",
     note: "One golden hour photograph and one soft sentence in lowercase. For a studio selling calm rather than scale.",
     cover: "/images/portfolio/t10-real.jpg",

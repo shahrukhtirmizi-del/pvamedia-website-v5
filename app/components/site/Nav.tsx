@@ -30,15 +30,20 @@ export default function Nav() {
 
   return (
     <header
-      className="sticky top-0 z-50 border-b"
+      className="sticky top-0 z-50"
       style={{
-        borderColor: "var(--line)",
-        background: "rgba(5,11,31,0.82)",
-        backdropFilter: "blur(14px)",
-        WebkitBackdropFilter: "blur(14px)",
+        // a fade from the page ground rather than a bar: the nav stays
+        // legible over anything that scrolls under it and still reads as
+        // part of the page. No blur, which also spares the GPU a
+        // re-blur on every frame the atmosphere moves.
+        background:
+          "linear-gradient(180deg, rgba(5,11,31,0.92) 0%, rgba(5,11,31,0.7) 60%, rgba(5,11,31,0) 100%)",
+        paddingBottom: 14,
+        marginBottom: -14,
+        pointerEvents: "none",
       }}
     >
-      <div className="mx-auto flex h-[64px] max-w-[1240px] items-center justify-between px-5 md:h-[72px] md:px-8">
+      <div className="mx-auto flex h-[64px] max-w-[1240px] items-center justify-between px-5 md:h-[72px] md:px-8" style={{ pointerEvents: "auto" }}>
         <Link
           href="/"
           aria-label="PVA Media, back to home"
@@ -79,6 +84,7 @@ export default function Nav() {
         hidden={!open}
         className="lg:hidden"
         style={{
+          pointerEvents: "auto",
           borderTop: "1px solid var(--line)",
           background: "rgba(5,11,31,0.98)",
           backdropFilter: "blur(18px)",

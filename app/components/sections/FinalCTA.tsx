@@ -36,8 +36,8 @@ export default function FinalCTA() {
         </Reveal>
 
         <Reveal delay={180}>
-          <div className="mt-14">
-            <OrbButton href="/bookings" label="Book a free call" sub="60 day guarantee" />
+          <div className="orb__float mt-14">
+            <OrbButton href="/bookings" label="Book a free call" sub="Free 30 minutes" />
           </div>
         </Reveal>
 

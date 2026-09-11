@@ -35,7 +35,7 @@ export default function Hero() {
       <div className="relative min-h-[100dvh]">
         {/* the particles paint over the headline, as the frame does in the reference */}
         <div className="absolute inset-0 z-10" aria-hidden>
-          <ParticleField frame={frame} star density={0.55} />
+          <ParticleField frame={frame} star density={0.45} maxDpr={1.5} />
         </div>
 
         <div className="relative z-0 mx-auto flex min-h-[100dvh] max-w-[1400px] flex-col items-center justify-between px-5 pb-[7vh] pt-[9vh] text-center md:px-8">

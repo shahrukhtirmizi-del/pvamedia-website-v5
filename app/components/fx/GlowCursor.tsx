@@ -14,7 +14,9 @@ import { useEffect, useRef } from "react";
  * pointers and under reduced motion.
  */
 
-const MAX_POINTS = 64;
+const MAX_POINTS = 32;
+/* the trail is a soft glow, so it renders at half resolution and scales up */
+const RES = 0.5;
 
 const VERTEX = `
 attribute vec2 position;
@@ -28,7 +30,7 @@ void main() {
 
 const FRAGMENT = `
 precision highp float;
-#define MAX_POINTS 64
+#define MAX_POINTS 32
 uniform vec2 uResolution;
 uniform vec2 uPoints[MAX_POINTS];
 uniform float uPointCount;
@@ -128,7 +130,7 @@ const clamp = (v: number, a: number, b: number) => Math.min(Math.max(v, a), b);
 const CONFIG = {
   color: "#c7cedc",
   secondaryColor: "#6d8be8",
-  trailLength: 36,
+  trailLength: 28,
   trailWidth: 5,
   trailTaper: 0.85,
   followSpeed: 0.18,
@@ -162,7 +164,7 @@ export default function GlowCursor() {
       const renderer = new Renderer({
         canvas,
         alpha: true,
-        dpr: Math.min(window.devicePixelRatio || 1, 1.5),
+        dpr: 1,
       });
       const gl = renderer.gl;
       gl.clearColor(0, 0, 0, 0);
@@ -212,8 +214,10 @@ export default function GlowCursor() {
       const resize = () => {
         width = Math.max(window.innerWidth, 1);
         height = Math.max(window.innerHeight, 1);
-        renderer.setSize(width, height);
-        program.uniforms.uResolution.value = [width, height];
+        renderer.setSize(width * RES, height * RES);
+        canvas.style.width = "100%";
+        canvas.style.height = "100%";
+        program.uniforms.uResolution.value = [width * RES, height * RES];
       };
 
       const initializeTrail = (x: number, y: number) => {
@@ -228,8 +232,8 @@ export default function GlowCursor() {
       };
 
       const onMove = (e: PointerEvent) => {
-        const x = clamp(e.clientX, 0, width);
-        const y = clamp(height - e.clientY, 0, height);
+        const x = clamp(e.clientX, 0, width) * RES;
+        const y = clamp(height - e.clientY, 0, height) * RES;
         if (!initialized) initializeTrail(x, y);
         target.x = x;
         target.y = y;
@@ -273,9 +277,34 @@ export default function GlowCursor() {
         program.uniforms.uTime.value = now * 0.001;
         program.uniforms.uFade.value = fade;
 
-        // skip the draw entirely while faded out, the trail is not visible
-        if (fade > 0.002) renderer.render({ scene: mesh });
-        else gl.clear(gl.COLOR_BUFFER_BIT);
+        // the shader is per-pixel and the trail covers a sliver of the screen,
+        // so clear everything cheaply and only shade a box around the points
+        gl.disable(gl.SCISSOR_TEST);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        if (fade > 0.002 && initialized) {
+          let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+          const n = clamp(Math.round(CONFIG.trailLength), 2, MAX_POINTS);
+          for (let i = 0; i < n; i++) {
+            const pt = points[i];
+            if (pt.x < minX) minX = pt.x;
+            if (pt.x > maxX) maxX = pt.x;
+            if (pt.y < minY) minY = pt.y;
+            if (pt.y > maxY) maxY = pt.y;
+          }
+          const pad = 90 * RES + CONFIG.trailWidth * 6;
+          const cw = width * RES;
+          const ch = height * RES;
+          const x0 = Math.max(0, Math.floor(minX - pad));
+          const y0 = Math.max(0, Math.floor(minY - pad));
+          const x1 = Math.min(cw, Math.ceil(maxX + pad));
+          const y1 = Math.min(ch, Math.ceil(maxY + pad));
+          if (x1 > x0 && y1 > y0) {
+            gl.enable(gl.SCISSOR_TEST);
+            gl.scissor(x0, y0, x1 - x0, y1 - y0);
+            renderer.render({ scene: mesh });
+            gl.disable(gl.SCISSOR_TEST);
+          }
+        }
 
         raf = requestAnimationFrame(render);
       };
@@ -307,7 +336,9 @@ export default function GlowCursor() {
       ref={canvasRef}
       aria-hidden
       className="pointer-events-none fixed inset-0 z-[115]"
-      style={{ width: "100%", height: "100%", mixBlendMode: "screen" }}
+      // normal compositing: a screen blend on a full-viewport layer made the
+      // browser re-blend the entire page every frame
+      style={{ width: "100%", height: "100%" }}
     />
   );
 }

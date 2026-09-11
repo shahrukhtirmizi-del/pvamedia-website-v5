@@ -23,11 +23,14 @@ export default function LaserBackground({
   centerX = -0.75,
   centerY = -0.15,
   opacity = 1,
+  scale = 0.6,
 }: {
   className?: string;
   centerX?: number;
   centerY?: number;
   opacity?: number;
+  /** render resolution as a fraction of the element; the beams are soft, 0.6 is invisible */
+  scale?: number;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -215,7 +218,7 @@ export default function LaserBackground({
       const el = canvasRef.current;
       if (!el) return;
       const rect = el.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, 2) * scale;
       mouseX = (e.clientX - rect.left) * dpr;
       mouseY = (rect.height - (e.clientY - rect.top)) * dpr;
       lastMouseMove = Date.now();
@@ -236,7 +239,7 @@ export default function LaserBackground({
     function resize() {
       const el = canvasRef.current;
       if (!el || !gl) return false;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, 2) * scale;
       const w = Math.max(1, Math.round(el.clientWidth * dpr));
       const h = Math.max(1, Math.round(el.clientHeight * dpr));
       if (el.width !== w || el.height !== h) {
@@ -304,7 +307,7 @@ export default function LaserBackground({
       gl.deleteShader(fs);
       gl.deleteBuffer(positionBuffer);
     };
-  }, [centerX, centerY]);
+  }, [centerX, centerY, scale]);
 
   return (
     <canvas

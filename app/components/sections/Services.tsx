@@ -1,11 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Check } from "lucide-react";
+import { Plus, Check, LayoutTemplate, MapPinned, Megaphone, PhoneCall, Server } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import Modal from "../ui/Modal";
 import Reveal from "../ui/Reveal";
 import Stagger from "../ui/Stagger";
 import { SERVICES, type Service } from "../../lib/site";
+
+const ICONS: Record<string, LucideIcon> = {
+  "website-design": LayoutTemplate,
+  "local-seo": MapPinned,
+  "paid-ads": Megaphone,
+  "ai-receptionist": PhoneCall,
+  "hosting-care": Server,
+};
 
 /**
  * Five services on a horizontal rail rather than a list. Breadth is the point
@@ -34,29 +43,62 @@ export default function Services() {
             <Reveal
               key={service.slug}
               delay={i * 70}
-              className="w-[80vw] max-w-[360px] shrink-0 snap-start sm:w-[46vw] lg:w-[300px]"
+              className="w-[82vw] max-w-[380px] shrink-0 snap-start sm:w-[48vw] lg:w-[330px]"
             >
               <button
                 type="button"
                 onClick={() => setActive(service)}
                 aria-haspopup="dialog"
-                className="surface card-lift group flex h-full min-h-[228px] w-full flex-col p-7 text-left md:min-h-[300px]"
+                className="surface card-lift group flex h-full min-h-[300px] w-full flex-col p-7 text-left md:min-h-[360px]"
                 style={{ borderRadius: "var(--radius-card)" }}
               >
-                <span
-                  aria-hidden
-                  className="mb-6 grid h-10 w-10 place-items-center rounded-full border transition-all duration-300 group-hover:rotate-90 group-hover:bg-[color:var(--ink)] group-hover:text-[color:var(--bg)] md:mb-8"
-                  style={{ borderColor: "var(--line-strong)" }}
-                >
-                  <Plus size={16} strokeWidth={1.6} />
-                </span>
+                {(() => {
+                  const Icon = ICONS[service.slug] ?? LayoutTemplate;
+                  return (
+                    <div className="mb-7 flex items-start justify-between">
+                      {/* the service's mark in a lit disc */}
+                      <span
+                        aria-hidden
+                        className="grid h-14 w-14 place-items-center rounded-full transition-transform duration-500 group-hover:scale-105"
+                        style={{
+                          background: "radial-gradient(circle at 35% 30%, rgba(199,206,220,0.22), rgba(199,206,220,0.05) 70%)",
+                          border: "1px solid rgba(199,206,220,0.25)",
+                          boxShadow: "0 0 40px -10px rgba(199,206,220,0.35)",
+                          color: "var(--ink)",
+                        }}
+                      >
+                        <Icon size={22} strokeWidth={1.5} />
+                      </span>
+                      <span
+                        aria-hidden
+                        className="grid h-9 w-9 place-items-center rounded-full border transition-all duration-300 group-hover:rotate-90 group-hover:bg-[color:var(--ink)] group-hover:text-[color:var(--bg)]"
+                        style={{ borderColor: "var(--line-strong)" }}
+                      >
+                        <Plus size={15} strokeWidth={1.6} />
+                      </span>
+                    </div>
+                  );
+                })()}
 
                 <h3 className="font-display mt-auto text-[21px] font-semibold leading-tight">
                   {service.name}
                 </h3>
-                <p className="mt-4 text-[15px] leading-relaxed" style={{ color: "var(--ink-60)" }}>
+                <p className="mt-3 text-[15px] leading-relaxed" style={{ color: "var(--ink-60)" }}>
                   {service.short}
                 </p>
+
+                {/* the first three inclusions, so the card says what is in the box */}
+                <div className="mt-5 flex flex-wrap gap-1.5">
+                  {service.includes.slice(0, 3).map((item) => (
+                    <span
+                      key={item}
+                      className="font-mono rounded-full px-2.5 py-1 text-[9.5px] uppercase tracking-[0.12em]"
+                      style={{ border: "1px solid var(--line-strong)", color: "var(--ink-60)" }}
+                    >
+                      {item}
+                    </span>
+                  ))}
+                </div>
               </button>
             </Reveal>
           ))}

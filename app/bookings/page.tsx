@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Check } from "lucide-react";
 import BookingForm from "../components/BookingForm";
-import ParticleField from "../components/fx/ParticleField";
+import LaserBackground from "../components/fx/LaserBackground";
 import Reveal from "../components/ui/Reveal";
 
 export const metadata: Metadata = {
@@ -21,7 +21,7 @@ export default function BookingsPage() {
   return (
     <section className="relative overflow-hidden">
       <div className="absolute inset-0" aria-hidden>
-        <ParticleField />
+        <LaserBackground centerX={-0.9} centerY={0.1} opacity={0.6} scale={0.5} />
       </div>
 
       <div className="relative mx-auto grid max-w-[1240px] gap-14 px-5 py-20 md:px-8 md:py-28 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
