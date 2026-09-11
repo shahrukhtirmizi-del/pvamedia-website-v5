@@ -1,5 +1,5 @@
 import LaserBackground from "../fx/LaserBackground";
-import OrbButton from "../ui/OrbButton";
+import MagneticCTA from "../ui/MagneticCTA";
 import Reveal from "../ui/Reveal";
 import { SITE } from "../../lib/site";
 
@@ -43,8 +43,8 @@ export default function FinalCTA() {
         </Reveal>
 
         <Reveal delay={180}>
-          <div className="orb__float mt-14">
-            <OrbButton href="/bookings" label="Book a free call" sub="Free 30 minutes" />
+          <div className="mt-12">
+            <MagneticCTA href="/bookings" label="Book a free call" note="Free 30 minutes. No pitch." />
           </div>
         </Reveal>
 
