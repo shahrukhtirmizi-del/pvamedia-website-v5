@@ -189,7 +189,17 @@ export default function BookingForm() {
       </button>
 
       <p className="mt-5 text-[13px]" style={{ color: "var(--ink-45)" }}>
-        We reply the same working day. No sales sequence, no automated chasing.
+        You pick a time on the next page. Or{" "}
+        <a
+          href={SITE.calendly}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline underline-offset-4"
+          style={{ color: "var(--ink-80)" }}
+        >
+          go straight to the calendar
+        </a>
+        .
       </p>
     </form>
   );
