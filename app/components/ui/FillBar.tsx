@@ -27,7 +27,7 @@ export default function FillBar({
         width: "100%",
         height,
         borderRadius: 999,
-        background: "rgba(242,238,223,0.09)",
+        background: "rgba(244, 244, 242,0.09)",
         overflow: "hidden",
       }}
     >

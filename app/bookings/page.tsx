@@ -64,7 +64,7 @@ export default function BookingsPage() {
             className="surface p-6 md:p-10"
             style={{
               borderRadius: "var(--radius-card)",
-              background: "rgba(8,17,43,0.9)",
+              background: "rgba(13, 13, 13,0.9)",
               backdropFilter: "blur(10px)",
               WebkitBackdropFilter: "blur(10px)",
             }}

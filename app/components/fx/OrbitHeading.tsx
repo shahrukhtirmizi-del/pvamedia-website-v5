@@ -119,7 +119,7 @@ export default function OrbitHeading({
       const x = c.getContext("2d");
       if (!x) return null;
 
-      x.fillStyle = "#0a1533";
+      x.fillStyle = "#121212";
       x.fillRect(0, 0, TS, TS);
 
       const scale = Math.max(TS / img.width, TS / img.height);
@@ -129,13 +129,13 @@ export default function OrbitHeading({
       x.drawImage(img, (TS - w) / 2, (TS - h) / 2, w, h);
 
       // sit the photography inside the page's palette rather than beside it:
-      // a cool multiply pulls the greens toward platinum, then a midnight
-      // wash drops the overall level so the plates orbit rather than shout
+      // a neutral multiply takes the edge off the greens, then a dark wash
+      // drops the overall level so the plates orbit rather than shout
       x.globalCompositeOperation = "multiply";
-      x.fillStyle = "rgba(138,156,198,1)";
+      x.fillStyle = "rgba(176,180,178,1)";
       x.fillRect(0, 0, TS, TS);
       x.globalCompositeOperation = "source-over";
-      x.fillStyle = "rgba(5,11,31,0.4)";
+      x.fillStyle = "rgba(7, 7, 7,0.4)";
       x.fillRect(0, 0, TS, TS);
 
       const d = mkc(TS, TS);
@@ -143,7 +143,7 @@ export default function OrbitHeading({
       if (y) {
         y.drawImage(c, 0, 0);
         y.globalCompositeOperation = "multiply";
-        y.fillStyle = "rgba(10,21,51,0.82)";
+        y.fillStyle = "rgba(18, 18, 18,0.82)";
         y.fillRect(0, 0, TS, TS);
       }
       return { front: c, back: d };
@@ -203,8 +203,8 @@ export default function OrbitHeading({
 
       // two lines, centred on the ring centre
       const blockTop = d2sy(RING.cy) - (cap + gap) / 2;
-      drawLine(x, lineOne, fontFamily, "700", size, d2sx(RING.cx), blockTop + cap, "#c7cedc");
-      drawLine(x, lineTwo, fontFamily, "700", size, d2sx(RING.cx), blockTop + cap + gap, "#f2eedf");
+      drawLine(x, lineOne, fontFamily, "700", size, d2sx(RING.cx), blockTop + cap, "#8f8f8f");
+      drawLine(x, lineTwo, fontFamily, "700", size, d2sx(RING.cx), blockTop + cap + gap, "#f4f4f2");
     }
 
     function project(p: number[]) {

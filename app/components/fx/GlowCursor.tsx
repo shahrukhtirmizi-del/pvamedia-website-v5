@@ -129,8 +129,8 @@ function hexToRgb(hex: string): [number, number, number] {
 const clamp = (v: number, a: number, b: number) => Math.min(Math.max(v, a), b);
 
 const CONFIG = {
-  color: "#c7cedc",
-  secondaryColor: "#6d8be8",
+  color: "#a6f0d4",
+  secondaryColor: "#3fb18c",
   trailLength: 28,
   trailWidth: 5,
   trailTaper: 0.85,

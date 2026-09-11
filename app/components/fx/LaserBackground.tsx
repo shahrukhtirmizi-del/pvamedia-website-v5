@@ -148,7 +148,7 @@ export default function LaserBackground({
         float distToCenter = length(uv - center);
         glow += 0.04 / (distToCenter + 0.01);
 
-        vec3 baseColor = vec3(0.6, 0.75, 1.0);
+        vec3 baseColor = vec3(0.62, 0.98, 0.86);
         vec3 finalColor = baseColor * glow;
 
         finalColor *= 0.85 + 0.15 * sin(u_time * 2.0 - distToCenter * 8.0);

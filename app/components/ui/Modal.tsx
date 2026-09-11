@@ -98,7 +98,7 @@ export default function Modal({
         style={{
           position: "absolute",
           inset: 0,
-          background: "rgba(3,7,20,0.72)",
+          background: "rgba(0, 0, 0,0.72)",
           backdropFilter: "blur(14px)",
           WebkitBackdropFilter: "blur(14px)",
         }}
@@ -112,7 +112,7 @@ export default function Modal({
         }`}
         style={{
           borderRadius: "var(--radius-card)",
-          background: "rgba(10,21,51,0.97)",
+          background: "rgba(18, 18, 18,0.97)",
           maxHeight: "88vh",
           overflowY: "auto",
           boxShadow: "var(--shadow-lift)",
@@ -122,10 +122,10 @@ export default function Modal({
           type="button"
           onClick={beginClose}
           aria-label="Close"
-          className="sticky top-4 z-10 ml-auto mr-4 grid h-10 w-10 shrink-0 place-items-center rounded-full border transition-colors hover:bg-[rgba(242,238,223,0.08)]"
+          className="sticky top-4 z-10 ml-auto mr-4 grid h-10 w-10 shrink-0 place-items-center rounded-full border transition-colors hover:bg-[rgba(244, 244, 242,0.08)]"
           style={{
             borderColor: "var(--line-strong)",
-            background: "rgba(5,11,31,0.75)",
+            background: "rgba(7, 7, 7,0.75)",
             float: "right",
           }}
         >

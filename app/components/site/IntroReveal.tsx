@@ -98,11 +98,11 @@ export default function IntroReveal() {
         const sepv = (1 - a) * 11;
         node.style.textShadow =
           sepv > 0.4
-            ? `${(-sepv).toFixed(1)}px 0 rgba(122,152,235,0.85),${sepv.toFixed(
+            ? `${(-sepv).toFixed(1)}px 0 rgba(98,220,176,0.85),${sepv.toFixed(
                 1
-              )}px 0 rgba(199,206,220,0.8),0 ${(sepv * 0.55).toFixed(
+              )}px 0 rgba(98, 220, 176,0.8),0 ${(sepv * 0.55).toFixed(
                 1
-              )}px rgba(242,238,223,0.7)`
+              )}px rgba(244, 244, 242,0.7)`
             : "none";
         node.style.filter = sepv > 0.7 ? `blur(${(sepv * 0.3).toFixed(2)}px)` : "none";
       }

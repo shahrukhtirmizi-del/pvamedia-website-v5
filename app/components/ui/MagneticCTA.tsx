@@ -53,20 +53,20 @@ export default function MagneticCTA({
           className="pointer-events-none absolute -inset-10 rounded-full"
           style={{
             background:
-              "radial-gradient(ellipse at 50% 50%, rgba(199,206,220,0.16), rgba(199,206,220,0.04) 45%, transparent 70%)",
+              "radial-gradient(ellipse at 50% 50%, rgba(98, 220, 176,0.16), rgba(98, 220, 176,0.04) 45%, transparent 70%)",
             filter: "blur(10px)",
           }}
         />
         <Link
           href={href}
           className="btn btn-primary group relative !gap-4 !px-9 !py-[22px] !text-[17px] md:!px-11 md:!py-6 md:!text-[19px]"
-          style={{ boxShadow: "0 24px 60px -24px rgba(2,6,18,0.9), 0 0 90px -30px rgba(199,206,220,0.45)" }}
+          style={{ boxShadow: "0 24px 60px -24px rgba(0, 0, 0,0.9), 0 0 90px -30px rgba(98, 220, 176,0.45)" }}
         >
           <span>{label}</span>
           <span
             aria-hidden
             className="grid h-8 w-8 place-items-center rounded-full transition-transform duration-500 group-hover:translate-x-1"
-            style={{ background: "rgba(5,11,31,0.1)" }}
+            style={{ background: "rgba(7, 7, 7,0.1)" }}
           >
             <ArrowRight size={16} strokeWidth={2} />
           </span>

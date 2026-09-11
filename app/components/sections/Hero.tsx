@@ -71,15 +71,15 @@ export default function Hero() {
         if (cur[i] > 0 || target > 0) live = true;
 
         const v = cur[i];
-        const rC = Math.round(242 - 20 * v);
-        const gC = Math.round(238 + 4 * v);
-        const bC = Math.round(223 + 25 * v);
+        const rC = Math.round(244 - 70 * v);
+        const gC = 244;
+        const bC = Math.round(242 - 30 * v);
         el.style.color = `rgba(${rC},${gC},${bC},${(0.5 + 0.5 * v).toFixed(3)})`;
         el.style.textShadow =
           v > 0.01
-            ? `0 0 ${(16 * v).toFixed(1)}px rgba(199,206,220,${(0.95 * v).toFixed(3)}), ` +
-              `0 0 ${(46 * v).toFixed(1)}px rgba(122,152,235,${(0.6 * v).toFixed(3)}), ` +
-              `0 0 ${(110 * v).toFixed(1)}px rgba(122,152,235,${(0.32 * v).toFixed(3)})`
+            ? `0 0 ${(16 * v).toFixed(1)}px rgba(98, 220, 176,${(0.95 * v).toFixed(3)}), ` +
+              `0 0 ${(46 * v).toFixed(1)}px rgba(98, 220, 176,${(0.6 * v).toFixed(3)}), ` +
+              `0 0 ${(110 * v).toFixed(1)}px rgba(98, 220, 176,${(0.32 * v).toFixed(3)})`
             : "none";
         el.style.transform = `translateY(${(-5 * v).toFixed(2)}px)`;
       }
@@ -119,7 +119,7 @@ export default function Hero() {
                 fontSize: "clamp(44px, 15.2vw, 262px)",
                 lineHeight: 0.9,
                 letterSpacing: "0.02em",
-                color: "rgba(242,238,223,0.5)",
+                color: "rgba(244, 244, 242,0.55)",
               }}
             >
               {NAME.split("").map((ch, i) => (

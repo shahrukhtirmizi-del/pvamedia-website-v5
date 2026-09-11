@@ -3,7 +3,7 @@
 /* ==========================================================================
    PVA Media - Midnight Blue & Platinum
    --------------------------------------------------------------------------
-   ONE theme (dark), ONE accent (platinum #C7CEDC), ONE radius system.
+   ONE theme (dark), ONE accent (platinum #62dcb0), ONE radius system.
 
    Radius rule, applied everywhere with no exceptions:
      - interactive (buttons, chips, pills, badges) ... 999px
@@ -12,36 +12,36 @@
    ========================================================================== */
 
 @theme {
-  --color-base: #050b1f;
-  --color-raised: #08112b;
-  --color-card: #0a1533;
-  --color-ink: #f2eedf;
-  --color-accent: #c7cedc;
+  --color-base: #070707;
+  --color-raised: #0d0d0d;
+  --color-card: #121212;
+  --color-ink: #f4f4f2;
+  --color-accent: #62dcb0;
 
   --radius-tile: 14px;
   --radius-card: 24px;
 }
 
 :root {
-  --bg: #050b1f;
-  --bg-raised: #08112b;
-  --bg-card: #0a1533;
-  --ink: #f2eedf;
-  --accent: #c7cedc;
+  --bg: #070707;
+  --bg-raised: #0d0d0d;
+  --bg-card: #121212;
+  --ink: #f4f4f2;
+  --accent: #62dcb0;
 
   /* text tiers - real hierarchy lives here, not in font size alone */
-  --ink-80: rgba(242, 238, 223, 0.8);
-  --ink-60: rgba(242, 238, 223, 0.6);
-  --ink-45: rgba(242, 238, 223, 0.45);
-  --ink-30: rgba(242, 238, 223, 0.3);
+  --ink-80: rgba(244, 244, 242, 0.8);
+  --ink-60: rgba(244, 244, 242, 0.6);
+  --ink-45: rgba(244, 244, 242, 0.45);
+  --ink-30: rgba(244, 244, 242, 0.3);
 
-  --line: rgba(242, 238, 223, 0.1);
-  --line-strong: rgba(242, 238, 223, 0.18);
+  --line: rgba(244, 244, 242, 0.1);
+  --line-strong: rgba(244, 244, 242, 0.18);
 
   /* shadows are tinted to the background hue, never pure black */
-  --shadow-soft: 0 18px 50px -20px rgba(2, 6, 18, 0.9);
-  --shadow-lift: 0 34px 80px -28px rgba(2, 6, 18, 0.95);
-  --glow: 0 0 60px -12px rgba(199, 206, 220, 0.25);
+  --shadow-soft: 0 18px 50px -20px rgba(0, 0, 0, 0.9);
+  --shadow-lift: 0 34px 80px -28px rgba(0, 0, 0, 0.95);
+  --glow: 0 0 60px -12px rgba(98, 220, 176, 0.25);
 }
 
 * {
@@ -127,9 +127,9 @@ body {
 .surface {
   background: linear-gradient(
     160deg,
-    rgba(242, 238, 223, 0.045),
-    rgba(242, 238, 223, 0.012) 46%,
-    rgba(242, 238, 223, 0.03)
+    rgba(244, 244, 242, 0.045),
+    rgba(244, 244, 242, 0.012) 46%,
+    rgba(244, 244, 242, 0.03)
   );
   border: 1px solid var(--line);
   box-shadow: var(--shadow-soft);
@@ -137,10 +137,10 @@ body {
 
 /* The Milan-style glowing bordered frame. */
 .frame-glow {
-  border: 1px solid rgba(199, 206, 220, 0.26);
+  border: 1px solid rgba(98, 220, 176, 0.26);
   box-shadow:
-    inset 0 0 60px -20px rgba(199, 206, 220, 0.35),
-    0 0 120px -30px rgba(199, 206, 220, 0.42);
+    inset 0 0 60px -20px rgba(98, 220, 176, 0.35),
+    0 0 120px -30px rgba(98, 220, 176, 0.42);
 }
 
 .hairline {
@@ -240,7 +240,7 @@ body {
 .btn-secondary:hover {
   transform: translateY(-2px);
   border-color: var(--accent);
-  background: rgba(242, 238, 223, 0.05);
+  background: rgba(244, 244, 242, 0.05);
   box-shadow: var(--shadow-soft);
 }
 
@@ -424,7 +424,7 @@ body {
   width: 38px;
   height: 38px;
   margin: -19px 0 0 -19px;
-  border: 1px solid rgba(242, 238, 223, 0.55);
+  border: 1px solid rgba(244, 244, 242, 0.55);
   transition:
     background-color 0.35s ease,
     border-color 0.35s ease,
@@ -433,8 +433,8 @@ body {
 
 .cursor-ring.is-hover {
   --s: 1.8;
-  border-color: rgba(199, 206, 220, 0.9);
-  background: rgba(199, 206, 220, 0.1);
+  border-color: rgba(98, 220, 176, 0.9);
+  background: rgba(98, 220, 176, 0.1);
 }
 
 .cursor-ring.is-down {
@@ -472,7 +472,7 @@ body {
   aspect-ratio: 16 / 10;
   overflow: hidden;
   border-radius: var(--radius-tile);
-  background: #0a1533;
+  background: #121212;
 }
 
 @keyframes hero-bob {

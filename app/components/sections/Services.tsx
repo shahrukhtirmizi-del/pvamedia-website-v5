@@ -61,9 +61,9 @@ export default function Services() {
                         aria-hidden
                         className="grid h-14 w-14 place-items-center rounded-full transition-transform duration-500 group-hover:scale-105"
                         style={{
-                          background: "radial-gradient(circle at 35% 30%, rgba(199,206,220,0.22), rgba(199,206,220,0.05) 70%)",
-                          border: "1px solid rgba(199,206,220,0.25)",
-                          boxShadow: "0 0 40px -10px rgba(199,206,220,0.35)",
+                          background: "radial-gradient(circle at 35% 30%, rgba(98, 220, 176,0.22), rgba(98, 220, 176,0.05) 70%)",
+                          border: "1px solid rgba(98, 220, 176,0.25)",
+                          boxShadow: "0 0 40px -10px rgba(98, 220, 176,0.35)",
                           color: "var(--ink)",
                         }}
                       >

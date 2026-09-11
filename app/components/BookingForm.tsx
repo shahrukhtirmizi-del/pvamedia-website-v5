@@ -80,7 +80,7 @@ export default function BookingForm() {
           className="mb-8 flex items-start gap-3 p-5"
           style={{
             borderRadius: "var(--radius-tile)",
-            background: "rgba(242,238,223,0.06)",
+            background: "rgba(244, 244, 242,0.06)",
             border: "1px solid var(--line-strong)",
           }}
         >
@@ -137,13 +137,13 @@ export default function BookingForm() {
             className="mt-2.5 w-full px-4 py-3.5 text-[15px] outline-none transition-colors"
             style={{
               borderRadius: "var(--radius-tile)",
-              background: "rgba(242,238,223,0.05)",
+              background: "rgba(244, 244, 242,0.05)",
               border: "1px solid var(--line-strong)",
               color: "var(--ink)",
             }}
           >
             {NEEDS.map((option) => (
-              <option key={option} value={option} style={{ background: "#0a1533", color: "#f2eedf" }}>
+              <option key={option} value={option} style={{ background: "#121212", color: "#f4f4f2" }}>
                 {option}
               </option>
             ))}
@@ -170,7 +170,7 @@ export default function BookingForm() {
             className="mt-2.5 w-full resize-y px-4 py-3.5 text-[15px] outline-none transition-colors"
             style={{
               borderRadius: "var(--radius-tile)",
-              background: "rgba(242,238,223,0.05)",
+              background: "rgba(244, 244, 242,0.05)",
               border: `1px solid ${errors.message ? "var(--accent)" : "var(--line-strong)"}`,
               color: "var(--ink)",
             }}
@@ -246,7 +246,7 @@ function Field({
         className="mt-2.5 w-full px-4 py-3.5 text-[15px] outline-none transition-colors"
         style={{
           borderRadius: "var(--radius-tile)",
-          background: "rgba(242,238,223,0.05)",
+          background: "rgba(244, 244, 242,0.05)",
           border: `1px solid ${error ? "var(--accent)" : "var(--line-strong)"}`,
           color: "var(--ink)",
         }}

@@ -36,11 +36,11 @@ function keyframes(uid: string) {
         100% { opacity: 0.22; transform: translateX(-6px); }
       }
       @keyframes ${uid}-dot-${i} {
-        0%, ${a}% { box-shadow: 0 0 0 0 rgba(199,206,220,0); background: rgba(242,238,223,0.18); }
-        ${b}% { box-shadow: 0 0 0 9px rgba(199,206,220,0.18); background: var(--ink); }
-        ${c}% { box-shadow: 0 0 0 0 rgba(199,206,220,0); background: var(--ink); }
+        0%, ${a}% { box-shadow: 0 0 0 0 rgba(98, 220, 176,0); background: rgba(244, 244, 242,0.18); }
+        ${b}% { box-shadow: 0 0 0 9px rgba(98, 220, 176,0.18); background: var(--ink); }
+        ${c}% { box-shadow: 0 0 0 0 rgba(98, 220, 176,0); background: var(--ink); }
         90% { background: var(--ink); }
-        100% { background: rgba(242,238,223,0.18); }
+        100% { background: rgba(244, 244, 242,0.18); }
       }
       .${uid} .step-${i} { animation: ${uid}-step-${i} ${CYCLE}s cubic-bezier(0.22,1,0.36,1) infinite; }
       .${uid} .dot-${i} { animation: ${uid}-dot-${i} ${CYCLE}s ease infinite; }
@@ -110,7 +110,7 @@ export default function CallTimeline({
       </div>
 
       <div className={`${uid} relative mt-8 pl-9`}>
-        <div className="absolute bottom-3 left-[11px] top-3 w-px" style={{ background: "rgba(242,238,223,0.1)" }} />
+        <div className="absolute bottom-3 left-[11px] top-3 w-px" style={{ background: "rgba(244, 244, 242,0.1)" }} />
         <div
           className="line absolute bottom-3 left-[11px] top-3 w-px origin-top"
           style={{

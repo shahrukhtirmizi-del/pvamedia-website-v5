@@ -37,7 +37,7 @@ export default function Nav() {
         // part of the page. No blur, which also spares the GPU a
         // re-blur on every frame the atmosphere moves.
         background:
-          "linear-gradient(180deg, rgba(5,11,31,0.92) 0%, rgba(5,11,31,0.7) 60%, rgba(5,11,31,0) 100%)",
+          "linear-gradient(180deg, rgba(7, 7, 7,0.92) 0%, rgba(7, 7, 7,0.7) 60%, rgba(7, 7, 7,0) 100%)",
         paddingBottom: 14,
         marginBottom: -14,
         pointerEvents: "none",
@@ -86,7 +86,7 @@ export default function Nav() {
         style={{
           pointerEvents: "auto",
           borderTop: "1px solid var(--line)",
-          background: "rgba(5,11,31,0.98)",
+          background: "rgba(7, 7, 7,0.98)",
           backdropFilter: "blur(18px)",
           WebkitBackdropFilter: "blur(18px)",
         }}

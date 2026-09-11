@@ -61,7 +61,7 @@ export default function PainPoints() {
                         className="absolute inset-0"
                         style={{
                           background:
-                            "linear-gradient(150deg, rgba(5,11,31,0.94), rgba(5,11,31,0.6) 58%, rgba(5,11,31,0.86))",
+                            "linear-gradient(150deg, rgba(7, 7, 7,0.94), rgba(7, 7, 7,0.6) 58%, rgba(7, 7, 7,0.86))",
                         }}
                       />
                     </>

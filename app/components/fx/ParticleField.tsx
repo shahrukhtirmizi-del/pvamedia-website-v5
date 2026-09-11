@@ -68,7 +68,7 @@ export default function ParticleField({
 
     function seedFree() {
       const target = Math.round(
-        Math.min(320, Math.max(40, ((W * H) / (dpr * dpr) / 13000) * density))
+        Math.min(520, Math.max(40, ((W * H) / (dpr * dpr) / 13000) * density))
       );
       parts = [];
       for (let i = 0; i < target; i++) {
@@ -143,9 +143,9 @@ export default function ParticleField({
 
       // a cloud of light gathered around the star, thickest at its centre
       halo = [];
-      for (let i = 0; i < 140; i++) {
+      for (let i = 0; i < 180; i++) {
         const ang = Math.random() * Math.PI * 2;
-        const rad = Math.pow(Math.random(), 0.6) * 46 * dpr;
+        const rad = Math.pow(Math.random(), 0.6) * 58 * dpr;
         halo.push({
           x: Math.cos(ang) * rad,
           y: Math.sin(ang) * rad * 0.9,
@@ -183,6 +183,7 @@ export default function ParticleField({
     /* one soft dot, blitted for every particle: drawImage is far cheaper than
        an arc + fill per particle per frame */
     let dotSprite: HTMLCanvasElement | null = null;
+    let mintSprite: HTMLCanvasElement | null = null;
     const DOT = 16;
     function buildDot() {
       const c = document.createElement("canvas");
@@ -190,25 +191,38 @@ export default function ParticleField({
       const x = c.getContext("2d");
       if (!x) return;
       const g = x.createRadialGradient(DOT / 2, DOT / 2, 0, DOT / 2, DOT / 2, DOT / 2);
-      g.addColorStop(0, "rgba(214,222,236,1)");
-      g.addColorStop(0.45, "rgba(214,222,236,0.55)");
-      g.addColorStop(1, "rgba(214,222,236,0)");
+      g.addColorStop(0, "rgba(236,238,236,1)");
+      g.addColorStop(0.45, "rgba(236,238,236,0.55)");
+      g.addColorStop(1, "rgba(236,238,236,0)");
       x.fillStyle = g;
       x.fillRect(0, 0, DOT, DOT);
       dotSprite = c;
+
+      // the same dot in the accent, for the cloud around the star
+      const m = document.createElement("canvas");
+      m.width = m.height = DOT;
+      const y = m.getContext("2d");
+      if (!y) return;
+      const g2 = y.createRadialGradient(DOT / 2, DOT / 2, 0, DOT / 2, DOT / 2, DOT / 2);
+      g2.addColorStop(0, "rgba(150,240,205,1)");
+      g2.addColorStop(0.45, "rgba(98,220,176,0.6)");
+      g2.addColorStop(1, "rgba(98,220,176,0)");
+      y.fillStyle = g2;
+      y.fillRect(0, 0, DOT, DOT);
+      mintSprite = m;
     }
     buildDot();
     function buildStar() {
-      const s = 24 * dpr;
-      const pad = 48 * dpr;
+      const s = 30 * dpr;
+      const pad = 56 * dpr;
       const c = document.createElement("canvas");
       c.width = c.height = Math.ceil((s + pad) * 2);
       const x = c.getContext("2d");
       if (!x) return;
       x.translate(c.width / 2, c.height / 2);
-      x.shadowColor = "rgba(199,206,220,0.9)";
+      x.shadowColor = "rgba(98,220,176,0.95)";
       x.shadowBlur = 22 * dpr;
-      x.fillStyle = "rgba(226,232,242,0.95)";
+      x.fillStyle = "rgba(150,240,205,1)";
       x.beginPath();
       // four-point star: long spikes, pinched waist
       for (let i = 0; i < 8; i++) {
@@ -304,7 +318,7 @@ export default function ParticleField({
         const twinkle = 0.5 + 0.5 * Math.sin(t * 0.0014 * h.tw + h.ph);
         const size = h.r * 2.4;
         ctx.globalAlpha = h.a * twinkle;
-        ctx.drawImage(dotSprite!, starC.x + h.x - size / 2, starC.y + h.y - size / 2, size, size);
+        ctx.drawImage(mintSprite ?? dotSprite!, starC.x + h.x - size / 2, starC.y + h.y - size / 2, size, size);
       }
       ctx.globalAlpha = 1;
       drawStar(t);
