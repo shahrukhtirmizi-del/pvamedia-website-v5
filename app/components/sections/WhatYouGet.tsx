@@ -29,7 +29,7 @@ export default function WhatYouGet() {
               className="mt-6 max-w-[34ch] text-[15px] leading-relaxed"
               style={{ color: "var(--ink-60)" }}
             >
-              Everything a landscaping company needs to be found, trusted and booked, handled by
+              Everything a trades or home service company needs to be found, trusted and booked, handled by
               one team.
             </p>
           </Reveal>
@@ -52,9 +52,9 @@ export default function WhatYouGet() {
                     className="grid h-12 w-12 place-items-center rounded-full md:h-14 md:w-14"
                     style={{
                       background:
-                        "radial-gradient(circle at 35% 30%, rgba(98, 220, 176,0.22), rgba(98, 220, 176,0.05) 70%)",
-                      border: "1px solid rgba(98, 220, 176,0.25)",
-                      boxShadow: "0 0 40px -10px rgba(98, 220, 176,0.35)",
+                        "radial-gradient(circle at 35% 30%, rgba(217, 192, 140, 0.22), rgba(217, 192, 140, 0.05) 70%)",
+                      border: "1px solid rgba(217, 192, 140, 0.25)",
+                      boxShadow: "0 0 40px -10px rgba(217, 192, 140, 0.35)",
                       color: "var(--ink)",
                     }}
                   >

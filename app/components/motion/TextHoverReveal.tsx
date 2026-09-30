@@ -53,7 +53,7 @@ export function RevealText({
   }, [text, letterDelay, springDuration]);
 
   return (
-    <main className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-black">
+    <div className="relative flex w-full items-center justify-center overflow-hidden py-24" style={{ background: "var(--bg)" }}>
       <div className="relative flex items-center justify-center px-4">
         <div className="flex">
           {text.split("").map((letter, index) => (
@@ -163,7 +163,7 @@ export function RevealText({
           ))}
         </div>
       </div>
-    </main>
+    </div>
   );
 }
 

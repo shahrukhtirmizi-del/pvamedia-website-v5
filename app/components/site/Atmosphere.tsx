@@ -15,7 +15,7 @@ export default function Atmosphere() {
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(120% 80% at 50% 0%, rgba(244, 244, 242,0.035), transparent 60%)",
+            "radial-gradient(120% 80% at 50% 0%, rgba(58, 36, 24, 0.035), transparent 60%)",
         }}
       />
     </div>

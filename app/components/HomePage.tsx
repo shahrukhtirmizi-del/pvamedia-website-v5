@@ -1,13 +1,15 @@
-import Hero from "./sections/Hero";
+import SplitCurtainPreloader from "./motion/SplitCurtainPreloader";
+import ScrollExpandMedia from "./motion/ScrollExpansionHero";
 import Statement from "./sections/Statement";
 import Ticker from "./ui/Ticker";
 import PainPoints from "./sections/PainPoints";
 import CaseStudy from "./sections/CaseStudy";
 import Portfolio from "./sections/Portfolio";
-import Services from "./sections/Services";
+import CardStoryScroll from "./motion/CardStoryScroll";
 import Pricing from "./sections/Pricing";
 import WhatYouGet from "./sections/WhatYouGet";
 import Testimonials from "./sections/Testimonials";
+import CircularCardDeck from "./motion/CircularCardDeck";
 import FinalCTA from "./sections/FinalCTA";
 import LaserBand from "./fx/LaserBand";
 import SectionRouter from "./site/SectionRouter";
@@ -21,7 +23,7 @@ const structuredData = {
   email: SITE.email,
   telephone: SITE.phone,
   description:
-    "Web design, local SEO and AI receptionist services built exclusively for landscaping companies across the United States.",
+    "Web design, local SEO and AI receptionist services built for trades and home service companies across the United States.",
   areaServed: { "@type": "Country", name: "United States" },
   slogan: SITE.tagline,
 };
@@ -35,7 +37,21 @@ export default function HomePage() {
       />
 
       <SectionRouter />
-      <Hero />
+      <SplitCurtainPreloader
+        studio="PVA Media"
+        cardTitle="PVA Media"
+        tags={["Websites", "Local SEO", "AI Receptionist"]}
+        heroImage="/images/portfolio/t7-hero.jpg"
+        footerRight="Websites for trades and home service companies"
+      />
+      <ScrollExpandMedia
+        mediaType="image"
+        mediaSrc="/images/portfolio/t7-hero.jpg"
+        bgImageSrc="/images/mood/paper-sheets-angled.png"
+        title="Live in 5 days"
+      >
+        <p>{SITE.tagline}</p>
+      </ScrollExpandMedia>
       <Statement />
       <Ticker items={TICKER} />
 
@@ -47,7 +63,7 @@ export default function HomePage() {
       </LaserBand>
 
       <Portfolio />
-      <Services />
+      <CardStoryScroll />
 
       <LaserBand centerX={-0.6} centerY={0.3} opacity={0.42}>
         <Pricing />
@@ -55,6 +71,7 @@ export default function HomePage() {
       </LaserBand>
 
       <Testimonials />
+      <CircularCardDeck />
       <FinalCTA />
     </>
   );

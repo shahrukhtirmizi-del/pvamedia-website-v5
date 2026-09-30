@@ -8,7 +8,7 @@ import HomePage from "../components/HomePage";
  */
 export const metadata: Metadata = {
   title: "Work",
-  description: "The work: eight landscaping site directions, each built around the crew's own photography.",
+  description: "The work: eight trades site directions, each built around the crew's own photography.",
   alternates: { canonical: "/" },
 };
 
