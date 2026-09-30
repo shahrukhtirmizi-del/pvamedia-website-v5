@@ -83,8 +83,30 @@ export default function CircularCardDeck({
     };
   }, []);
 
-  const cardWidth = useMemo(() => Math.round(clamp(stageWidth * 0.4, 280, 440)), [stageWidth]);
+  // phones get a wider card, so a full quote doesn't make it very tall
+  const cardWidth = useMemo(
+    () =>
+      Math.round(
+        stageWidth < 700 ? clamp(stageWidth * 0.84, 280, 380) : clamp(stageWidth * 0.4, 280, 440),
+      ),
+    [stageWidth],
+  );
+  // the resting size; a card grows past it to fit its whole quote
   const cardHeight = Math.round(cardWidth * 1.18);
+
+  // Every quote is shown in full, so cards differ in height. The stage is
+  // sized to the tallest one so none is ever clipped. (offsetHeight ignores
+  // the coverflow transforms, so this is each card's own laid-out height.)
+  const cardRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const [tallest, setTallest] = useState(0);
+  useEffect(() => {
+    const measure = () =>
+      setTallest(Math.max(0, ...cardRefs.current.map((card) => card?.offsetHeight ?? 0)));
+    measure();
+    const observer = new ResizeObserver(measure);
+    cardRefs.current.forEach((card) => card && observer.observe(card));
+    return () => observer.disconnect();
+  }, [total]);
   const horizontalSpacing = useMemo(
     () => clamp(stageWidth * 0.24, 130, cardWidth * 0.76),
     [stageWidth, cardWidth],
@@ -159,6 +181,7 @@ export default function CircularCardDeck({
       >
         <div
           className="ccd-scene-3d"
+          style={tallest ? { height: `max(clamp(420px, 56vh, 620px), ${tallest + 72}px)` } : undefined}
           onPointerDown={onPointerDown}
           onPointerUp={onPointerUp}
           onPointerCancel={() => {
@@ -190,10 +213,13 @@ export default function CircularCardDeck({
                 <button
                   key={testimonial.company + testimonial.displayName}
                   type="button"
+                  ref={(card) => {
+                    cardRefs.current[index] = card;
+                  }}
                   className={`ccd-card${isActive ? " is-active" : ""}`}
                   style={{
                     width: cardWidth,
-                    height: cardHeight,
+                    minHeight: cardHeight,
                     transform,
                     opacity: isVisible ? (isActive ? 1 : 0.72) : 0,
                     filter: isActive ? "none" : `brightness(${Math.max(0.6, 0.85 - distance * 0.08)})`,
@@ -279,11 +305,11 @@ export default function CircularCardDeck({
         .ccd-card.is-active { box-shadow: 0 40px 90px rgba(10,10,10,.32); }
         .ccd-card:focus-visible { outline: 2px solid #FFFFFF; outline-offset: -8px; }
 
-        .ccd-card blockquote { margin: 0; overflow: hidden; }
+        .ccd-card blockquote { margin: 0; }
         .ccd-card blockquote p {
           margin: 0; font-family: var(--font-sans), system-ui, sans-serif;
           font-size: clamp(13px, 1.15cqw, 17px); line-height: 1.5; letter-spacing: -.005em;
-          display: -webkit-box; -webkit-line-clamp: 12; -webkit-box-orient: vertical; overflow: hidden;
+          /* the whole quote, never cut off: the card grows to fit it */
         }
         .ccd-card footer { display: flex; flex-direction: column; gap: 6px; margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.2); }
         .ccd-card footer strong { font-family: var(--font-display), var(--font-sans), sans-serif; font-size: clamp(13px, 1.05cqw, 16px); font-weight: 700; letter-spacing: -.01em; }
@@ -301,7 +327,7 @@ export default function CircularCardDeck({
 
         @media (max-width: 700px) {
           .ccd-heading h2 { font-size: 30px; }
-          .ccd-card blockquote p { font-size: 13px; -webkit-line-clamp: 10; }
+          .ccd-card blockquote p { font-size: 14px; line-height: 1.48; }
         }
         @media (prefers-reduced-motion: reduce) { .ccd-card { transition: none; } }
       `}</style>
