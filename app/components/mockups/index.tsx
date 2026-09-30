@@ -3,7 +3,7 @@ import type { CSSProperties, ReactNode } from "react";
 import { GlassCard, SerifLandscape, WordmarkCaption } from "./replacements";
 
 /**
- * Eight hero concepts for landscaping companies. Each is a self-contained
+ * Eight hero concepts for trades and home service companies. Each is a self-contained
  * composition sized in container units (cqw), so the same markup reads
  * correctly at 300px in the rail and at 700px in the modal.
  *
@@ -250,7 +250,7 @@ function Oakhaven() {
       <div style={abs({ inset: 0, background: "linear-gradient(180deg, rgba(40,26,14,0.35), rgba(40,26,14,0.15) 50%, rgba(40,26,14,0.55))" })} />
       <div style={abs({ top: "4cqw", left: "5cqw", right: "5cqw", display: "flex", justifyContent: "space-between", alignItems: "center", color: "#fff", fontFamily: SANS })}>
         <span style={{ fontSize: "2.4cqw" }}>
-          <Blur><b>oakhaven</b></Blur> landscapes
+          <Blur><b>oakhaven</b></Blur> gardens
         </span>
         <span style={{ display: "flex", gap: "3cqw", fontSize: "2cqw", opacity: 0.9 }}>
           <span>projects</span>
@@ -302,7 +302,7 @@ export const MOCKUPS: Mockup[] = [
     slug: "verdant",
     client: "Elena",
     state: "CA",
-    direction: "Serif over landscape",
+    direction: "Serif over a wide view",
     note: "A wide view framed by soft foreground, a two line serif headline and one button. Calm and premium, for a coastal garden studio selling the feeling of the place.",
     cover: "/images/portfolio/t6-featured-960.jpg",
     Component: SerifLandscape,

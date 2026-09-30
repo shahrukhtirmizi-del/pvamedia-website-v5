@@ -3,7 +3,7 @@ import type { CSSProperties, ReactNode } from "react";
 
 /**
  * Three concepts drawn from the second round of references: a photograph
- * tilted in space under a serif name, a serif headline set over a landscape
+ * tilted in space under a serif name, a serif headline set over a wide view
  * framed by foreground blur, and a giant wordmark over a top-down scene with
  * a caption box.
  */
@@ -36,7 +36,7 @@ function Blur({ children, amount = 0.55 }: { children: ReactNode; amount?: numbe
   );
 }
 
-/* B ─ serif over landscape: a framed view, a two-line serif headline, one button */
+/* B ─ serif over a wide view: a framed view, a two-line serif headline, one button */
 export function SerifLandscape() {
   return (
     <div className="mock" style={{ background: "#1a2028" }}>

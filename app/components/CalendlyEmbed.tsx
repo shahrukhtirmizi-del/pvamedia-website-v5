@@ -13,7 +13,7 @@ export default function CalendlyEmbed() {
 
   const url =
     SITE.calendly +
-    "?hide_gdpr_banner=1&background_color=0d0d0d&text_color=f4f4f2&primary_color=62dcb0";
+    "?hide_gdpr_banner=1&background_color=faf6ec&text_color=3a2418&primary_color=d9c08c";
 
   useEffect(() => {
     const id = "calendly-widget-script";
@@ -40,7 +40,7 @@ export default function CalendlyEmbed() {
           // is framed as a deliberate light card on the dark page
           borderRadius: "var(--radius-card)",
           background: "#ffffff",
-          boxShadow: "0 40px 90px -30px rgba(0,0,0,0.9), 0 0 0 1px rgba(244,244,242,0.1)",
+          boxShadow: "0 40px 90px -30px rgba(58,36,24,0.25), 0 0 0 1px rgba(58,36,24,0.1)",
         }}
       >
         <div

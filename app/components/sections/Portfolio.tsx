@@ -12,7 +12,7 @@ import { MOCKUPS, type Mockup } from "../mockups";
 const RING_IMAGES = MOCKUPS.map((m) => m.cover.replace("-960.jpg", "-480.jpg"));
 
 /**
- * Eight directions a landscaping site can take, drifting past on a rail that
+ * Eight directions a trades site can take, drifting past on a rail that
  * stops under the pointer. Each opens larger, with a note on who it suits.
  */
 export default function Portfolio() {
@@ -33,7 +33,7 @@ export default function Portfolio() {
             className="mx-auto -mt-2 max-w-[52ch] text-center text-[16px] leading-relaxed md:text-[18px]"
             style={{ color: "var(--ink-60)" }}
           >
-            Eight landscaping sites, eight different directions. Every one is built around the
+            Eight trades sites, eight different directions. Every one is built around the
             crew{"’"}s own work, and none of them is a template.
           </p>
         </Reveal>

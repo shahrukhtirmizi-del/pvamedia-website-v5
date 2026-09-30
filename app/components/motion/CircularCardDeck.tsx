@@ -1,20 +1,19 @@
+"use client";
+
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
 type CardData = {
   theme: "ink" | "paper" | "signal";
-  type: "count" | "process" | "portal" | "pulse" | "statement" | "brief" | "orbit";
+  type: "count" | "pulse" | "statement" | "brief";
   kicker: string;
   title: string;
 };
 
 const cards: CardData[] = [
-  { theme: "signal", type: "count", kicker: "OPEN EDITION · 2026", title: "Seven ways forward" },
-  { theme: "ink", type: "process", kicker: "FIELDWORK / 01", title: "Find the signal" },
-  { theme: "paper", type: "portal", kicker: "OPPORTUNITY RADAR", title: "A wider opening" },
-  { theme: "ink", type: "pulse", kicker: "CULTURE PULSE", title: "Ideas in motion" },
-  { theme: "signal", type: "statement", kicker: "MAKE WHAT MATTERS", title: "Build momentum" },
-  { theme: "paper", type: "brief", kicker: "STUDIO BRIEF / 08", title: "Useful by design" },
-  { theme: "ink", type: "orbit", kicker: "NEXT RELEASE", title: "The path ahead" },
+  { theme: "signal", type: "count", kicker: "TRACK RECORD", title: "Proof, not promises" },
+  { theme: "ink", type: "pulse", kicker: "BY THE NUMBERS", title: "What clients see" },
+  { theme: "signal", type: "statement", kicker: "THE GUARANTEE", title: "No risk to start" },
+  { theme: "paper", type: "brief", kicker: "WHY PVA", title: "Speed, proof, risk" },
 ];
 
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
@@ -22,24 +21,15 @@ const easeInOutCubic = (t: number) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 
 
 function CardArt({ card }: { card: CardData }) {
   if (card.type === "count") {
-    return <><div className="micro">A COLLECTION OF PRACTICAL<br />IDEAS FOR CURIOUS TEAMS</div><strong className="giant">7</strong><i className="rule" /></>;
-  }
-  if (card.type === "process") {
-    return <><div className="steps"><span>1</span>NOTICE<br /><span>2</span>FRAME<br /><span>3</span>MAKE<br /><span>4</span>LEARN</div><div className="bars"><i /><i /><i /><i /></div></>;
-  }
-  if (card.type === "portal") {
-    return <><div className="rows"><p>THE GAP <b>UNTAPPED</b></p><p>THE SHIFT <b>NOW</b></p></div><div className="portalArt"><i /><b>+</b></div></>;
+    return <><div className="micro">WEBSITES BUILT FOR TRADES<br />AND HOME SERVICE COMPANIES</div><strong className="giant">200<small style={{ fontSize: "0.3em", verticalAlign: "top", letterSpacing: 0 }}>+</small></strong><i className="rule" /></>;
   }
   if (card.type === "pulse") {
-    return <><div className="metrics"><b>18K</b><b>72%</b><b>04</b></div><div className="portrait"><i /></div><div className="swatches"><i /><i /><i /><i /></div><div className="cities">NEW SIGNALS<br />COLOMBO<br />TOKYO<br />OSLO</div></>;
+    return <><div className="metrics"><b>200+</b><b>5</b><b>60%</b></div><div className="portrait"><i /></div><div className="swatches"><i /><i /><i /><i /></div><div className="cities">WHERE WE WORK<br />TEXAS<br />CALIFORNIA<br />SAN DIEGO</div></>;
   }
   if (card.type === "statement") {
-    return <><div className="edgeNote">SMALL MOVES<br />COMPOUND FAST</div><div className="word">momentum</div></>;
+    return <><div className="edgeNote">60% MORE ENQUIRIES<br />IN 90 DAYS</div><div className="word">guarantee</div></>;
   }
-  if (card.type === "brief") {
-    return <><div className="briefNo">08.24</div><div className="columns"><p>CLARITY<br /><b>LESS, BETTER</b></p><p>UTILITY<br /><b>READY TO USE</b></p><p>FEELING<br /><b>QUIETLY BOLD</b></p></div></>;
-  }
-  return <><div className="orbitArt"><i /><i /><i /><b /></div><div className="route">START&nbsp;&nbsp;—&nbsp;&nbsp;SHAPE&nbsp;&nbsp;—&nbsp;&nbsp;SHIP</div></>;
+  return <><div className="briefNo">08.24</div><div className="columns"><p>SPEED<br /><b>LIVE IN 5 DAYS</b></p><p>PROOF<br /><b>200+ BUILT</b></p><p>RISK<br /><b>60% GUARANTEE</b></p></div></>;
 }
 
 function ArcCard({
@@ -258,12 +248,9 @@ export default function CircularCardDeck() {
       <div className="hint"><span>DRAG</span><i /><span>SCROLL</span></div>
 
       <style>{`
-        :root { color-scheme: light; font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
         * { box-sizing: border-box; }
-        html, body, #root { width: 100%; height: 100%; margin: 0; overflow: hidden; }
-        body { background: #dfe2e4; }
         button, article { -webkit-tap-highlight-color: transparent; }
-        .scene { position: relative; width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; background: linear-gradient(180deg,#e3e5e7 0%,#e3e5e7 72%,#aeb2b5 118%); }
+        .scene { position: relative; width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; background: linear-gradient(180deg, #F2EAD3 0%, #F2EAD3 72%, #ECE0C8 118%); }
         .scene:after { content: ""; position: absolute; inset: auto 0 0; height: 22%; pointer-events: none; background: linear-gradient(transparent,rgba(67,71,74,.16)); }
         .stage { position: absolute; left: 50%; top: 0; width: min(100vw,62vh); height: 100%; transform: translateX(-50%); touch-action: none; user-select: none; cursor: grab; }
         .stage:active { cursor: grabbing; }
@@ -273,10 +260,10 @@ export default function CircularCardDeck() {
         .card:hover .cardSurface { transform: translateZ(0) scale(1.055); box-shadow: 0 1px 0 rgba(255,255,255,.55) inset,0 24px 52px rgba(20,24,27,.3); }
         .card header { position: absolute; z-index: 3; left: 6.5%; right: 6.5%; top: 8%; display: flex; justify-content: space-between; font-size: clamp(4px,1.45cqw,8px); font-weight: 700; letter-spacing: .05em; opacity: .82; }
         .card h2 { position: absolute; z-index: 3; margin: 0; left: 6.5%; top: 22%; max-width: 48%; font-size: clamp(10px,5.8cqw,27px); line-height: .92; letter-spacing: -.055em; font-weight: 580; }
-        .ink .cardSurface { color: #f6f5f1; background: #171719; border: 1px solid rgba(255,255,255,.09); }
+        .ink .cardSurface { color: #F2EAD3; background: #241811; border: 1px solid rgba(255,255,255,.09); }
         .ink .cardSurface:after { content: ""; position: absolute; inset: 0; opacity: .13; background: repeating-linear-gradient(0deg,transparent 0 12%,#fff 12.4% 12.8%); }
-        .paper .cardSurface { color: #18191a; background: #f8f8f5; border: 1px solid rgba(10,12,13,.11); }
-        .signal .cardSurface { color: #fff8ee; background: #ff4b32; border: 1px solid rgba(139,29,13,.16); }
+        .paper .cardSurface { color: #3A2418; background: #FAF6EC; border: 1px solid rgba(10,12,13,.11); }
+        .signal .cardSurface { color: #F2EAD3; background: #3A2418; border: 1px solid rgba(217,192,140,0.25); }
         .micro { position: absolute; left: 7%; bottom: 12%; font-size: clamp(4px,1.55cqw,8px); line-height: 1.35; letter-spacing: .05em; }
         .giant { position: absolute; right: 7%; bottom: -17%; font-size: clamp(76px,44cqw,210px); line-height: 1; font-weight: 350; letter-spacing: -.1em; }
         .rule { position: absolute; left: 7%; right: 7%; bottom: 8%; border-bottom: 1px solid rgba(255,255,255,.5); }
@@ -292,12 +279,12 @@ export default function CircularCardDeck() {
         .portalArt b { position: absolute; right: 22%; top: 43%; color: #18191a; font: 8px monospace; }
         .metrics { position: absolute; left: 7%; right: 7%; top: 26%; display: flex; justify-content: space-around; border-top: 1px solid #454549; padding-top: 4%; font-size: clamp(5px,2.7cqw,13px); }
         .portrait { position: absolute; left: 7%; bottom: 7%; width: 34%; height: 45%; background: radial-gradient(circle at 50% 35%,#c9cac7 0 7%,#19191b 8% 27%,transparent 28%),linear-gradient(135deg,#e8e8e4,#bfc1bf); overflow: hidden; }
-        .portrait:after { content: ""; position: absolute; width: 48%; height: 8%; background: #ff4b32; top: 35%; left: 45%; box-shadow: 0 0 10px #ff4b32; }
+        .portrait:after { content: ""; position: absolute; width: 48%; height: 8%; background: #D9C08C; top: 35%; left: 45%; box-shadow: 0 0 10px #D9C08C; }
         .portrait i { position: absolute; width: 58%; height: 52%; border-radius: 50% 50% 0 0; background: #111; left: 22%; bottom: -5%; }
-        .swatches { position: absolute; left: 48%; top: 51%; display: flex; gap: 4px; }.swatches i { width: clamp(9px,5cqw,23px); aspect-ratio: 1; background: #ff4b32; }.swatches i:nth-child(2){background:#ff735e}.swatches i:nth-child(3){background:#eee}.swatches i:nth-child(4){background:#777}
+        .swatches { position: absolute; left: 48%; top: 51%; display: flex; gap: 4px; }.swatches i { width: clamp(9px,5cqw,23px); aspect-ratio: 1; background: #D9C08C; }.swatches i:nth-child(2){background:#C9A968}.swatches i:nth-child(3){background:#eee}.swatches i:nth-child(4){background:#777}
         .cities { position: absolute; left: 49%; bottom: 7%; font-size: clamp(4px,1.9cqw,9px); line-height: .92; }
         .edgeNote { position: absolute; right: 7%; top: 19%; text-align: right; font-size: clamp(4px,1.45cqw,8px); line-height: 1.2; }
-        .word { position: absolute; left: -3%; bottom: -18%; color: rgba(255,244,233,.82); font-size: clamp(43px,29cqw,140px); line-height: 1; letter-spacing: -.09em; font-weight: 450; }
+        .word { position: absolute; left: -3%; bottom: -18%; color: rgba(242,234,211,0.85); font-size: clamp(43px,29cqw,140px); line-height: 1; letter-spacing: -.09em; font-weight: 450; }
         .briefNo { position: absolute; left: 7%; bottom: 7%; color: #d0d0cb; font-size: clamp(28px,18cqw,88px); letter-spacing: -.08em; }
         .columns { position: absolute; left: 50%; right: 6%; top: 32%; font-size: clamp(4px,1.6cqw,8px); }.columns p { margin: 0; padding: 6% 0; border-top: 1px solid #ddd; color: #999; }.columns b { color: #202020; }
         .orbitArt { position: absolute; width: 47%; aspect-ratio: 1; right: 4%; bottom: -38%; border: 1px solid #555; border-radius: 50%; }.orbitArt i { position: absolute; inset: 12%; border: 1px solid #414145; border-radius: 50%; }.orbitArt i:nth-child(2){inset:27%}.orbitArt i:nth-child(3){inset:42%}.orbitArt b { position:absolute;width:9%;aspect-ratio:1;border-radius:50%;background:#ff4b32;left:4%;top:23%; }

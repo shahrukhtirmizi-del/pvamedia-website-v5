@@ -119,7 +119,7 @@ export default function OrbitHeading({
       const x = c.getContext("2d");
       if (!x) return null;
 
-      x.fillStyle = "#121212";
+      x.fillStyle = "#FAF6EC";
       x.fillRect(0, 0, TS, TS);
 
       const scale = Math.max(TS / img.width, TS / img.height);
@@ -135,7 +135,7 @@ export default function OrbitHeading({
       x.fillStyle = "rgba(176,180,178,1)";
       x.fillRect(0, 0, TS, TS);
       x.globalCompositeOperation = "source-over";
-      x.fillStyle = "rgba(7, 7, 7,0.4)";
+      x.fillStyle = "rgba(242, 234, 211, 0.4)";
       x.fillRect(0, 0, TS, TS);
 
       const d = mkc(TS, TS);
@@ -143,7 +143,7 @@ export default function OrbitHeading({
       if (y) {
         y.drawImage(c, 0, 0);
         y.globalCompositeOperation = "multiply";
-        y.fillStyle = "rgba(18, 18, 18,0.82)";
+        y.fillStyle = "rgba(250, 246, 236, 0.82)";
         y.fillRect(0, 0, TS, TS);
       }
       return { front: c, back: d };
@@ -204,7 +204,7 @@ export default function OrbitHeading({
       // two lines, centred on the ring centre
       const blockTop = d2sy(RING.cy) - (cap + gap) / 2;
       drawLine(x, lineOne, fontFamily, "700", size, d2sx(RING.cx), blockTop + cap, "#8f8f8f");
-      drawLine(x, lineTwo, fontFamily, "700", size, d2sx(RING.cx), blockTop + cap + gap, "#f4f4f2");
+      drawLine(x, lineTwo, fontFamily, "700", size, d2sx(RING.cx), blockTop + cap + gap, "#3A2418");
     }
 
     function project(p: number[]) {
