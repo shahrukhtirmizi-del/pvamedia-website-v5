@@ -219,8 +219,8 @@ export const GUARANTEE = "60% more enquiries in 90 days, or you don't pay.";
 
 /**
  * Real client testimonials and results, grouped by service line.
- * CLIENT_TESTIMONIALS feeds the CircularCardDeck testimonials section and
- * CLIENT_RESULTS feeds the Results section built on ScrollSwipeStack.
+ * CLIENT_TESTIMONIALS feeds the CircularCardDeck 3D coverflow and
+ * CLIENT_RESULTS feeds the Results section's conversion-metrics bento grid.
  */
 
 export type ClientCategory = "Website" | "Marketing" | "AI Automation";
