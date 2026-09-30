@@ -133,7 +133,7 @@ export const SERVICES: Service[] = [
     short:
       "Ads that point at a page built to convert, not at your homepage.",
     detail: [
-      "Most landscaping ad budgets are wasted after the click, not before it. The targeting is usually fine. The page is the problem.",
+      "Most trades ad budgets are wasted after the click, not before it. The targeting is usually fine. The page is the problem.",
       "We build a dedicated landing page for every service you advertise, matched to the ad that feeds it, and keep the two in step as the campaign runs.",
     ],
     includes: [

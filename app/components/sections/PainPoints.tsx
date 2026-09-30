@@ -31,7 +31,7 @@ export default function PainPoints() {
           className="font-display max-w-[20ch] font-semibold"
           style={{ fontSize: "clamp(30px, 4.6vw, 56px)", lineHeight: 1.08 }}
         >
-          Most landscapers lose jobs before the phone even rings
+          Most trades and home service companies lose jobs before the phone even rings
         </h2>
       </Reveal>
 
@@ -61,7 +61,7 @@ export default function PainPoints() {
                         className="absolute inset-0"
                         style={{
                           background:
-                            "linear-gradient(150deg, rgba(7, 7, 7,0.94), rgba(7, 7, 7,0.6) 58%, rgba(7, 7, 7,0.86))",
+                            "linear-gradient(150deg, rgba(242, 234, 211, 0.94), rgba(242, 234, 211, 0.6) 58%, rgba(242, 234, 211, 0.86))",
                         }}
                       />
                     </>

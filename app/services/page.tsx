@@ -8,7 +8,7 @@ import HomePage from "../components/HomePage";
  */
 export const metadata: Metadata = {
   title: "Services",
-  description: "Website design and build, local SEO, paid ads, an AI receptionist and ongoing care, for landscaping companies.",
+  description: "Website design and build, local SEO, paid ads, an AI receptionist and ongoing care, for trades and home service companies.",
   alternates: { canonical: "/" },
 };
 

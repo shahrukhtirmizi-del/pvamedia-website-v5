@@ -104,7 +104,7 @@ export default function OnboardingForm() {
           className="flex items-start gap-3 p-5"
           style={{
             borderRadius: "var(--radius-tile)",
-            background: "rgba(244, 244, 242, 0.06)",
+            background: "rgba(58, 36, 24, 0.06)",
             border: "1px solid var(--line-strong)",
           }}
         >
@@ -132,7 +132,7 @@ export default function OnboardingForm() {
       </Card>
 
       <Card step={2} title="Services and pricing rules" intro="What you do, what costs extra, and what should never be promised.">
-        <Textarea label="Full list of services offered" name="services" rows={5} placeholder="Lawn maintenance, hardscaping, irrigation install and repair, seasonal clean-ups, landscape lighting" />
+        <Textarea label="Full list of services offered" name="services" rows={5} placeholder="Lawn maintenance, hardscaping, irrigation install and repair, seasonal clean-ups, outdoor lighting" />
         <Textarea label="Services with special pricing rules" name="pricing_rules" rows={4} helper="Diagnostic fees, minimum charges, travel fees, anything a caller should be told up front." placeholder="Irrigation diagnostic is $95, waived if the repair goes ahead. $150 minimum on any call-out." />
         <Textarea label="Services NOT offered" name="services_not_offered" rows={3} helper="Anything the receptionist must never promise or quote for." placeholder="Tree removal over 20ft, pool construction, snow clearing" />
       </Card>
@@ -206,7 +206,7 @@ const FIELD = "mt-2.5 w-full px-4 py-3.5 text-[15px] outline-none transition-col
 function fieldStyle(error?: string) {
   return {
     borderRadius: "var(--radius-tile)",
-    background: "rgba(244, 244, 242, 0.05)",
+    background: "rgba(58, 36, 24, 0.05)",
     border: `1px solid ${error ? "var(--accent)" : "var(--line-strong)"}`,
     color: "var(--ink)",
   } as const;
@@ -216,7 +216,7 @@ function Card({ step, title, intro, children }: { step: number; title: string; i
   return (
     <section
       className="surface p-6 md:p-9"
-      style={{ borderRadius: "var(--radius-card)", background: "rgba(13, 13, 13, 0.85)" }}
+      style={{ borderRadius: "var(--radius-card)", background: "rgba(236, 224, 200, 0.85)" }}
       aria-labelledby={`step-${step}`}
     >
       <div className="mb-7 flex items-start gap-4">
@@ -249,7 +249,7 @@ function Note({ children }: { children: ReactNode }) {
   return (
     <p
       className="p-4 text-[14px] leading-relaxed"
-      style={{ borderRadius: "var(--radius-tile)", background: "rgba(244, 244, 242, 0.04)", color: "var(--ink-80)" }}
+      style={{ borderRadius: "var(--radius-tile)", background: "rgba(58, 36, 24, 0.04)", color: "var(--ink-80)" }}
     >
       {children}
     </p>
