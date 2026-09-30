@@ -141,22 +141,41 @@ export default function SettleStack({
       };
       raf = requestAnimationFrame(tick);
     } else {
-      // eased toward the scroll position rather than snapped to it, so a
-      // fast flick of the wheel still plays the flip and each exit through
+      // Eased toward the scroll position rather than snapped to it, so a fast
+      // flick of the wheel still plays the flip and each exit through. Touch
+      // already arrives smoothed (see SmoothScroll) and a finger expects the
+      // cards to keep up with it, so it gets a much lighter ease there.
+      const ease = window.matchMedia("(pointer: coarse)").matches ? 0.2 : 0.09;
       let shown = -1;
-      const tick = () => {
+      let target = 0;
+      const measure = () => {
         const rect = pin.getBoundingClientRect();
         // against the pinned stage (100svh), not innerHeight, which moves
         // with a phone's address bar
         const stageH = (pin.firstElementChild as HTMLElement | null)?.offsetHeight || window.innerHeight;
         const span = pin.offsetHeight - stageH;
-        const target = clamp01(span > 0 ? -rect.top / span : 0);
-        shown = shown < 0 ? target : shown + (target - shown) * 0.09;
+        target = clamp01(span > 0 ? -rect.top / span : 0);
+      };
+      const tick = () => {
+        raf = 0;
+        measure();
+        shown = shown < 0 ? target : shown + (target - shown) * ease;
         if (Math.abs(target - shown) < 0.0004) shown = target;
         apply(shown);
-        raf = requestAnimationFrame(tick);
+        // sleep once caught up; the next scroll wakes it
+        if (shown !== target) raf = requestAnimationFrame(tick);
       };
-      raf = requestAnimationFrame(tick);
+      const wake = () => {
+        if (!raf) raf = requestAnimationFrame(tick);
+      };
+      window.addEventListener("scroll", wake, { passive: true });
+      window.addEventListener("resize", wake);
+      wake();
+      return () => {
+        cancelAnimationFrame(raf);
+        window.removeEventListener("scroll", wake);
+        window.removeEventListener("resize", wake);
+      };
     }
 
     return () => cancelAnimationFrame(raf);
@@ -257,9 +276,9 @@ const css = `
   /* tall scroll track; the sticky stage stays pinned while you scroll it */
   /* long enough that the flip and each card's exit get roughly a screen
      of scroll apiece */
-  .st-track{position:relative;width:100%;height:760svh;}
+  .st-track{position:relative;width:100%;height:760vh;height:760svh;}
 
-  .st-stage{position:sticky;top:0;width:100%;height:100svh;overflow:hidden;
+  .st-stage{position:sticky;top:0;width:100%;height:100vh;height:100svh;overflow:hidden;
     background:#ffffff;
     color:#000000;perspective:1200px;}
 
@@ -335,6 +354,8 @@ const css = `
   .st-card{overflow:hidden;}
   /* phones: a taller, wider card and tighter rows so a six-item list fits */
   @media (max-width:640px){
+    /* a finger covers ground faster than a wheel: less track per card */
+    .st-track{height:620vh;height:620svh;}
     .st-card{width:84%;aspect-ratio:3/4.1;}
     .st-back:has(.st-listcard){padding:1.4rem 1.25rem 1.1rem;}
     .st-listcard h3{font-size:1.35rem;margin-bottom:.8rem;}

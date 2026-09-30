@@ -3,14 +3,15 @@ import Logo from "../Logo";
 import { SITE, NAV } from "../../lib/site";
 import ChromaticFooter from "../motion/ChromaticGradientFooter";
 
+/** The year PVA Media was founded, shown in the copyright line. */
+const FOUNDED = 2025;
+
 const LEGAL = [
   { label: "Privacy policy", href: "/privacy" },
   { label: "Terms and conditions", href: "/terms" },
 ];
 
 export default function Footer() {
-  const year = new Date().getFullYear();
-
   return (
     <ChromaticFooter className="border-t" style={{ borderColor: "var(--line)" }}>
       <div className="mx-auto max-w-[1240px] px-5 py-14 md:px-8 md:py-20">
@@ -20,7 +21,7 @@ export default function Footer() {
               <Logo className="h-5 w-auto" />
             </Link>
             <p className="mt-5 max-w-[34ch] text-[15px]" style={{ color: "var(--ink-60)" }}>
-              Marketing, AI automation and websites for trades and home service companies.
+              Specialists in marketing, AI automation and websites for trades and home service companies.
             </p>
           </div>
 
@@ -65,9 +66,9 @@ export default function Footer() {
           style={{ borderColor: "var(--line)", color: "var(--ink-45)" }}
         >
           <p>
-            {"©"} {year} {SITE.name}. All rights reserved.
+            {"©"} {FOUNDED} {SITE.name}. All rights reserved.
           </p>
-          <p>A UK marketing agency for trades and home service companies.</p>
+          <p>A UK marketing agency specialising in trades and home service companies.</p>
         </div>
       </div>
     </ChromaticFooter>

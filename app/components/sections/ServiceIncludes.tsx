@@ -49,7 +49,7 @@ export default function ServiceIncludes() {
       headline="What each service includes"
       frontTitle="What's inside"
       frontTag={`${SERVICES.length} services`}
-      frontBody="Keep scrolling to open each service up."
+      frontBody="Four specialisms, one system. Keep scrolling to open each one up."
       // the component's own top chrome would sit under the site nav
       markLabel=""
       hintLabel="Scroll to open the stack"

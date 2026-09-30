@@ -18,7 +18,7 @@ const structuredData = {
   email: SITE.email,
   telephone: SITE.phone,
   description:
-    "A UK marketing agency for trades and home service companies: local SEO, paid advertising, AI receptionists and AI automation agents, backed by websites built to convert.",
+    "A UK marketing agency specialising in trades and home service companies: local SEO, paid advertising, AI receptionists and AI automation agents, backed by websites built to convert.",
   areaServed: { "@type": "Country", name: "United Kingdom" },
   slogan: SITE.tagline,
 };
@@ -64,7 +64,7 @@ export default function HomePage() {
             tags={["Local SEO", "Paid ads", "AI automation"]}
             heroImage="/images/hero/preloader-bg.png"
             footerLeft="Scroll"
-            footerRight="Marketing for trades and home services"
+            footerRight="Trades marketing specialists"
           />
         }
       />

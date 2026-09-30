@@ -108,6 +108,8 @@ export type Service = {
   /** Same claim as `short`, split into two scannable lines instead of one
    *  dense sentence — what CardStoryScroll renders. */
   shortLines: [string, string];
+  /** The line over the service's card: what we specialise in. */
+  specialism: string;
   detail: string[];
   includes: string[];
 };
@@ -120,6 +122,7 @@ export const SERVICES: Service[] = [
   {
     slug: "marketing",
     name: "Marketing",
+    specialism: "Local search and ads specialists",
     short:
       "Local SEO and paid ads that put you in front of homeowners ready to book, and turn clicks into jobs.",
     shortLines: [
@@ -142,6 +145,7 @@ export const SERVICES: Service[] = [
   {
     slug: "websites",
     name: "Websites",
+    specialism: "Trade website specialists",
     short:
       "A fast, custom site built to turn the traffic we send you into calls and quote requests.",
     shortLines: [
@@ -164,6 +168,7 @@ export const SERVICES: Service[] = [
   {
     slug: "ai-receptionist",
     name: "AI Receptionist",
+    specialism: "Specialist call handling",
     short:
       "Answers every call and web enquiry, qualifies the job and books it in, day or night.",
     shortLines: [
@@ -185,6 +190,7 @@ export const SERVICES: Service[] = [
   {
     slug: "ai-automation",
     name: "AI Automation Agents",
+    specialism: "Specialist lead follow-up",
     short:
       "Agents that confirm bookings, chase unbooked leads and answer routine questions for you.",
     shortLines: [

@@ -6,6 +6,7 @@
 
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
+import { isCoarse } from "../../lib/device";
 
 /* ───────────────────────────────────────────────────────────────────────────
    PLUME — a real-time fluid field that answers the cursor.
@@ -137,21 +138,20 @@ export default function PlumeField({
   reduced = false,
 }: {
   active?: boolean;
-  /** Shrink the solver grids and pressure iterations, same treatment as the
-   *  gallery-card thumbnail — for running the field outside the hero, where
-   *  it is a background texture rather than the main event. Changing this
-   *  rebuilds the solver (it sizes the render targets once, on mount), so
-   *  it is meant to flip rarely (e.g. entering/leaving the hero), not per
-   *  frame. */
+  /** The field is a faint background texture here rather than the main
+   *  event (outside the hero). Phones stop drawing into it altogether; the
+   *  solver itself is never rebuilt, so this can flip freely. */
   reduced?: boolean;
 }) {
   const rootRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   // read inside the rAF loop, so toggling it never tears the solver down
   const activeRef = useRef(active);
+  const reducedRef = useRef(reduced);
   useEffect(() => {
     activeRef.current = active;
-  }, [active]);
+    reducedRef.current = reduced;
+  }, [active, reduced]);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -160,12 +160,15 @@ export default function PlumeField({
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const isCard = new URLSearchParams(window.location.search).has("card");
-    const lowQuality = isCard || reduced;
+    // Phones get the thumbnail-sized solver: a full-grade one behind a
+    // scrolling page cost them smooth scrolling everywhere
+    const coarse = isCoarse();
+    const lowQuality = isCard || coarse;
     // Reduced motion: leave the canvas blank so only the calm hero shows.
     if (reduce) return;
 
     const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, coarse ? 1.5 : 2));
     const sizeOf = () => {
       const r = root.getBoundingClientRect();
       return { w: Math.max(1, r.width), h: Math.max(1, r.height) };
@@ -204,7 +207,7 @@ export default function PlumeField({
     // grids are wasted work — shrink them (and the pressure iterations) for the
     // thumbnail. The standalone route (and any copied code) keeps full quality.
     const simRes = lowQuality ? 128 : CONFIG.simResolution;
-    const dyeRes = lowQuality ? 384 : CONFIG.dyeResolution;
+    const dyeRes = isCard ? 384 : coarse ? 512 : CONFIG.dyeResolution;
     const pressureIters = lowQuality ? 18 : CONFIG.pressureIterations;
     const simSize = {
       w: simRes,
@@ -299,6 +302,9 @@ export default function PlumeField({
     };
     const onPointer = (e: PointerEvent) => {
       if (isCard) return;
+      // on a phone past the hero the field is a faint texture under opaque
+      // sections; a scrolling finger shouldn't keep the solver busy for it
+      if (coarse && reducedRef.current) return;
       moveTo(e.clientX, e.clientY);
     };
     if (!isCard) window.addEventListener("pointermove", onPointer);
@@ -311,7 +317,15 @@ export default function PlumeField({
     };
     window.addEventListener(PLUME_SPLAT, onSplat);
 
+    // Ink fades below the display threshold well within a second of the last
+    // splat, after which every pass draws an empty field. Past this long
+    // without input the loop skips the solver; the canvas keeps its (empty)
+    // last frame, and the next splat wakes it.
+    const IDLE_MS = 1500;
+    let lastInput = -Infinity;
+
     const splat = (x: number, y: number, vx: number, vy: number) => {
+      lastInput = performance.now();
       set(mats.splat, {
         aspect: width / height,
         point: new THREE.Vector2(x / width, 1 - y / height),
@@ -411,7 +425,8 @@ export default function PlumeField({
       const behindCurtain =
         html.getAttribute("data-intro") === "playing" &&
         html.getAttribute("data-intro-phase") !== "handoff";
-      if (!activeRef.current || behindCurtain) {
+      const idle = !isCard && !queued.length && !mouse.moved && now - lastInput > IDLE_MS;
+      if (!activeRef.current || behindCurtain || idle) {
         queued.length = 0;
         mouse.moved = false;
         raf = requestAnimationFrame(loop);
@@ -453,6 +468,10 @@ export default function PlumeField({
 
     const onResize = () => {
       const s = sizeOf();
+      // a phone's address bar sliding in and out changes only the height;
+      // reallocating the canvas for that stalled scrolling, and the ink
+      // stretching a few percent is invisible
+      if (coarse && Math.round(s.w) === Math.round(cssW)) return;
       cssW = s.w;
       cssH = s.h;
       renderer.setSize(cssW, cssH, false);
@@ -475,7 +494,7 @@ export default function PlumeField({
       Object.values(mats).forEach((m) => m.dispose());
       quad.geometry.dispose();
     };
-  }, [reduced]);
+  }, []);
 
   return (
     <div className="pl-root" ref={rootRef}>

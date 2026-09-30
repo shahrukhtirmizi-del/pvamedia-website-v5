@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 const REASSURANCE = [
-  "Thirty minutes, no pitch",
+  "Thirty minutes with a specialist, no pitch",
   "We look at your current search visibility live",
   "You leave with the plan whether you hire us or not",
 ];

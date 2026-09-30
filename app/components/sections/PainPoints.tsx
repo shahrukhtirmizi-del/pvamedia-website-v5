@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, type CSSProperties } from "react";
 import Reveal from "../ui/Reveal";
 import HandWrittenTitle from "../motion/HandWrittenTitle";
 import { PAIN_POINTS, PAIN_CLOSER } from "../../lib/site";
@@ -40,13 +40,11 @@ const clamp = (value: number, min: number, max: number) => Math.min(max, Math.ma
 type CardStyle = CSSProperties & {
   "--card-color": string;
   "--muted": string;
-  "--card-scale": number;
-  "--depth": number;
 };
 
 export default function PainPoints() {
   const stackRef = useRef<HTMLDivElement>(null);
-  const [progress, setProgress] = useState(0);
+  const cardRefs = useRef<(HTMLElement | null)[]>([]);
 
   useEffect(() => {
     let raf = 0;
@@ -63,7 +61,14 @@ export default function PainPoints() {
       const step = parseFloat(vars.getPropertyValue("--stack-step")) || 400;
       const next = (window.scrollY - (pageTop - stickyTop)) / step;
 
-      setProgress(clamp(next, 0, CARDS.length - 0.1));
+      // written straight to each card, so scrolling never re-renders React
+      const progress = clamp(next, 0, CARDS.length - 0.1);
+      cardRefs.current.forEach((card, index) => {
+        if (!card) return;
+        const depth = clamp(progress - index, 0, 3);
+        card.style.setProperty("--card-scale", `${1 - depth * 0.022}`);
+        card.style.setProperty("--depth", `${depth}`);
+      });
     };
 
     const requestUpdate = () => {
@@ -95,17 +100,21 @@ export default function PainPoints() {
 
       <div className="ps-stack" ref={stackRef}>
         {CARDS.map((card, index) => {
-          const depth = clamp(progress - index, 0, 3);
           const style: CardStyle = {
             "--card-color": card.color,
             "--muted": card.muted,
-            "--card-scale": 1 - depth * 0.022,
-            "--depth": depth,
             zIndex: 10 + index,
           };
 
           return (
-            <article className="ps-card" key={card.title} style={style}>
+            <article
+              className="ps-card"
+              key={card.title}
+              style={style}
+              ref={(el) => {
+                cardRefs.current[index] = el;
+              }}
+            >
               <div className="ps-top">
                 <h3 className="ps-title">
                   <span>{card.titleLines[0]}</span>
@@ -139,7 +148,7 @@ export default function PainPoints() {
         <HandWrittenTitle
           eyebrow="The fix"
           title={PAIN_CLOSER}
-          subtitle="Search, ads, follow-up and booking, run as one joined-up system instead of five tools that never talk to each other."
+          subtitle="We specialise in search, ads, follow-up and booking for trades, and run them as one joined-up system instead of five tools that never talk to each other."
         />
       </div>
     </section>
@@ -192,7 +201,7 @@ const CSS = `
     background: var(--card-color);
     color: #FFFFFF;
     transform-origin: 50% 0%;
-    transform: translateY(calc(var(--depth) * var(--peek-lift) * -1)) scale(var(--card-scale));
+    transform: translateY(calc(var(--depth, 0) * var(--peek-lift) * -1)) scale(var(--card-scale, 1));
     will-change: transform;
     box-shadow: inset 0 0 0 1px rgba(255,255,255,.04), 0 -18px 40px -24px rgba(0,0,0,.45);
   }

@@ -22,8 +22,8 @@ export default function FinalCTA() {
             className="mx-auto mt-7 max-w-[44ch] text-[16px] leading-relaxed md:text-[18px]"
             style={{ color: "var(--ink-60)" }}
           >
-            Thirty minutes, no pitch. We look at where your enquiries come from now, and what it
-            would take to fill next month.
+            Thirty minutes with a trades marketing specialist, no pitch. We look at where your
+            enquiries come from now, and what it would take to fill next month.
           </p>
         </Reveal>
 

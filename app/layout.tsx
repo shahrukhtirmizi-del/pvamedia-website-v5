@@ -43,11 +43,11 @@ const serif = Source_Serif_4({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.domain),
   title: {
-    default: "PVA Media | Marketing for Trades and Home Services",
+    default: "PVA Media | Specialist Marketing for Trades and Home Services",
     template: "%s | PVA Media",
   },
   description:
-    "Local SEO, paid ads and AI automation for trades and home service companies, with websites built to convert. 60% more enquiries in 90 days, or you don't pay.",
+    "Specialists in local SEO, paid ads and AI automation for trades and home service companies, with websites built to convert. 60% more enquiries in 90 days, or you don't pay.",
   keywords: [
     "trades marketing agency",
     "home service marketing",
@@ -60,13 +60,13 @@ export const metadata: Metadata = {
     type: "website",
     url: SITE.domain,
     siteName: SITE.name,
-    title: "PVA Media | Marketing for Trades and Home Services",
+    title: "PVA Media | Specialist Marketing for Trades and Home Services",
     description:
       "We take trades and home service companies from 3 booked jobs a month to 12, without lifting a finger.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "PVA Media | Marketing for Trades and Home Services",
+    title: "PVA Media | Specialist Marketing for Trades and Home Services",
     description:
       "We take trades and home service companies from 3 booked jobs a month to 12, without lifting a finger.",
   },

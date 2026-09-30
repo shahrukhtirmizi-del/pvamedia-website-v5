@@ -79,8 +79,8 @@ export default function Results() {
         <article className="rb-feature">
           <div className="rb-feature-content">
             <p>
-              Trades and home service businesses trust us with their marketing, websites and AI
-              automation, and judge us on booked jobs.
+              Trades and home service businesses trust us as specialists in their marketing,
+              websites and AI automation, and judge us on booked jobs.
             </p>
 
             <div className="rb-feature-row">

@@ -197,16 +197,85 @@ const CSS = `
   letter-spacing: -0.08em;
 }
 
-@media (max-width: 800px) {
+/*
+  PHONES AND TABLETS: native sticky stacking instead of the scripted flight.
+  The title panel and each card are full-screen sticky panels in normal flow,
+  so every card slides up over the last one at exactly the speed of the
+  finger, in either direction, with nothing computed per frame. (The
+  scripted version lagged the finger and fought fast flicks on phones.)
+*/
+@media (max-width: 800px), (pointer: coarse) {
   .kex-scroll-scene {
-    height: 540vh;
-    height: 540svh;
+    height: auto;
   }
 
+  .kex-sticky-stage {
+    position: relative;
+    height: auto;
+    overflow: visible;
+  }
+
+  .kex-hero-content {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100svh;
+    display: flex;
+    align-items: center;
+  }
+
+  .kex-card-layer {
+    position: relative;
+    inset: auto;
+  }
+
+  .kex-scroll-card {
+    position: sticky;
+    top: 0;
+    left: auto;
+    transform: none !important;
+    opacity: 1 !important;
+    filter: none !important;
+    will-change: auto;
+    border-radius: 22px 22px 0 0;
+    box-shadow: 0 -24px 48px -20px rgba(0, 0, 0, 0.35);
+  }
+
+  /* text in flow, top to bottom, so the description can never be pushed
+     off the card; the top padding clears the site nav */
+  .kex-card-inner {
+    display: flex;
+    flex-direction: column;
+    padding: 104px clamp(24px, 6vw, 56px) clamp(32px, 6svh, 56px);
+  }
+
+  .kex-card-kicker {
+    margin: 0 0 clamp(20px, 5svh, 48px);
+  }
+
+  .kex-card-number {
+    top: 96px;
+  }
+
+  .kex-card-description {
+    position: static;
+    margin-top: auto;
+    max-width: 34rem;
+  }
+}
+
+@media (max-width: 800px) {
   .kex-hero-title {
     font-size: clamp(58px, 17vw, 120px);
   }
 
+  .kex-card-kicker {
+    /* clear of the card number in the top-right corner */
+    max-width: calc(100% - 72px);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    line-height: 1.6;
+  }
 
   .kex-card-title {
     /* long single words (RECEPTIONIST, AUTOMATION) have to fit a phone */
@@ -214,15 +283,27 @@ const CSS = `
     overflow-wrap: anywhere;
   }
 
-  .kex-card-description {
-    left: clamp(38px, 4vw, 72px);
-    right: auto;
-    bottom: 42px;
-    max-width: 80%;
+  .kex-card-number {
+    right: 24px;
+    font-size: 44px;
   }
 
   .kex-card-description p {
-    font-size: 18px;
+    font-size: clamp(16px, 4.6vw, 19px);
+  }
+}
+
+/* short phones (SE and similar): tighten so everything still fits */
+@media (max-width: 800px) and (max-height: 700px) {
+  .kex-card-inner {
+    padding-top: 92px;
+  }
+  .kex-card-number {
+    top: 84px;
+    font-size: 36px;
+  }
+  .kex-card-description p {
+    font-size: 15.5px;
   }
 }
 
@@ -286,7 +367,9 @@ const CARD_COLORS: Array<Pick<Card, "bg" | "text" | "muted" | "numberColor">> = 
 
 const cards: Card[] = SERVICES.map((service, index) => ({
   number: `0${index + 1}`,
-  kicker: `0${index + 1} — ${service.name}`,
+  // the big number and title already name the service; the line above
+  // them says what we specialise in
+  kicker: service.specialism,
   title: service.name,
   descriptionLines: service.shortLines,
   ...CARD_COLORS[index],
@@ -314,6 +397,9 @@ export default function CardStoryScroll() {
   const frameRef = useRef<number | null>(null);
 
   useEffect(() => {
+    // phones and tablets use the CSS sticky stack; see the stylesheet
+    const stackedQuery = window.matchMedia("(max-width: 800px), (pointer: coarse)");
+
     const updateTargetProgress = () => {
       const scene = sceneRef.current;
       if (!scene) return;
@@ -329,14 +415,36 @@ export default function CardStoryScroll() {
         0,
         1,
       );
+      wake();
+    };
+
+    const clearInline = () => {
+      if (heroTitleRef.current) {
+        heroTitleRef.current.style.transform = "";
+        heroTitleRef.current.style.opacity = "";
+      }
+      cardRefs.current.forEach((card) => {
+        if (!card) return;
+        card.style.transform = "";
+        card.style.opacity = "";
+        card.style.filter = "";
+        card.style.zIndex = "";
+      });
     };
 
     const render = () => {
+      frameRef.current = null;
+      if (stackedQuery.matches) return;
+
       currentProgress.current = lerp(
         currentProgress.current,
         targetProgress.current,
         0.085,
       );
+      // close enough: land exactly and let the loop sleep until next scroll
+      if (Math.abs(targetProgress.current - currentProgress.current) < 0.0002) {
+        currentProgress.current = targetProgress.current;
+      }
 
       const progress = currentProgress.current;
 
@@ -380,7 +488,7 @@ export default function CardStoryScroll() {
         `;
 
         card.style.opacity = `${opacity}`;
-        card.style.filter = `blur(${blur}px)`;
+        card.style.filter = blur > 0.01 ? `blur(${blur}px)` : "none";
 
         /*
           Higher cards sit above lower cards,
@@ -389,22 +497,38 @@ export default function CardStoryScroll() {
         card.style.zIndex = `${20 + index}`;
       });
 
-      frameRef.current = requestAnimationFrame(render);
+      if (currentProgress.current !== targetProgress.current) wake();
     };
 
-    updateTargetProgress();
+    // the loop only runs while the eased progress is still catching up
+    function wake() {
+      if (frameRef.current === null && !stackedQuery.matches) {
+        frameRef.current = requestAnimationFrame(render);
+      }
+    }
+
+    const onModeChange = () => {
+      if (stackedQuery.matches) clearInline();
+      else updateTargetProgress();
+    };
+
+    if (stackedQuery.matches) clearInline();
+    else {
+      updateTargetProgress();
+      currentProgress.current = targetProgress.current;
+      render();
+    }
 
     window.addEventListener("scroll", updateTargetProgress, {
       passive: true,
     });
-
     window.addEventListener("resize", updateTargetProgress);
-
-    frameRef.current = requestAnimationFrame(render);
+    stackedQuery.addEventListener("change", onModeChange);
 
     return () => {
       window.removeEventListener("scroll", updateTargetProgress);
       window.removeEventListener("resize", updateTargetProgress);
+      stackedQuery.removeEventListener("change", onModeChange);
 
       if (frameRef.current) {
         cancelAnimationFrame(frameRef.current);

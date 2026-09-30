@@ -10,11 +10,11 @@ import PlumeField from "../motion/PlumeField";
  * Cinematic Accordion, the dark CardStoryScroll cards, and so on) already
  * occludes it naturally at that z-index, so nothing extra is needed there.
  *
- * It stays full quality and full opacity only while the hero (#top) is in
- * view. Past that it drops to the same reduced-resolution solver used for
- * the gallery-card thumbnail and fades to a low opacity, so the rest of the
- * page still reads as mostly plain white with a faint moving texture,
- * without paying full hero-grade GPU cost the whole way down the page.
+ * It stays at full opacity only while the hero (#top) is in view. Past that
+ * it fades to a low opacity, so the rest of the page reads as mostly plain
+ * white with a faint moving texture, and phones stop feeding it (see
+ * PlumeField's `reduced`). The solver idles whenever there is no input, so
+ * it costs nothing while you simply scroll.
  *
  * `subtle` is for pages with no hero (the bookings page): the field runs in
  * that same low-opacity, reduced mode from the start.
