@@ -170,14 +170,27 @@ const CSS = `
   right: clamp(30px, 6vw, 100px);
   bottom: clamp(36px, 5vw, 80px);
 
-  max-width: 540px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+  max-width: 460px;
+}
+
+.kex-card-description p {
   margin: 0;
-
-  color: var(--card-muted);
-
   font-size: clamp(18px, 1.6vw, 28px);
-  line-height: 1.35;
+  line-height: 1.3;
   letter-spacing: -0.035em;
+}
+
+.kex-card-description p:first-child {
+  color: var(--card-text);
+  font-weight: 600;
+}
+
+.kex-card-description p:last-child {
+  color: var(--card-muted);
+  font-weight: 400;
 }
 
 .kex-card-number {
@@ -216,6 +229,9 @@ const CSS = `
     right: auto;
     bottom: 42px;
     max-width: 80%;
+  }
+
+  .kex-card-description p {
     font-size: 18px;
   }
 }
@@ -233,7 +249,7 @@ type Card = {
   number: string;
   kicker: string;
   title: string;
-  description: string;
+  descriptionLines: [string, string];
   bg: string;
   text: string;
   muted: string;
@@ -282,7 +298,7 @@ const cards: Card[] = SERVICES.map((service, index) => ({
   number: `0${index + 1}`,
   kicker: `0${index + 1} — ${service.name}`,
   title: service.name,
-  description: service.short,
+  descriptionLines: service.shortLines,
   ...CARD_COLORS[index],
 }));
 
@@ -457,9 +473,10 @@ export default function CardStoryScroll() {
 
                       <h2 className="kex-card-title">{card.title}</h2>
 
-                      <p className="kex-card-description">
-                        {card.description}
-                      </p>
+                      <div className="kex-card-description">
+                        <p>{card.descriptionLines[0]}</p>
+                        <p>{card.descriptionLines[1]}</p>
+                      </div>
                     </div>
                   </article>
                 );

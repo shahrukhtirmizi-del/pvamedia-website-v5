@@ -4,19 +4,25 @@ import { useEffect, useState } from "react";
 import PlumeField from "../motion/PlumeField";
 
 /**
- * The fluid ink field, fixed behind the preloader and the hero so both share
- * one continuous background. It sits at z-index -1: under every in-flow
- * section, over the page ground. Once the hero (#top) has scrolled away the
- * field fades out and its solver stops, so the rest of the page reads on
- * plain white and no GPU time is spent on a layer nobody can see.
+ * The fluid ink field, fixed behind the whole page at z-index -1: under
+ * every in-flow section, over the page ground. It runs everywhere, not just
+ * behind the hero — any section painting its own opaque background (the
+ * Cinematic Accordion, the dark CardStoryScroll cards, and so on) already
+ * occludes it naturally at that z-index, so nothing extra is needed there.
+ *
+ * It stays full quality and full opacity only while the hero (#top) is in
+ * view. Past that it drops to the same reduced-resolution solver used for
+ * the gallery-card thumbnail and fades to a low opacity, so the rest of the
+ * page still reads as mostly plain white with a faint moving texture,
+ * without paying full hero-grade GPU cost the whole way down the page.
  */
 export default function HeroBackdrop() {
-  const [active, setActive] = useState(true);
+  const [heroVisible, setHeroVisible] = useState(true);
 
   useEffect(() => {
     const hero = document.getElementById("top");
     if (!hero) return;
-    const io = new IntersectionObserver(([entry]) => setActive(entry.isIntersecting));
+    const io = new IntersectionObserver(([entry]) => setHeroVisible(entry.isIntersecting));
     io.observe(hero);
     return () => io.disconnect();
   }, []);
@@ -26,12 +32,12 @@ export default function HeroBackdrop() {
       aria-hidden
       className="pointer-events-none fixed inset-0 z-[-1]"
       style={{
-        opacity: active ? 1 : 0,
+        opacity: heroVisible ? 1 : 0.16,
         transition: "opacity 0.5s ease",
         isolation: "isolate",
       }}
     >
-      <PlumeField active={active} />
+      <PlumeField active reduced={!heroVisible} />
     </div>
   );
 }

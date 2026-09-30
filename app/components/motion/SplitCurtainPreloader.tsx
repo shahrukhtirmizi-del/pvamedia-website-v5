@@ -6,6 +6,10 @@ import { PLUME_SPLAT, type PlumeSplat } from "./PlumeField";
 
 type Triple = [string, string, string];
 
+/** Dispatched by the skip button; the running timeline answers it exactly
+ *  like a scroll — fade the curtain, then hand off to the hero. */
+const SKIP_INTRO = "sf:skip-intro";
+
 export interface SplitRevealHeroProps {
   studio?: string;
   numeral?: string;
@@ -518,11 +522,13 @@ export default function SplitRevealHero({
       later(shrinkAt + shrinkFor + 4000, finish);
     };
 
-    // Scrolling during the intro skips straight to the hero: the curtain
-    // fades rather than making anyone sit through the rest of it.
-    const onScroll = () => {
-      if (!overlay || finished || window.scrollY < 30) return;
+    // Scrolling during the intro, or clicking the skip button, both cut
+    // straight to the hero: the curtain fades rather than making anyone sit
+    // through the rest of it.
+    const skip = () => {
+      if (!overlay || finished) return;
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener(SKIP_INTRO, skip);
       const fade = root.animate([{ opacity: 1 }, { opacity: 0 }], {
         duration: 320,
         easing: "ease-out",
@@ -531,7 +537,14 @@ export default function SplitRevealHero({
       animations.push(fade);
       fade.onfinish = finish;
     };
-    if (overlay) window.addEventListener("scroll", onScroll, { passive: true });
+    const onScroll = () => {
+      if (window.scrollY < 30) return;
+      skip();
+    };
+    if (overlay) {
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener(SKIP_INTRO, skip);
+    }
 
     // Two frames let the browser create compositor layers before movement starts.
     frame = window.requestAnimationFrame(() => {
@@ -541,6 +554,7 @@ export default function SplitRevealHero({
     return () => {
       cancelled = true;
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener(SKIP_INTRO, skip);
       window.cancelAnimationFrame(frame);
       animations.forEach((animation) => animation.cancel());
       timers.forEach(window.clearTimeout);
@@ -574,6 +588,16 @@ export default function SplitRevealHero({
 
       <Cover position="bottom" />
       <Cover position="top" />
+
+      {overlay && (
+        <button
+          type="button"
+          className="sf-skip"
+          onClick={() => window.dispatchEvent(new Event(SKIP_INTRO))}
+        >
+          Skip intro
+        </button>
+      )}
 
       <div className="sf-tags" aria-hidden="true">
         {tags.map((tag, index) => (
@@ -681,6 +705,38 @@ const styles = `
 .sf-tags {
   z-index: 5;
   pointer-events: none;
+}
+
+.sf-skip {
+  position: absolute;
+  z-index: 20;
+  top: clamp(16px, 3vw, 28px);
+  right: clamp(16px, 3vw, 28px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 999px;
+  padding: 9px 16px;
+  background: rgba(0, 0, 0, 0.2);
+  color: #fff;
+  font-family: var(--font-sans), Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 200ms ease, border-color 200ms ease;
+}
+
+.sf-skip:hover,
+.sf-skip:focus-visible {
+  background: rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+@media (max-width: 560px) {
+  .sf-skip {
+    padding: 7px 13px;
+    font-size: 10px;
+  }
 }
 
 .sf-intro,

@@ -132,7 +132,19 @@ const css = `
 export const PLUME_SPLAT = "pva:plume-splat";
 export type PlumeSplat = { x: number; y: number; vx: number; vy: number };
 
-export default function PlumeField({ active = true }: { active?: boolean }) {
+export default function PlumeField({
+  active = true,
+  reduced = false,
+}: {
+  active?: boolean;
+  /** Shrink the solver grids and pressure iterations, same treatment as the
+   *  gallery-card thumbnail — for running the field outside the hero, where
+   *  it is a background texture rather than the main event. Changing this
+   *  rebuilds the solver (it sizes the render targets once, on mount), so
+   *  it is meant to flip rarely (e.g. entering/leaving the hero), not per
+   *  frame. */
+  reduced?: boolean;
+}) {
   const rootRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   // read inside the rAF loop, so toggling it never tears the solver down
@@ -148,6 +160,7 @@ export default function PlumeField({ active = true }: { active?: boolean }) {
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const isCard = new URLSearchParams(window.location.search).has("card");
+    const lowQuality = isCard || reduced;
     // Reduced motion: leave the canvas blank so only the calm hero shows.
     if (reduce) return;
 
@@ -190,9 +203,9 @@ export default function PlumeField({ active = true }: { active?: boolean }) {
     // In the gallery card the field is shown ~380px wide, so the full-fat solver
     // grids are wasted work — shrink them (and the pressure iterations) for the
     // thumbnail. The standalone route (and any copied code) keeps full quality.
-    const simRes = isCard ? 128 : CONFIG.simResolution;
-    const dyeRes = isCard ? 384 : CONFIG.dyeResolution;
-    const pressureIters = isCard ? 18 : CONFIG.pressureIterations;
+    const simRes = lowQuality ? 128 : CONFIG.simResolution;
+    const dyeRes = lowQuality ? 384 : CONFIG.dyeResolution;
+    const pressureIters = lowQuality ? 18 : CONFIG.pressureIterations;
     const simSize = {
       w: simRes,
       h: Math.round(simRes / aspect),
@@ -462,7 +475,7 @@ export default function PlumeField({ active = true }: { active?: boolean }) {
       Object.values(mats).forEach((m) => m.dispose());
       quad.geometry.dispose();
     };
-  }, []);
+  }, [reduced]);
 
   return (
     <div className="pl-root" ref={rootRef}>

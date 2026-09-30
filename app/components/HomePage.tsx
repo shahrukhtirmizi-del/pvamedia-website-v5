@@ -6,7 +6,6 @@ import Ticker from "./ui/Ticker";
 import PainPoints from "./sections/PainPoints";
 import CardStoryScroll from "./motion/CardStoryScroll";
 import ServiceIncludes from "./sections/ServiceIncludes";
-import WhatYouGet from "./sections/WhatYouGet";
 import CircularCardDeck from "./motion/CircularCardDeck";
 import Results from "./sections/Results";
 import FinalCTA from "./sections/FinalCTA";
@@ -53,7 +52,7 @@ export default function HomePage() {
           image in the hero frame, so the two read as one reveal */}
       <ScrollExpandMedia
         mediaType="image"
-        mediaSrc="/images/hero/media-ink.png"
+        mediaSrc="/images/hero/media-ink-v2.png"
         title="Found. Called. Booked."
         textBlend
         intro={
@@ -78,10 +77,9 @@ export default function HomePage() {
 
       <Statement />
       <Ticker items={TICKER} />
-      <PainPoints />
       <CardStoryScroll />
       <ServiceIncludes />
-      <WhatYouGet />
+      <PainPoints />
       <CircularCardDeck testimonials={CLIENT_TESTIMONIALS} />
       <Results />
       <FinalCTA />

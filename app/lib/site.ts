@@ -84,6 +84,9 @@ export type Service = {
   slug: string;
   name: string;
   short: string;
+  /** Same claim as `short`, split into two scannable lines instead of one
+   *  dense sentence — what CardStoryScroll renders. */
+  shortLines: [string, string];
   detail: string[];
   includes: string[];
 };
@@ -98,6 +101,10 @@ export const SERVICES: Service[] = [
     name: "Marketing",
     short:
       "Local SEO and paid ads that put you in front of homeowners ready to book, and turn clicks into jobs.",
+    shortLines: [
+      "Local SEO and paid ads that put you in front of homeowners ready to book.",
+      "Turns clicks into jobs, not just traffic.",
+    ],
     detail: [
       "Local SEO puts you in front of homeowners in the areas you want to work, at the moment they start looking. We build out service-area pages, keep your Google Business Profile active and clean up your citations so the map results start trusting you.",
       "Paid ads fill the gaps search cannot cover yet. Every Google and Meta campaign points at a landing page built for that service, with call and form tracking, so you can see which spend becomes booked work.",
@@ -116,6 +123,10 @@ export const SERVICES: Service[] = [
     name: "Websites",
     short:
       "A fast, custom site built to turn the traffic we send you into calls and quote requests.",
+    shortLines: [
+      "A fast, custom site built for conversion.",
+      "Turns the traffic we send you into calls and quote requests.",
+    ],
     detail: [
       "Your website is where the marketing pays off, so we build it to convert: clear services, your own project photos and a quote path on every page. No templates, and live in five days.",
       "Hosting, security, backups and edits are handled for you, and new project photos go up whenever you send them.",
@@ -134,6 +145,10 @@ export const SERVICES: Service[] = [
     name: "AI Receptionist",
     short:
       "Answers every call and web enquiry, qualifies the job and books it in, day or night.",
+    shortLines: [
+      "Answers every call and web enquiry, day or night.",
+      "Qualifies the job and books it straight into your calendar.",
+    ],
     detail: [
       "One of the automations we run for clients. It picks up when you cannot, which on a working day is most of the time.",
       "It knows your service area, your pricing bands and the work you turn down, so it qualifies each enquiry, books it into your calendar and sends you the summary before you are off the site.",
@@ -151,6 +166,10 @@ export const SERVICES: Service[] = [
     name: "AI Automation Agents",
     short:
       "Agents that confirm bookings, chase unbooked leads and answer routine questions for you.",
+    shortLines: [
+      "Agents that confirm bookings and chase unbooked leads.",
+      "Answer routine questions so you don't have to.",
+    ],
     detail: [
       "Most of the work between an enquiry and a booked job is repetitive admin. Our AI agents take it off your plate, so every lead hears back in minutes, not hours.",
       "They confirm bookings, follow up with leads that have not booked yet, reply to email and text enquiries, and hand the conversation to your team when a person is needed.",
