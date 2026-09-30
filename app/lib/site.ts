@@ -208,7 +208,10 @@ export type ClientCategory = "Website" | "Marketing" | "AI Automation";
 
 export type ClientTestimonial = {
   quote: string;
+  /** Full name, kept for our own records — never render this publicly. */
   name: string;
+  /** First name + surname initial, e.g. "Ravi S." — this is the one to render. */
+  displayName: string;
   company: string;
   category: ClientCategory;
 };
@@ -218,6 +221,7 @@ export const CLIENT_TESTIMONIALS: ClientTestimonial[] = [
     quote:
       "We knew our old website was not really doing the business justice. The new one is a night and day difference. It looks clean, professional, and actually feels like it represents the level of work we do. The other big thing is that it was not built just to look nice. Customers can find what they need quickly, it is easy to contact us, and they put a lot of thought into how the site would perform on Google. I am really happy with how it turned out.",
     name: "Eddie Matherwood",
+    displayName: "Eddie M.",
     company: "TheGroundsGuys",
     category: "Website",
   },
@@ -225,6 +229,7 @@ export const CLIENT_TESTIMONIALS: ClientTestimonial[] = [
     quote:
       "I wanted something simple, professional, and easy for customers to use, and that is pretty much exactly what we got. The site works great on phones, everything is laid out clearly, and people do not have to dig around to figure out what services we offer. They also explained the Google side of things and built the site around actually generating inquiries, which I liked. It has been a big step up from what we had before.",
     name: "Bruno Knight",
+    displayName: "Bruno K.",
     company: "Comprehensive Irrigation",
     category: "Website",
   },
@@ -232,6 +237,7 @@ export const CLIENT_TESTIMONIALS: ClientTestimonial[] = [
     quote:
       "The website came out really well. With remodeling, people are obviously judging your work visually, so I wanted the site to feel polished without looking too corporate or overdone. They got that balance right. Our projects are presented properly, the site is easy to move around, and there is a clear path for homeowners who want to contact us. It feels much more like our company now, which was important to me.",
     name: "Joshua Anderson",
+    displayName: "Joshua A.",
     company: "AP Remodeling",
     category: "Website",
   },
@@ -239,6 +245,7 @@ export const CLIENT_TESTIMONIALS: ClientTestimonial[] = [
     quote:
       "The main thing I wanted was for someone to land on our website and immediately feel confident about the company. Before, I did not think we were getting that. The new site looks much more established and professional, and it is straightforward for customers to use. I also liked that they kept bringing the conversation back to how the website could actually help generate business, rather than just talking about colors and design. It came together really nicely.",
     name: "Kamal Rana",
+    displayName: "Kamal R.",
     company: "N & L Remodeling",
     category: "Website",
   },
@@ -246,6 +253,7 @@ export const CLIENT_TESTIMONIALS: ClientTestimonial[] = [
     quote:
       "We had done marketing before and gotten plenty of inquiries that went nowhere, so I was more interested in lead quality than just seeing a big number on a report. That has been the biggest improvement. We are talking to more homeowners who actually have a project in mind and are serious about getting work done. It has made our sales conversations a lot more worthwhile and given us a more consistent flow of opportunities.",
     name: "Matt Davison",
+    displayName: "Matt D.",
     company: "Structura Remodeling",
     category: "Marketing",
   },
@@ -253,6 +261,7 @@ export const CLIENT_TESTIMONIALS: ClientTestimonial[] = [
     quote:
       "I have dealt with marketing companies that promise a lot and then send over leads that are barely worth calling. This has been different. We have been getting in front of people who are genuinely looking for roofing work, and that makes life a lot easier for our team. It has also helped us compete for jobs against some of the bigger names in the area. Overall, it has been money much better spent than some of the things we tried before.",
     name: "Laughton Paperworth",
+    displayName: "Laughton P.",
     company: "Texas Roofers USA",
     category: "Marketing",
   },
@@ -260,6 +269,7 @@ export const CLIENT_TESTIMONIALS: ClientTestimonial[] = [
     quote:
       "For us, the biggest change has been consistency. We are not just relying on referrals or hoping the phone rings. There is a proper marketing system bringing new people into the business, and the inquiries have generally been much better matched to the work we want. Not every lead turns into a job, obviously, but we are having more conversations with the right type of customer, and that is what matters.",
     name: "Alasdair Field",
+    displayName: "Alasdair F.",
     company: "Texas Pro Roofing",
     category: "Marketing",
   },
@@ -267,6 +277,7 @@ export const CLIENT_TESTIMONIALS: ClientTestimonial[] = [
     quote:
       "We wanted to get more predictable with our lead flow instead of having really busy weeks followed by nothing. The marketing has helped smooth that out quite a bit. We are getting more opportunities to quote jobs, and the leads have been more relevant than what we were used to. I also like that everything feels focused around actual business results rather than just clicks and impressions. That was a big thing for me.",
     name: "James Mahoney",
+    displayName: "James M.",
     company: "Ace Roofing Company",
     category: "Marketing",
   },
@@ -274,6 +285,7 @@ export const CLIENT_TESTIMONIALS: ClientTestimonial[] = [
     quote:
       "When things get busy, answering every call, text, and email right away is just not realistic. That was the problem we were trying to solve. The automation now handles a lot of the initial back and forth for us, answers common questions, helps customers get scheduled, and keeps things moving until someone on our team needs to step in. It has taken a surprising amount of little day to day work off our plate. We are quicker with customers now without having someone constantly watching the phone.",
     name: "Ravi Shah",
+    displayName: "Ravi S.",
     company: "Central Texas HVAC LLC",
     category: "AI Automation",
   },
@@ -281,13 +293,17 @@ export const CLIENT_TESTIMONIALS: ClientTestimonial[] = [
     quote:
       "I was a little unsure at first about how automated replies would come across to customers, but it has worked much better than I expected. A lot of the basic questions, follow ups, lead qualification, and booking can happen without us manually going through every conversation. If somebody needs a real person, we can jump in, but we are not wasting time on all the repetitive parts anymore. It has definitely made the office side of the business easier to manage.",
     name: "Michee Wonga",
+    displayName: "Michee W.",
     company: "Texas Air Tech",
     category: "AI Automation",
   },
 ];
 
 export type ClientResult = {
+  /** Full name, kept for our own records — never render this publicly. */
   name: string;
+  /** First name + surname initial, e.g. "Ravi S." — this is the one to render. */
+  displayName: string;
   company: string;
   category: ClientCategory;
   stats: string[];
@@ -296,6 +312,7 @@ export type ClientResult = {
 export const CLIENT_RESULTS: ClientResult[] = [
   {
     name: "Eddie Matherwood",
+    displayName: "Eddie M.",
     company: "TheGroundsGuys",
     category: "Website",
     stats: [
@@ -306,6 +323,7 @@ export const CLIENT_RESULTS: ClientResult[] = [
   },
   {
     name: "Bruno Knight",
+    displayName: "Bruno K.",
     company: "Comprehensive Irrigation",
     category: "Website",
     stats: [
@@ -316,6 +334,7 @@ export const CLIENT_RESULTS: ClientResult[] = [
   },
   {
     name: "Joshua Anderson",
+    displayName: "Joshua A.",
     company: "AP Remodeling",
     category: "Website",
     stats: [
@@ -326,6 +345,7 @@ export const CLIENT_RESULTS: ClientResult[] = [
   },
   {
     name: "Kamal Rana",
+    displayName: "Kamal R.",
     company: "N & L Remodeling",
     category: "Website",
     stats: [
@@ -336,6 +356,7 @@ export const CLIENT_RESULTS: ClientResult[] = [
   },
   {
     name: "Matt Davison",
+    displayName: "Matt D.",
     company: "Structura Remodeling",
     category: "Marketing",
     stats: [
@@ -346,6 +367,7 @@ export const CLIENT_RESULTS: ClientResult[] = [
   },
   {
     name: "Laughton Paperworth",
+    displayName: "Laughton P.",
     company: "Texas Roofers USA",
     category: "Marketing",
     stats: [
@@ -356,6 +378,7 @@ export const CLIENT_RESULTS: ClientResult[] = [
   },
   {
     name: "Alasdair Field",
+    displayName: "Alasdair F.",
     company: "Texas Pro Roofing",
     category: "Marketing",
     stats: [
@@ -366,6 +389,7 @@ export const CLIENT_RESULTS: ClientResult[] = [
   },
   {
     name: "James Mahoney",
+    displayName: "James M.",
     company: "Ace Roofing Company",
     category: "Marketing",
     stats: [
@@ -376,6 +400,7 @@ export const CLIENT_RESULTS: ClientResult[] = [
   },
   {
     name: "Ravi Shah",
+    displayName: "Ravi S.",
     company: "Central Texas HVAC LLC",
     category: "AI Automation",
     stats: [
@@ -387,6 +412,7 @@ export const CLIENT_RESULTS: ClientResult[] = [
   },
   {
     name: "Michee Wonga",
+    displayName: "Michee W.",
     company: "Texas Air Tech",
     category: "AI Automation",
     stats: [
