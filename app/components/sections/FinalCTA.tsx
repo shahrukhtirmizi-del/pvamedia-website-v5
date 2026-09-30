@@ -11,9 +11,9 @@ export default function FinalCTA() {
         <Reveal>
           <h2
             className="font-serif-display max-w-[14ch]"
-            style={{ fontSize: "clamp(44px, 7.4vw, 108px)", lineHeight: 0.98 }}
+            style={{ fontSize: "clamp(40px, 6.4vw, 92px)", lineHeight: 1.02 }}
           >
-            Ready to see what{"’"}s <em className="italic">possible?</em>
+            Ready to see what{"’"}s possible?
           </h2>
         </Reveal>
 

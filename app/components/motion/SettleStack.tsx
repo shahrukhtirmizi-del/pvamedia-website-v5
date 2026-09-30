@@ -141,11 +141,16 @@ export default function SettleStack({
       };
       raf = requestAnimationFrame(tick);
     } else {
+      // eased toward the scroll position rather than snapped to it, so a
+      // fast flick of the wheel still plays the flip and each exit through
+      let shown = -1;
       const tick = () => {
         const rect = pin.getBoundingClientRect();
         const span = pin.offsetHeight - window.innerHeight;
-        const p = clamp01(span > 0 ? -rect.top / span : 0);
-        apply(p);
+        const target = clamp01(span > 0 ? -rect.top / span : 0);
+        shown = shown < 0 ? target : shown + (target - shown) * 0.09;
+        if (Math.abs(target - shown) < 0.0004) shown = target;
+        apply(shown);
         raf = requestAnimationFrame(tick);
       };
       raf = requestAnimationFrame(tick);
@@ -247,7 +252,9 @@ const css = `
     font-family:var(--font-sans, "Inter", "Helvetica Neue", Arial, sans-serif);}
 
   /* tall scroll track; the sticky stage stays pinned while you scroll it */
-  .st-track{position:relative;width:100%;height:420svh;}
+  /* long enough that the flip and each card's exit get roughly a screen
+     of scroll apiece */
+  .st-track{position:relative;width:100%;height:760svh;}
 
   .st-stage{position:sticky;top:0;width:100%;height:100svh;overflow:hidden;
     background:#ffffff;
@@ -321,5 +328,14 @@ const css = `
   @media (max-width:1000px){
     .st-headline h2{width:86%;}
     .st-card{width:70%;min-width:0;}
+  }
+  .st-card{overflow:hidden;}
+  /* phones: a taller, wider card and tighter rows so a six-item list fits */
+  @media (max-width:640px){
+    .st-card{width:84%;aspect-ratio:3/4.1;}
+    .st-back:has(.st-listcard){padding:1.4rem 1.25rem 1.1rem;}
+    .st-listcard h3{font-size:1.35rem;margin-bottom:.8rem;}
+    .st-list li{font-size:.82rem;padding:.5rem 0 .5rem 1.1rem;}
+    .st-list li::before{top:.9rem;width:.45rem;}
   }
 `;

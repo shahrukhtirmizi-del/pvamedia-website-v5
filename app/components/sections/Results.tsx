@@ -4,9 +4,8 @@ import Reveal from "../ui/Reveal";
 /**
  * Conversion Metrics Bento Grid, adapted from the client-supplied reference.
  * Per the client's decision, this keeps the reference's fixed bento shape
- * (a client-mix tile, two headline stat tiles, a status tile and a wide
- * feature tile) rather than listing all 10 clients — that per-client
- * breakdown is what the old ScrollSwipeStack layout already did.
+ * (two headline stat tiles, a status tile and a wide feature tile) rather
+ * than listing clients one by one, and names no client counts or trades.
  *
  * Every number below is a real aggregate computed from CLIENT_RESULTS, not
  * invented to fit the template:
@@ -27,9 +26,6 @@ import Reveal from "../ui/Reveal";
  *    so rather than fabricate a blended average, the feature tile cites one
  *    real, single-client figure instead.
  */
-
-/** Trades behind the results (from the client list), shown without counts. */
-const INDUSTRIES = ["Roofing", "HVAC", "Remodeling", "Irrigation"];
 
 const AVG_WEBSITE_CONVERSION_LIFT = 58; // see comment above
 const AVG_MARKETING_QUALIFIED_LEAD_LIFT = 46; // see comment above
@@ -53,15 +49,6 @@ export default function Results() {
       </Reveal>
 
       <div className="rb-grid mt-12 md:mt-16">
-        <article className="rb-card rb-mix">
-          <span className="rb-mix-label">Trades we grow</span>
-          <div className="rb-mix-chips">
-            {INDUSTRIES.map((industry) => (
-              <span key={industry}>{industry}</span>
-            ))}
-          </div>
-        </article>
-
         <article className="rb-card rb-stat-a">
           <p>Average website conversion-rate lift, across clients that report one</p>
           <div className="rb-stat-bottom">
@@ -92,8 +79,8 @@ export default function Results() {
         <article className="rb-feature">
           <div className="rb-feature-content">
             <p>
-              Roofers, HVAC companies, irrigation specialists and remodelers trust us with their
-              marketing, websites and AI automation.
+              Trades and home service businesses trust us with their marketing, websites and AI
+              automation, and judge us on booked jobs.
             </p>
 
             <div className="rb-feature-row">
@@ -148,12 +135,8 @@ export default function Results() {
         .rb-card { padding: 22px; }
         .rb-card:hover { transform: translateY(-4px); border-color: var(--line-strong); background: var(--bg); }
 
-        .rb-mix { grid-column: 1; grid-row: 1; display: flex; flex-direction: column; justify-content: center; gap: 10px; }
-        .rb-mix-label { color: var(--ink-45); font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
-        .rb-mix-chips { display: flex; flex-wrap: wrap; gap: 6px; }
-        .rb-mix-chips span { padding: 5px 9px; border-radius: 999px; background: var(--bg); border: 1px solid var(--line); font-size: 10px; font-weight: 600; letter-spacing: .04em; color: var(--ink-60); white-space: nowrap; }
 
-        .rb-stat-a { grid-column: 1; grid-row: 2 / 4; display: flex; flex-direction: column; justify-content: space-between; }
+        .rb-stat-a { grid-column: 1; grid-row: 1 / 4; display: flex; flex-direction: column; justify-content: space-between; }
         .rb-stat-b { grid-column: 2; grid-row: 1 / 3; display: flex; flex-direction: column; justify-content: space-between; }
 
         .rb-availability { grid-column: 2; grid-row: 3; display: flex; align-items: center; gap: 10px; padding-block: 16px; color: var(--ink-60); font-size: 11px; font-weight: 800; letter-spacing: .08em; }
@@ -200,7 +183,6 @@ export default function Results() {
 
         @media (max-width: 620px) {
           .rb-grid { display: flex; flex-direction: column; }
-          .rb-mix { min-height: 88px; }
           .rb-stat-a, .rb-stat-b { min-height: 260px; }
           .rb-feature { min-height: 380px; padding: 26px; }
           .rb-feature p { width: 100%; }

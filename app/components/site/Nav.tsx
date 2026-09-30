@@ -69,14 +69,20 @@ const MENU_LINKS = [
 
 type LenisLike = { stop?: () => void; start?: () => void };
 
+/**
+ * Lock on <html>, never <body>: overflow:hidden on body turns it into its own
+ * scroll container, which switches off position:sticky on this header, so a
+ * menu opened part way down the page would lose its bar (and its Close
+ * button) off the top of the screen.
+ */
 function lockScroll(locked: boolean) {
   const lenis = window.__lenis as unknown as LenisLike | undefined;
   if (locked) {
     lenis?.stop?.();
-    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
   } else {
     lenis?.start?.();
-    document.body.style.overflow = "";
+    document.documentElement.style.overflow = "";
   }
 }
 
@@ -202,18 +208,22 @@ export default function Nav() {
             {SITE.phone}
           </a>
 
-          <Link
-            href="/bookings"
-            data-menu-link={open || undefined}
-            className="btn hidden !px-5 !py-3 !text-[13px] sm:inline-flex"
-            style={
-              open
-                ? { background: "#FFFFFF", color: "#0A0A0A" }
-                : { background: "var(--ink)", color: "var(--bg)" }
-            }
-          >
-            Book a free call
-          </Link>
+          {/* the breakpoint lives on a wrapper: .btn sets its own display,
+              which would override a `hidden` utility on the link itself */}
+          <span className="hidden sm:inline-flex">
+            <Link
+              href="/bookings"
+              data-menu-link={open || undefined}
+              className="btn !px-5 !py-3 !text-[13px]"
+              style={
+                open
+                  ? { background: "#FFFFFF", color: "#0A0A0A" }
+                  : { background: "var(--ink)", color: "var(--bg)" }
+              }
+            >
+              Book a free call
+            </Link>
+          </span>
 
           <button
             type="button"
@@ -228,6 +238,9 @@ export default function Nav() {
             </span>
             <span className="dm-toggle-close" aria-hidden>
               Close
+              <svg viewBox="0 0 12 12" width="11" height="11" aria-hidden>
+                <path d="M1 1l10 10M11 1L1 11" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+              </svg>
             </span>
           </button>
         </div>
@@ -283,13 +296,13 @@ export default function Nav() {
 }
 
 const css = `
-  .dm-toggle{position:relative;width:4.4rem;height:2rem;padding:0;border:0;
+  .dm-toggle{position:relative;width:5.6rem;height:2.2rem;padding:0;border:0;
     background:none;cursor:pointer;text-transform:uppercase;font-family:inherit;
     font-size:.72rem;font-weight:700;letter-spacing:.22em;}
   .dm-toggle span{position:absolute;top:50%;right:0;transform:translateY(-50%);
     transition:opacity .25s ease;}
   .dm-toggle-open{color:var(--ink);}
-  .dm-toggle-close{color:#FFFFFF;opacity:0;}
+  .dm-toggle-close{color:#FFFFFF;opacity:0;display:inline-flex;align-items:center;gap:.55rem;}
   .dm-toggle.is-open .dm-toggle-open{opacity:0;}
   .dm-toggle.is-open .dm-toggle-close{opacity:1;transition-delay:.25s;}
   .dm-toggle:focus-visible{outline:1px solid currentColor;outline-offset:6px;}

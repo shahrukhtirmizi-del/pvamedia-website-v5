@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Reveal from "../ui/Reveal";
-import ScrollWords from "../ui/ScrollWords";
+import HandWrittenTitle from "../motion/HandWrittenTitle";
 import { PAIN_POINTS, PAIN_CLOSER } from "../../lib/site";
 
 /**
@@ -136,13 +136,11 @@ export default function PainPoints() {
       </div>
 
       <div className="ps-closer">
-        <Reveal>
-          <ScrollWords
-            text={PAIN_CLOSER}
-            className="font-serif-display mx-auto max-w-[20ch] text-center"
-            style={{ fontSize: "clamp(34px, 5.2vw, 72px)", lineHeight: 1.04 }}
-          />
-        </Reveal>
+        <HandWrittenTitle
+          eyebrow="The fix"
+          title={PAIN_CLOSER}
+          subtitle="Search, ads, follow-up and booking, run as one joined-up system instead of five tools that never talk to each other."
+        />
       </div>
     </section>
   );
@@ -271,7 +269,7 @@ const CSS = `
   }
 
   .ps-closer {
-    padding: clamp(72px, 10vw, 140px) var(--gutter) clamp(80px, 11vw, 150px);
+    padding: clamp(56px, 8vw, 120px) clamp(0px, 2vw, 24px) clamp(64px, 9vw, 130px);
   }
 
   @media (min-width: 850px) {

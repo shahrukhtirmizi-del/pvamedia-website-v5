@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque, Inter, Instrument_Serif } from "next/font/google";
+import { Bricolage_Grotesque, Inter, Source_Serif_4 } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
@@ -28,13 +28,14 @@ const display = Bricolage_Grotesque({
 });
 
 /**
- * An editorial serif for the few lines that should read as a statement
- * rather than a heading: the pain-points closer and the closing call.
+ * A sober, upright serif for the few lines that should read as a statement
+ * rather than a heading: the pain-points closer and the closing call. Loaded
+ * with its optical-size axis so large settings get the display cut.
  */
-const serif = Instrument_Serif({
+const serif = Source_Serif_4({
   subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
+  weight: "variable",
+  axes: ["opsz"],
   variable: "--font-serif",
   display: "swap",
 });

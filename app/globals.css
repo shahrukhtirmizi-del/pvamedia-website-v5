@@ -108,12 +108,16 @@ body {
   letter-spacing: -0.035em;
 }
 
-/* Statement lines: set in the editorial serif, light and slightly tight,
-   so they read as a pull quote rather than another bold headline. */
+/* Statement lines: an upright text-grade serif at medium weight, set tight,
+   so they read as a considered statement rather than another bold headline. */
 .font-serif-display {
   font-family: var(--font-serif), Georgia, "Times New Roman", serif;
-  font-weight: 400;
-  letter-spacing: -0.015em;
+  font-weight: 500;
+  /* pinned to the sturdy text cut: left on auto, big sizes switch to the
+     high-contrast display cut, which reads condensed and fashion-y */
+  font-optical-sizing: none;
+  font-variation-settings: "opsz" 20;
+  letter-spacing: -0.022em;
 }
 
 /* Small uppercase labels. Set in the body face with tabular figures and wide
