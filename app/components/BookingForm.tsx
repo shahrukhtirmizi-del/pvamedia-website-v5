@@ -4,19 +4,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { FormEvent } from "react";
 import { AlertCircle, Loader2 } from "lucide-react";
-import { SITE } from "../lib/site";
+import { SITE, SERVICES } from "../lib/site";
 
 type Errors = Partial<Record<"name" | "email" | "phone" | "message", string>>;
 
-const NEEDS = [
-  "Local SEO",
-  "Paid ads and landing pages",
-  "A new website",
-  "AI Receptionist",
-  "AI automation agents",
-  "The full package",
-  "Not sure yet",
-];
+/** The four services, in the order the site presents them, plus two catch-alls. */
+const NEEDS = [...SERVICES.map((service) => service.name), "The full package", "Not sure yet"];
 
 function validate(data: FormData): Errors {
   const errors: Errors = {};

@@ -48,32 +48,53 @@ export const TICKER = [
 
 /* -------------------------------------------------------------------------- */
 
+/**
+ * titleLines splits each title across the stacked card's two lines (the
+ * second set in a muted tone); tags are the short labels along its foot.
+ */
 export const PAIN_POINTS = [
   {
     title: "Homeowners can't find you",
+    titleLines: ["Homeowners", "can't find you"],
+    tags: ["Google Maps", "Local search", "Reviews", "Business Profile"],
     body: "Someone nearby searches for exactly what you do, and three competitors show up on the map before you.",
   },
   {
     title: "Referrals are drying up",
+    titleLines: ["Referrals are", "drying up"],
+    tags: ["Word of mouth", "Repeat work", "New lead sources"],
     body: "Word of mouth carried the business for years. When it slows down, there is no steady source of new enquiries underneath it.",
   },
   {
     title: "Lead flow is feast or famine",
+    titleLines: ["Lead flow is", "feast or famine"],
+    tags: ["Seasonality", "Crew planning", "Pipeline", "Forecasting"],
     body: "Slammed one month, quiet the next. Without a predictable flow of enquiries you cannot plan crews, hiring or growth.",
   },
   {
     title: "Ad spend disappears",
+    titleLines: ["Ad spend", "disappears"],
+    tags: ["Google Ads", "Meta Ads", "Call tracking", "Cost per lead"],
     body: "You pay for clicks, but nobody can tell you which ones became booked jobs, or why the rest did not.",
   },
   {
     title: "Enquiries go cold before you reply",
+    titleLines: ["Enquiries go cold", "before you reply"],
+    tags: ["Missed calls", "Response time", "Follow-up"],
     body: "The phone rings while you are on a job. By the time you call back, they have already booked someone else.",
   },
   {
     title: "Visitors leave without calling",
+    titleLines: ["Visitors leave", "without calling"],
+    tags: ["Conversion", "Trust", "Calls to action"],
     body: "People land on your site, look around and go, because nothing gives them a clear reason to get in touch today.",
   },
-];
+] satisfies {
+  title: string;
+  titleLines: [string, string];
+  tags: string[];
+  body: string;
+}[];
 
 export const PAIN_CLOSER =
   "We fix that with one marketing system that keeps working while you work.";

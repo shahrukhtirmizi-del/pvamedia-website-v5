@@ -15,17 +15,21 @@ import PlumeField from "../motion/PlumeField";
  * the gallery-card thumbnail and fades to a low opacity, so the rest of the
  * page still reads as mostly plain white with a faint moving texture,
  * without paying full hero-grade GPU cost the whole way down the page.
+ *
+ * `subtle` is for pages with no hero (the bookings page): the field runs in
+ * that same low-opacity, reduced mode from the start.
  */
-export default function HeroBackdrop() {
-  const [heroVisible, setHeroVisible] = useState(true);
+export default function HeroBackdrop({ subtle = false }: { subtle?: boolean }) {
+  const [heroVisible, setHeroVisible] = useState(!subtle);
 
   useEffect(() => {
+    if (subtle) return;
     const hero = document.getElementById("top");
     if (!hero) return;
     const io = new IntersectionObserver(([entry]) => setHeroVisible(entry.isIntersecting));
     io.observe(hero);
     return () => io.disconnect();
-  }, []);
+  }, [subtle]);
 
   return (
     <div

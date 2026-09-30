@@ -108,6 +108,14 @@ body {
   letter-spacing: -0.035em;
 }
 
+/* Statement lines: set in the editorial serif, light and slightly tight,
+   so they read as a pull quote rather than another bold headline. */
+.font-serif-display {
+  font-family: var(--font-serif), Georgia, "Times New Roman", serif;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+}
+
 /* Small uppercase labels. Set in the body face with tabular figures and wide
    tracking rather than a separate monospace family. */
 .font-mono {

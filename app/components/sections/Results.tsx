@@ -1,5 +1,5 @@
 import Reveal from "../ui/Reveal";
-import { CLIENT_RESULTS } from "../../lib/site";
+// Figures below are computed by hand from CLIENT_RESULTS in lib/site.ts.
 
 /**
  * Conversion Metrics Bento Grid, adapted from the client-supplied reference.
@@ -16,22 +16,23 @@ import { CLIENT_RESULTS } from "../../lib/site";
  *    Joshua +67%, Kamal +49% -> 58%). Bruno's stats report inquiries, not a
  *    conversion rate, so he's correctly left out of this particular average
  *    rather than mixed into a number he didn't report.
- *  - Marketing cost-per-lead reduction: all 4 marketing clients report a
- *    "lower cost per lead/qualified lead" figure, so all 4 are averaged
- *    (Matt 23%, Laughton 27%, Alasdair 28%, James 21% -> 24.75, rounded 25).
+ *  - Marketing qualified-lead lift: every marketing client reports an
+ *    increase in qualified leads (Matt +41%, Laughton +63%, Alasdair +44%;
+ *    James reports the same measure as "+36% qualified inquiries"), so all
+ *    four are averaged: 184 / 4 = 46%.
+ *  - The client mix and client count are deliberately not shown: a small
+ *    named sample read as "they only have ten clients".
  *  - The AI Automation category has only 2 clients and its stats don't share
  *    a common unit with each other (hours saved, response time, % handled),
  *    so rather than fabricate a blended average, the feature tile cites one
  *    real, single-client figure instead.
  */
 
-const WEBSITE_CLIENTS = CLIENT_RESULTS.filter((r) => r.category === "Website").length;
-const MARKETING_CLIENTS = CLIENT_RESULTS.filter((r) => r.category === "Marketing").length;
-const AI_CLIENTS = CLIENT_RESULTS.filter((r) => r.category === "AI Automation").length;
-const TOTAL_CLIENTS = CLIENT_RESULTS.length;
+/** Trades behind the results (from the client list), shown without counts. */
+const INDUSTRIES = ["Roofing", "HVAC", "Remodeling", "Irrigation"];
 
 const AVG_WEBSITE_CONVERSION_LIFT = 58; // see comment above
-const AVG_MARKETING_COST_REDUCTION = 25; // see comment above
+const AVG_MARKETING_QUALIFIED_LEAD_LIFT = 46; // see comment above
 // "84% of routine inquiries handled automatically" below is Ravi S.'s
 // (Central Texas HVAC) real figure from CLIENT_RESULTS — cited as one
 // client's result, not blended into an average.
@@ -53,12 +54,12 @@ export default function Results() {
 
       <div className="rb-grid mt-12 md:mt-16">
         <article className="rb-card rb-mix">
-          <div className="rb-mix-chips" aria-hidden="true">
-            <span>{WEBSITE_CLIENTS} Website</span>
-            <span>{MARKETING_CLIENTS} Marketing</span>
-            <span>{AI_CLIENTS} AI Automation</span>
+          <span className="rb-mix-label">Trades we grow</span>
+          <div className="rb-mix-chips">
+            {INDUSTRIES.map((industry) => (
+              <span key={industry}>{industry}</span>
+            ))}
           </div>
-          <span className="rb-mix-count">{TOTAL_CLIENTS} REAL CLIENTS</span>
         </article>
 
         <article className="rb-card rb-stat-a">
@@ -73,10 +74,10 @@ export default function Results() {
         </article>
 
         <article className="rb-card rb-stat-b">
-          <p>Average reduction in cost per qualified lead, across marketing clients</p>
+          <p>Average increase in qualified leads for our marketing clients</p>
           <div className="rb-stat-bottom">
             <div className="rb-stat-value">
-              <strong>{"−"}{AVG_MARKETING_COST_REDUCTION}</strong>
+              <strong>+{AVG_MARKETING_QUALIFIED_LEAD_LIFT}</strong>
               <span>%</span>
             </div>
             <small>Marketing clients</small>
@@ -91,8 +92,8 @@ export default function Results() {
         <article className="rb-feature">
           <div className="rb-feature-content">
             <p>
-              {TOTAL_CLIENTS} real trades and home-service businesses — roofers, HVAC, irrigation and remodelers —
-              trust us with their marketing, websites and AI automation.
+              Roofers, HVAC companies, irrigation specialists and remodelers trust us with their
+              marketing, websites and AI automation.
             </p>
 
             <div className="rb-feature-row">
@@ -101,7 +102,7 @@ export default function Results() {
                 <span>of routine inquiries handled automatically</span>
               </div>
               <div className="rb-feature-note">
-                <span>A real result from one AI Automation client, not a blended average.</span>
+                <span>Result from one of our AI automation clients.</span>
               </div>
             </div>
           </div>
@@ -147,10 +148,10 @@ export default function Results() {
         .rb-card { padding: 22px; }
         .rb-card:hover { transform: translateY(-4px); border-color: var(--line-strong); background: var(--bg); }
 
-        .rb-mix { grid-column: 1; grid-row: 1; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+        .rb-mix { grid-column: 1; grid-row: 1; display: flex; flex-direction: column; justify-content: center; gap: 10px; }
+        .rb-mix-label { color: var(--ink-45); font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
         .rb-mix-chips { display: flex; flex-wrap: wrap; gap: 6px; }
         .rb-mix-chips span { padding: 5px 9px; border-radius: 999px; background: var(--bg); border: 1px solid var(--line); font-size: 10px; font-weight: 600; letter-spacing: .04em; color: var(--ink-60); white-space: nowrap; }
-        .rb-mix-count { color: var(--ink-45); font-size: 11px; font-weight: 800; letter-spacing: .08em; white-space: nowrap; }
 
         .rb-stat-a { grid-column: 1; grid-row: 2 / 4; display: flex; flex-direction: column; justify-content: space-between; }
         .rb-stat-b { grid-column: 2; grid-row: 1 / 3; display: flex; flex-direction: column; justify-content: space-between; }
@@ -199,7 +200,7 @@ export default function Results() {
 
         @media (max-width: 620px) {
           .rb-grid { display: flex; flex-direction: column; }
-          .rb-mix { min-height: 88px; flex-direction: column; align-items: flex-start; gap: 12px; }
+          .rb-mix { min-height: 88px; }
           .rb-stat-a, .rb-stat-b { min-height: 260px; }
           .rb-feature { min-height: 380px; padding: 26px; }
           .rb-feature p { width: 100%; }

@@ -23,6 +23,8 @@ export type SettleStackCard = {
   title: string;
   kicker?: string;
   body: string;
+  /** When given, rendered as a ruled list instead of the body paragraph. */
+  items?: string[];
   flipTilt: number; // rotationZ when the stack settles
   dismissTilt: number; // rotationZ at the top of its exit
   bg: string;
@@ -190,17 +192,42 @@ export default function SettleStack({
                 }}
                 style={{ background: c.bg, color: c.fg, zIndex: 10 + i }}
               >
-                {c.kicker && <span className="st-tag">{c.kicker}</span>}
-                <h3>{c.title}</h3>
-                <div
-                  className="st-icon"
-                  style={{ background: c.fg, color: c.bg }}
-                >
-                  <svg viewBox="0 0 24 24" aria-hidden>
-                    <path d={c.icon} />
-                  </svg>
-                </div>
-                <p>{c.body}</p>
+                {c.items ? (
+                  // list layout: numbered header, title, then ruled rows
+                  <div className="st-listcard">
+                    <div className="st-listhead">
+                      {c.kicker && <span className="st-num">{c.kicker}</span>}
+                      <span
+                        className="st-icon st-icon--sm"
+                        style={{ background: c.fg, color: c.bg }}
+                      >
+                        <svg viewBox="0 0 24 24" aria-hidden>
+                          <path d={c.icon} />
+                        </svg>
+                      </span>
+                    </div>
+                    <h3>{c.title}</h3>
+                    <ul className="st-list">
+                      {c.items.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : (
+                  <>
+                    {c.kicker && <span className="st-tag">{c.kicker}</span>}
+                    <h3>{c.title}</h3>
+                    <div
+                      className="st-icon"
+                      style={{ background: c.fg, color: c.bg }}
+                    >
+                      <svg viewBox="0 0 24 24" aria-hidden>
+                        <path d={c.icon} />
+                      </svg>
+                    </div>
+                    <p>{c.body}</p>
+                  </>
+                )}
               </div>
             ))}
           </div>
@@ -260,6 +287,24 @@ const css = `
   .st-icon svg{width:1.7rem;height:1.7rem;fill:none;stroke:currentColor;
     stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
   .st-icon--ring{border:.14rem solid currentColor;background:transparent;}
+
+  /* list layout for cards that pass items */
+  .st-back:has(.st-listcard){padding:1.9rem 1.75rem 1.6rem;}
+  .st-listcard{width:100%;height:100%;display:flex;flex-direction:column;
+    text-align:left;}
+  .st-listhead{display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:auto;}
+  .st-num{font-size:.72rem;font-weight:700;letter-spacing:.18em;opacity:.55;}
+  .st-icon--sm{width:2.6rem;height:2.6rem;}
+  .st-icon--sm svg{width:1.15rem;height:1.15rem;}
+  .st-listcard h3{margin:0 0 1.1rem;line-height:.95;
+    font-size:clamp(1.35rem,1.9vw,1.9rem);}
+  .st-list{list-style:none;margin:0;padding:0;}
+  .st-list li{position:relative;padding:.62rem 0 .62rem 1.35rem;
+    border-top:1px solid color-mix(in srgb,currentColor 16%,transparent);
+    font-size:.9rem;font-weight:450;line-height:1.3;letter-spacing:-.005em;}
+  .st-list li::before{content:"";position:absolute;left:0;top:1.02rem;
+    width:.55rem;height:1px;background:currentColor;opacity:.6;}
 
   .st-chrome{position:absolute;left:0;right:0;z-index:6;display:flex;
     align-items:center;justify-content:space-between;

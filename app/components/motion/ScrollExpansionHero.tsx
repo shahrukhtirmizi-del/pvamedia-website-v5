@@ -335,6 +335,9 @@ function ScrollExpandMedia({
         </section>
       </div>
 
+      {/* nothing after the stage unless there is something to show, so the
+          next section follows the hero directly */}
+      {children && (
       <div className="mx-auto w-full max-w-[1240px]">
         <motion.div
           className="w-full px-5 py-12 md:px-8 lg:py-20"
@@ -354,6 +357,7 @@ function ScrollExpandMedia({
           {children}
         </motion.div>
       </div>
+      )}
     </div>
   )
 }

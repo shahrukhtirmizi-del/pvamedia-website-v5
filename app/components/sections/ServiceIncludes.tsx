@@ -36,6 +36,7 @@ const cards: SettleStackCard[] = SERVICES.map((service, i) => ({
   title: service.name,
   kicker: `0${i + 1}`,
   body: service.includes.join("\n"),
+  items: service.includes,
   icon: ICONS[i % ICONS.length],
   ...COLORS[i % COLORS.length],
   ...TILTS[i % TILTS.length],

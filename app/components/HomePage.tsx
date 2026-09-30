@@ -1,8 +1,6 @@
 import SplitCurtainPreloader from "./motion/SplitCurtainPreloader";
 import ScrollExpandMedia from "./motion/ScrollExpansionHero";
 import HeroBackdrop from "./fx/HeroBackdrop";
-import Statement from "./sections/Statement";
-import Ticker from "./ui/Ticker";
 import PainPoints from "./sections/PainPoints";
 import CardStoryScroll from "./motion/CardStoryScroll";
 import ServiceIncludes from "./sections/ServiceIncludes";
@@ -10,7 +8,7 @@ import CircularCardDeck from "./motion/CircularCardDeck";
 import Results from "./sections/Results";
 import FinalCTA from "./sections/FinalCTA";
 import SectionRouter from "./site/SectionRouter";
-import { SITE, TICKER, CLIENT_TESTIMONIALS } from "../lib/site";
+import { SITE, CLIENT_TESTIMONIALS } from "../lib/site";
 
 const structuredData = {
   "@context": "https://schema.org",
@@ -69,14 +67,8 @@ export default function HomePage() {
             footerRight="Marketing for trades and home services"
           />
         }
-      >
-        <p className="font-display text-[clamp(22px,2.6vw,34px)] font-semibold leading-tight">
-          {SITE.tagline}
-        </p>
-      </ScrollExpandMedia>
+      />
 
-      <Statement />
-      <Ticker items={TICKER} />
       <CardStoryScroll />
       <ServiceIncludes />
       <PainPoints />

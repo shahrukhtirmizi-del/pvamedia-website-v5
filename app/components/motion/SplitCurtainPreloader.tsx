@@ -582,7 +582,6 @@ export default function SplitRevealHero({
     <section
       ref={rootRef}
       className={`sf-root${overlay ? " sf-overlay" : ""} ${className}`}
-      aria-hidden={overlay || undefined}
     >
       <style>{styles}</style>
 
@@ -607,7 +606,8 @@ export default function SplitRevealHero({
         ))}
       </div>
 
-      <div className="sf-scene">
+      {/* everything visual is decorative; only the skip button is exposed */}
+      <div className="sf-scene" aria-hidden="true">
         <img
           className="sf-image"
           src={heroImage}
@@ -707,35 +707,40 @@ const styles = `
   pointer-events: none;
 }
 
+/* plain set type, no pill: just the words, tracked out, top right */
 .sf-skip {
   position: absolute;
   z-index: 20;
-  top: clamp(16px, 3vw, 28px);
-  right: clamp(16px, 3vw, 28px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 999px;
-  padding: 9px 16px;
-  background: rgba(0, 0, 0, 0.2);
-  color: #fff;
+  top: clamp(14px, 2.4vw, 24px);
+  right: clamp(16px, 2.6vw, 28px);
+  border: 0;
+  padding: 6px 0;
+  background: none;
+  color: rgba(255, 255, 255, 0.82);
   font-family: var(--font-sans), Arial, sans-serif;
   font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.06em;
+  font-weight: 700;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: background 200ms ease, border-color 200ms ease;
+  transition: color 200ms ease;
 }
 
 .sf-skip:hover,
 .sf-skip:focus-visible {
-  background: rgba(0, 0, 0, 0.4);
-  border-color: rgba(255, 255, 255, 0.7);
+  color: #fff;
+}
+
+.sf-skip:focus-visible {
+  outline: 1px solid rgba(255, 255, 255, 0.6);
+  outline-offset: 4px;
+  border-radius: 2px;
 }
 
 @media (max-width: 560px) {
   .sf-skip {
-    padding: 7px 13px;
     font-size: 10px;
+    letter-spacing: 0.2em;
   }
 }
 

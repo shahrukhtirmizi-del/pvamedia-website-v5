@@ -1,490 +1,331 @@
 "use client";
 
-import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Reveal from "../ui/Reveal";
 import ScrollWords from "../ui/ScrollWords";
 import { PAIN_POINTS, PAIN_CLOSER } from "../../lib/site";
 
 /**
- * Full-Screen Cinematic Image Accordion, adapted from the client-supplied
- * reference component. Two structural changes from that reference, both
- * required to drop it into this site rather than run it as its own page:
+ * Sticky stacking cards, adapted from the client-supplied reference. Each
+ * pain point is a full-width card that pins below the nav; the next one
+ * slides up over it while the ones underneath ease back (a slight scale and
+ * lift), so the stack reads as pages being laid on top of each other.
  *
- *  - It was hardcoded for exactly 4 panels (25% idle / 4.7% closed / 85.9%
- *    active). PAIN_POINTS has 6 entries, so the widths below are recomputed
- *    from PANELS.length instead of hardcoded.
- *  - The reference set `:root` variables and `html, body { overflow: hidden }`
- *    directly, and pulled in its own Google Fonts import — demo-page globals
- *    that would leak into the rest of the site. Everything here is scoped
- *    under .pp-accordion and uses the site's own theme tokens and fonts.
- *
- * The reference also drives its own custom art-cursor (a circular image
- * preview that follows the pointer) and hides the system cursor over the
- * section. This site already replaces the system cursor everywhere with its
- * own dot+ring (Cursor.tsx). Rather than run both at once, this component
- * only tracks the pointer while it's actually over the section (the
- * reference tracked it via `window`, which would have shown its art-cursor
- * on every page, not just here) and hides Cursor.tsx's dot+ring for as long
- * as the pointer stays inside, via a `data-hide-site-cursor` attribute on
- * `<html>` rather than a global stylesheet change.
+ * Changes from the reference, needed to drop it into this site:
+ *  - Its :root variables and html/body/#root rules are gone; the layout
+ *    variables live on the section and the progress maths reads them from
+ *    there, so nothing leaks into the rest of the page.
+ *  - Colours are monochrome greys and type uses the site's own fonts.
+ *  - The sticky offset clears the fixed nav, and the reference's 6–8px
+ *    mobile type (unreadable on a phone) is raised to legible sizes.
  */
 
-const IMAGES = [
-  "/images/pain-points/01-cant-find-you.png",
-  "/images/pain-points/02-referrals-drying-up.png",
-  "/images/pain-points/03-feast-or-famine.png",
-  "/images/pain-points/04-ad-spend-disappears.png",
-  "/images/pain-points/05-enquiries-go-cold.png",
-  "/images/pain-points/06-leave-without-calling.png",
+/** One shade per card, darkest first, with the muted tone for line two. */
+const SHADES = [
+  { color: "#0A0A0A", muted: "#8A8A8A" },
+  { color: "#141414", muted: "#969696" },
+  { color: "#1E1E1E", muted: "#A0A0A0" },
+  { color: "#282828", muted: "#AAAAAA" },
+  { color: "#323232", muted: "#B2B2B2" },
+  { color: "#3C3C3C", muted: "#BABABA" },
 ];
 
-const PANELS = PAIN_POINTS.map((point, index) => ({ ...point, image: IMAGES[index] }));
-const COUNT = PANELS.length;
+const CARDS = PAIN_POINTS.map((point, index) => ({
+  ...point,
+  ...SHADES[index % SHADES.length],
+}));
 
-// Idle (nothing hovered): panels split the row evenly.
-const IDLE_WIDTH = (100 / COUNT).toFixed(4);
-// Hovered: every other panel collapses to CLOSED_WIDTH, the active one takes
-// the rest — (COUNT - 1) closed panels + 1 active panel must sum to 100.
-const CLOSED_WIDTH = 3;
-const ACTIVE_WIDTH = 100 - CLOSED_WIDTH * (COUNT - 1);
+const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
-const CSS = `
-  .pp-accordion, .pp-accordion * { box-sizing: border-box; }
-
-  .pp-accordion {
-    position: relative;
-    width: 100%;
-    height: 100svh;
-    min-height: 560px;
-    overflow: hidden;
-    isolation: isolate;
-    background: var(--bg);
-    color: var(--ink);
-  }
-
-  @media (pointer: fine) and (prefers-reduced-motion: no-preference) {
-    .pp-accordion { cursor: none; }
-  }
-
-  .pp-masthead {
-    position: absolute;
-    inset: 0;
-    z-index: 6;
-    pointer-events: none;
-    padding: clamp(24px, 4vw, 56px);
-  }
-
-  .pp-eyebrow {
-    margin: 0;
-    font-family: var(--font-sans), sans-serif;
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--ink-45);
-    transition: color 420ms ease;
-  }
-
-  .pp-accordion.is-open .pp-eyebrow { color: rgba(255, 255, 255, 0.7); }
-
-  .pp-headline {
-    margin: 14px 0 0;
-    max-width: 20ch;
-    font-family: var(--font-display), var(--font-sans), sans-serif;
-    font-weight: 600;
-    font-size: clamp(24px, 3.4vw, 44px);
-    line-height: 1.1;
-    transition: color 420ms ease;
-  }
-
-  .pp-accordion.is-open .pp-headline { color: #fff; }
-
-  .pp-row {
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    display: flex;
-    width: 100%;
-    height: 100%;
-  }
-
-  .pp-panel {
-    position: relative;
-    width: ${IDLE_WIDTH}%;
-    height: 100%;
-    min-width: 0;
-    overflow: hidden;
-    border-left: 1px solid var(--line);
-    outline: none;
-    background: var(--bg);
-    transition: width 760ms cubic-bezier(0.77, 0, 0.175, 1);
-    will-change: width;
-  }
-
-  .pp-panel:first-child { border-left: 0; }
-
-  .pp-accordion.is-open .pp-panel { width: ${CLOSED_WIDTH}%; }
-  .pp-accordion.is-open .pp-panel.is-active { width: ${ACTIVE_WIDTH}%; }
-
-  .pp-panel-image {
-    position: absolute;
-    inset: 0;
-    background-position: center;
-    background-size: cover;
-    opacity: 0;
-    transform: scale(1.06);
-    filter: grayscale(1) contrast(1.05);
-    transition: opacity 340ms ease, transform 1400ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .pp-panel.is-active .pp-panel-image { opacity: 1; transform: scale(1); }
-
-  .pp-panel-shade {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    background: linear-gradient(180deg, rgba(10, 10, 10, 0.08) 0%, rgba(10, 10, 10, 0.18) 45%, rgba(10, 10, 10, 0.74) 100%);
-    transition: opacity 420ms ease;
-  }
-
-  .pp-panel.is-active .pp-panel-shade { opacity: 1; }
-
-  .pp-panel h3 {
-    position: absolute;
-    left: clamp(14px, 2.2vw, 32px);
-    right: clamp(14px, 2.2vw, 32px);
-    bottom: clamp(16px, 2.6vw, 40px);
-    margin: 0;
-    font-family: var(--font-display), var(--font-sans), sans-serif;
-    font-weight: 600;
-    font-size: clamp(11px, 0.95vw, 15px);
-    line-height: 1.08;
-    letter-spacing: -0.01em;
-    color: var(--ink);
-    transition: color 260ms ease, opacity 220ms ease, font-size 620ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .pp-accordion.is-open .pp-panel:not(.is-active) h3 { opacity: 0; }
-
-  .pp-panel.is-active h3 {
-    color: #fff;
-    font-size: clamp(19px, 2.3vw, 36px);
-  }
-
-  .pp-panel-body {
-    position: absolute;
-    right: clamp(18px, 3.6vw, 60px);
-    bottom: clamp(22px, 2.8vw, 44px);
-    width: min(30vw, 400px);
-    margin: 0;
-    color: #fff;
-    font-family: var(--font-sans), sans-serif;
-    font-size: clamp(12px, 0.82vw, 14px);
-    line-height: 1.45;
-    opacity: 0;
-    transform: translateY(12px);
-    transition: opacity 300ms ease, transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .pp-panel.is-active .pp-panel-body { opacity: 0.92; transform: translateY(0); transition-delay: 340ms; }
-
-  .pp-panel-index {
-    position: absolute;
-    right: clamp(14px, 2.2vw, 32px);
-    bottom: clamp(14px, 2.2vw, 32px);
-    display: flex;
-    gap: 3px;
-    color: #fff;
-    font-family: var(--font-sans), sans-serif;
-    font-size: 10px;
-    letter-spacing: 0.06em;
-    opacity: 0;
-    transition: opacity 300ms ease 400ms;
-  }
-
-  .pp-panel.is-active .pp-panel-index { opacity: 0.75; }
-
-  .pp-art-cursor {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 20;
-    width: 0;
-    height: 0;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 160ms ease;
-    will-change: transform;
-  }
-
-  .pp-art-cursor.is-visible { opacity: 1; }
-
-  .pp-cursor-dot {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 10px;
-    height: 10px;
-    margin: -5px 0 0 -5px;
-    border-radius: 50%;
-    background: #fff;
-    mix-blend-mode: difference;
-    transition: opacity 200ms ease, transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-
-  .pp-art-cursor.is-preview .pp-cursor-dot { opacity: 0; transform: scale(0.2); }
-
-  .pp-cursor-preview {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: clamp(72px, 8vw, 120px);
-    aspect-ratio: 1;
-    border: 2px solid rgba(255, 255, 255, 0.92);
-    border-radius: 50%;
-    background-position: center;
-    background-size: cover;
-    filter: grayscale(1);
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.15);
-    transition: opacity 160ms ease, transform 520ms cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-
-  .pp-art-cursor.is-preview .pp-cursor-preview { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-
-  .pp-close {
-    position: absolute;
-    z-index: 30;
-    top: 14px;
-    right: 14px;
-    display: none;
-    border: 1px solid rgba(255, 255, 255, 0.75);
-    border-radius: 999px;
-    padding: 7px 12px;
-    background: rgba(0, 0, 0, 0.2);
-    color: #fff;
-    font-family: var(--font-sans), sans-serif;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-
-  @media (max-width: 760px), (hover: none) {
-    .pp-accordion { cursor: auto; }
-    .pp-art-cursor { display: none; }
-
-    .pp-row {
-      flex-direction: column;
-      padding-top: 84px;
-    }
-
-    .pp-panel,
-    .pp-accordion.is-open .pp-panel {
-      width: 100%;
-      height: ${IDLE_WIDTH}%;
-      border-top: 1px solid var(--line);
-      border-left: 0;
-      transition: height 680ms cubic-bezier(0.77, 0, 0.175, 1);
-    }
-
-    .pp-accordion.is-open .pp-panel { height: ${CLOSED_WIDTH}%; }
-    .pp-accordion.is-open .pp-panel.is-active { width: 100%; height: ${ACTIVE_WIDTH}%; }
-
-    .pp-panel h3 { font-size: 13px; bottom: 12px; }
-    .pp-panel.is-active h3 { font-size: 22px; }
-    .pp-panel-body { right: 18px; bottom: 22px; width: 56vw; font-size: 11px; }
-    .pp-panel-index { display: none; }
-    .pp-accordion.is-open .pp-close { display: block; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .pp-panel, .pp-panel-image, .pp-panel-shade, .pp-panel h3, .pp-panel-body, .pp-panel-index {
-      transition-duration: 0.001ms !important;
-    }
-  }
-`;
+type CardStyle = CSSProperties & {
+  "--card-color": string;
+  "--muted": string;
+  "--card-scale": number;
+  "--depth": number;
+};
 
 export default function PainPoints() {
-  const [active, setActive] = useState<number | null>(null);
-  const [cursorReady, setCursorReady] = useState(false);
-  const [hasPointer, setHasPointer] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
-  const cursorRef = useRef<HTMLDivElement>(null);
-  const settleTimer = useRef<number | null>(null);
+  const stackRef = useRef<HTMLDivElement>(null);
+  const [progress, setProgress] = useState(0);
 
-  // Pointer tracking + the cursor-follow loop live in one effect, scoped to
-  // this section's own element (not `window`) — the reference tracked the
-  // pointer globally, which would have shown its art-cursor on every page,
-  // not just here.
   useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
+    let raf = 0;
 
-    const pointer = { x: -120, y: -120 };
-    const rendered = { x: -120, y: -120 };
-    let frame: number | null = null;
+    const update = () => {
+      raf = 0;
+      const stack = stackRef.current;
+      if (!stack) return;
 
-    function animateCursor() {
-      const dx = pointer.x - rendered.x;
-      const dy = pointer.y - rendered.y;
-      rendered.x += dx * 0.22;
-      rendered.y += dy * 0.22;
-      if (cursorRef.current) {
-        cursorRef.current.style.transform = `translate3d(${rendered.x}px, ${rendered.y}px, 0)`;
-      }
-      if (Math.abs(dx) + Math.abs(dy) > 0.08) {
-        frame = requestAnimationFrame(animateCursor);
-      } else {
-        frame = null;
-      }
-    }
+      const rect = stack.getBoundingClientRect();
+      const pageTop = rect.top + window.scrollY;
+      const vars = getComputedStyle(stack);
+      const stickyTop = parseFloat(vars.getPropertyValue("--sticky-top")) || 96;
+      const step = parseFloat(vars.getPropertyValue("--stack-step")) || 400;
+      const next = (window.scrollY - (pageTop - stickyTop)) / step;
 
-    function onPointerMove(event: PointerEvent) {
-      if (event.pointerType === "touch") return;
-      if (rendered.x < 0) {
-        rendered.x = event.clientX;
-        rendered.y = event.clientY;
-      }
-      pointer.x = event.clientX;
-      pointer.y = event.clientY;
-      setHasPointer(true);
-      if (frame === null) frame = requestAnimationFrame(animateCursor);
-    }
+      setProgress(clamp(next, 0, CARDS.length - 0.1));
+    };
 
-    function onPointerLeave() {
-      setHasPointer(false);
-      setActive(null);
-      setCursorReady(false);
-    }
+    const requestUpdate = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
 
-    section.addEventListener("pointermove", onPointerMove, { passive: true });
-    section.addEventListener("pointerleave", onPointerLeave);
+    update();
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate);
 
     return () => {
-      section.removeEventListener("pointermove", onPointerMove);
-      section.removeEventListener("pointerleave", onPointerLeave);
-      if (frame !== null) cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", requestUpdate);
+      window.removeEventListener("resize", requestUpdate);
+      if (raf) cancelAnimationFrame(raf);
     };
   }, []);
-
-  useEffect(() => {
-    return () => {
-      if (settleTimer.current) window.clearTimeout(settleTimer.current);
-    };
-  }, []);
-
-  // Hide the site's own dot+ring cursor for as long as the pointer is over
-  // this section; hand it back the instant it leaves.
-  useEffect(() => {
-    const html = document.documentElement;
-    if (hasPointer) html.setAttribute("data-hide-site-cursor", "true");
-    else html.removeAttribute("data-hide-site-cursor");
-    return () => html.removeAttribute("data-hide-site-cursor");
-  }, [hasPointer]);
-
-  const activatePanel = (index: number) => {
-    setActive(index);
-    setCursorReady(false);
-    if (settleTimer.current) window.clearTimeout(settleTimer.current);
-    settleTimer.current = window.setTimeout(() => setCursorReady(true), 600);
-  };
-
-  const closePanels = () => {
-    setActive(null);
-    setCursorReady(false);
-    if (settleTimer.current) window.clearTimeout(settleTimer.current);
-  };
-
-  const handlePanelKeyDown = (event: KeyboardEvent<HTMLElement>, index: number) => {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      if (active === index) closePanels();
-      else activatePanel(index);
-    }
-  };
 
   return (
-    <>
+    <section className="ps-section" aria-label="What holds trades businesses back">
       <style>{CSS}</style>
-      <style>{`
-        html[data-hide-site-cursor="true"] .cursor-dot,
-        html[data-hide-site-cursor="true"] .cursor-ring,
-        html[data-hide-site-cursor="true"] .glow-cursor-canvas { opacity: 0 !important; }
-      `}</style>
 
-      <section
-        ref={sectionRef}
-        className={`pp-accordion${active !== null ? " is-open" : ""}`}
-        aria-label="What's holding trades businesses back"
-      >
-        <div className="pp-masthead" aria-hidden="true">
-          <p className="pp-eyebrow">Pain points</p>
-          <h2 className="pp-headline">
+      <div className="ps-head">
+        <Reveal>
+          <h2 className="font-display ps-headline">
             Most trades businesses don{"’"}t have a work problem. They have a marketing problem.
           </h2>
-        </div>
+        </Reveal>
+      </div>
 
-        <div className="pp-row">
-          {PANELS.map((panel, index) => {
-            const isActive = active === index;
-            return (
-              <article
-                key={panel.title}
-                className={`pp-panel${isActive ? " is-active" : ""}`}
-                onMouseEnter={() => activatePanel(index)}
-                onFocus={() => activatePanel(index)}
-                onClick={() => (isActive ? closePanels() : activatePanel(index))}
-                onKeyDown={(event) => handlePanelKeyDown(event, index)}
-                tabIndex={0}
-                role="button"
-                aria-expanded={isActive}
-              >
-                <div
-                  className="pp-panel-image"
-                  style={{ backgroundImage: `url("${panel.image}")` }}
-                  aria-hidden="true"
-                />
-                <div className="pp-panel-shade" aria-hidden="true" />
-                <h3>{panel.title}</h3>
-                <p className="pp-panel-body">{panel.body}</p>
-                <div className="pp-panel-index" aria-hidden="true">
-                  <span>{String(index + 1).padStart(2, "0")}</span>
-                  <span>/ {String(COUNT).padStart(2, "0")}</span>
+      <div className="ps-stack" ref={stackRef}>
+        {CARDS.map((card, index) => {
+          const depth = clamp(progress - index, 0, 3);
+          const style: CardStyle = {
+            "--card-color": card.color,
+            "--muted": card.muted,
+            "--card-scale": 1 - depth * 0.022,
+            "--depth": depth,
+            zIndex: 10 + index,
+          };
+
+          return (
+            <article className="ps-card" key={card.title} style={style}>
+              <div className="ps-top">
+                <h3 className="ps-title">
+                  <span>{card.titleLines[0]}</span>
+                  <span>{card.titleLines[1]}</span>
+                </h3>
+                <span className="ps-index" aria-hidden="true">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+              </div>
+
+              <div className="ps-bottom">
+                <ul className="ps-tags" aria-label="Where it shows up">
+                  {card.tags.map((tag) => (
+                    <li key={tag}>{tag}</li>
+                  ))}
+                </ul>
+
+                <div className="ps-description">
+                  <span className="ps-spark" aria-hidden="true">
+                    ✳
+                  </span>
+                  <p>{card.body}</p>
                 </div>
-              </article>
-            );
-          })}
-        </div>
+              </div>
+            </article>
+          );
+        })}
+      </div>
 
-        <div
-          ref={cursorRef}
-          className={`pp-art-cursor${hasPointer ? " is-visible" : ""}${
-            cursorReady && active !== null ? " is-preview" : ""
-          }`}
-          aria-hidden="true"
-        >
-          <span className="pp-cursor-dot" />
-          <span
-            className="pp-cursor-preview"
-            style={active !== null ? { backgroundImage: `url("${PANELS[active].image}")` } : undefined}
-          />
-        </div>
-
-        <button className="pp-close" type="button" onClick={closePanels}>
-          Close
-        </button>
-      </section>
-
-      <div className="mx-auto max-w-[1240px] px-5 py-20 md:px-8 md:py-28">
+      <div className="ps-closer">
         <Reveal>
           <ScrollWords
             text={PAIN_CLOSER}
-            className="font-display mx-auto max-w-[22ch] text-center font-medium"
-            style={{ fontSize: "clamp(26px, 4vw, 52px)", lineHeight: 1.14 }}
+            className="font-serif-display mx-auto max-w-[20ch] text-center"
+            style={{ fontSize: "clamp(34px, 5.2vw, 72px)", lineHeight: 1.04 }}
           />
         </Reveal>
       </div>
-    </>
+    </section>
   );
 }
+
+const CSS = `
+  .ps-section, .ps-section * { box-sizing: border-box; }
+
+  .ps-section {
+    --gutter: clamp(16px, 4.65vw, 30px);
+    position: relative;
+    width: 100%;
+    max-width: 1380px;
+    margin: 0 auto;
+    padding: clamp(80px, 11vw, 140px) 0 0;
+  }
+
+  .ps-head {
+    padding: 0 var(--gutter) clamp(36px, 5vw, 64px);
+  }
+  .ps-headline {
+    margin: 0;
+    max-width: 20ch;
+    font-size: clamp(32px, 4.8vw, 64px);
+    line-height: 1.04;
+    font-weight: 700;
+  }
+
+  /* layout variables live here, not on :root, and the scroll maths reads
+     them from this element */
+  .ps-stack {
+    --sticky-top: 84px;
+    --stack-step: 340px;
+    --card-height: 300px;
+    --peek-lift: 12px;
+    position: relative;
+    padding: 0 var(--gutter) 18px;
+  }
+
+  .ps-card {
+    position: sticky;
+    top: var(--sticky-top);
+    width: 100%;
+    height: var(--card-height);
+    margin-bottom: 40px;
+    padding: 26px 22px 20px;
+    overflow: hidden;
+    border-radius: 18px;
+    background: var(--card-color);
+    color: #FFFFFF;
+    transform-origin: 50% 0%;
+    transform: translateY(calc(var(--depth) * var(--peek-lift) * -1)) scale(var(--card-scale));
+    will-change: transform;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.04), 0 -18px 40px -24px rgba(0,0,0,.45);
+  }
+
+  .ps-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .ps-title {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    font-family: var(--font-display), var(--font-sans), sans-serif;
+    font-size: 34px;
+    line-height: .95;
+    font-weight: 500;
+    letter-spacing: -.045em;
+  }
+  .ps-title span:last-child { color: var(--muted); }
+
+  .ps-index {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .2em;
+    color: rgba(255,255,255,.45);
+    padding-top: 6px;
+  }
+
+  .ps-bottom {
+    position: absolute;
+    left: 22px;
+    right: 22px;
+    bottom: 20px;
+  }
+
+  .ps-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    margin: 0 0 16px;
+    padding: 0;
+    list-style: none;
+    color: rgba(255,255,255,.72);
+  }
+  .ps-tags li {
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .ps-description {
+    display: grid;
+    grid-template-columns: 16px minmax(0, 1fr);
+    gap: 8px;
+    align-items: start;
+  }
+  .ps-spark {
+    font-size: 15px;
+    line-height: 1;
+    color: rgba(255,255,255,.85);
+    transform: translateY(1px);
+  }
+  .ps-description p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.4;
+    letter-spacing: -.01em;
+    color: rgba(255,255,255,.92);
+  }
+
+  .ps-closer {
+    padding: clamp(72px, 10vw, 140px) var(--gutter) clamp(80px, 11vw, 150px);
+  }
+
+  @media (min-width: 850px) {
+    .ps-section { --gutter: 4.65vw; }
+
+    .ps-stack {
+      --sticky-top: 96px;
+      --card-height: clamp(360px, 39.4vw, 544px);
+      --stack-step: clamp(400px, 44.4vw, 612px);
+      --peek-lift: 20px;
+    }
+
+    .ps-card {
+      border-radius: clamp(18px, 2.6vw, 36px);
+      padding: 4vw 3.9vw 3.1vw;
+      margin-bottom: 5.3vw;
+    }
+
+    .ps-title { font-size: clamp(42px, 5.75vw, 78px); }
+    .ps-index { font-size: 12px; }
+
+    .ps-bottom {
+      left: 3.9vw;
+      right: 3.9vw;
+      bottom: 3.1vw;
+    }
+
+    .ps-tags {
+      gap: 8px 4.8vw;
+      margin-bottom: 2.4vw;
+    }
+    .ps-tags li { font-size: clamp(10px, .96vw, 13px); }
+
+    .ps-description {
+      grid-template-columns: 2vw 1fr;
+      gap: .9vw;
+    }
+    .ps-spark { font-size: clamp(16px, 2vw, 27px); }
+    .ps-description p {
+      max-width: 62%;
+      font-size: clamp(15px, 1.4vw, 20px);
+    }
+  }
+
+  @media (max-width: 520px) {
+    .ps-stack {
+      --sticky-top: 80px;
+      --card-height: 320px;
+      --stack-step: 360px;
+    }
+    .ps-title { font-size: 30px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ps-card { transform: none !important; }
+  }
+`;

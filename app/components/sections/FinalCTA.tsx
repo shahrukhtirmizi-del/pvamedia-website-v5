@@ -1,46 +1,19 @@
-import LaserBackground from "../fx/LaserBackground";
 import MagneticCTA from "../ui/MagneticCTA";
 import Reveal from "../ui/Reveal";
-import TextHoverReveal from "../motion/TextHoverReveal";
 import { SITE } from "../../lib/site";
 
 export default function FinalCTA() {
   return (
-    <section id="contact" className="relative overflow-hidden">
-      {/* the beams converge left of the headline and react to the pointer;
-          z-0 keeps them behind everything, including the orb's solid disc */}
-      <div
-        className="absolute inset-0 z-0"
-        aria-hidden
-        style={{
-          maskImage: "linear-gradient(to bottom, transparent, black 22%)",
-          WebkitMaskImage: "linear-gradient(to bottom, transparent, black 22%)",
-        }}
-      >
-        <LaserBackground centerX={-0.78} centerY={-0.12} opacity={0.85} />
-      </div>
-
-      <div className="relative flex w-full items-center justify-center overflow-hidden py-24" style={{ background: "var(--bg)" }}>
-        <TextHoverReveal
-          text="LET'S TALK"
-          fontSize="text-[clamp(28px,6vw,64px)]"
-          textColor="text-[color:var(--ink)]"
-          overlayColor="text-[color:var(--ink-45)]"
-          letterImages={[
-            "/images/hero/media-ink.png",
-            "/images/hero/bg-texture.png",
-            "/images/hero/preloader-bg.png",
-          ]}
-        />
-      </div>
-
+    <section id="contact" className="relative">
+      {/* no background of its own: the ink field that runs behind the whole
+          site carries on through the closing section */}
       <div className="relative z-10 mx-auto flex min-h-[80vh] max-w-[1240px] flex-col items-center justify-center px-5 py-28 text-center md:px-8 md:py-36">
         <Reveal>
           <h2
-            className="font-display max-w-[15ch] font-semibold"
-            style={{ fontSize: "clamp(36px, 6.4vw, 82px)", lineHeight: 1.05 }}
+            className="font-serif-display max-w-[14ch]"
+            style={{ fontSize: "clamp(44px, 7.4vw, 108px)", lineHeight: 0.98 }}
           >
-            Ready to see what{"’"}s possible?
+            Ready to see what{"’"}s <em className="italic">possible?</em>
           </h2>
         </Reveal>
 
