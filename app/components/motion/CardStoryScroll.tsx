@@ -421,7 +421,7 @@ export default function CardStoryScroll() {
       <style>{CSS}</style>
 
       <main className="kex-scroll-page">
-        <section ref={sceneRef} className="kex-scroll-scene">
+        <section id="services" ref={sceneRef} className="kex-scroll-scene">
           <div className="kex-sticky-stage">
             <div className="kex-hero-content">
               <h1 ref={heroTitleRef} className="kex-hero-title">
