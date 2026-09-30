@@ -11,7 +11,7 @@ export const SITE = {
    */
   domain: "https://www.pvamedia.co.uk",
   tagline:
-    "We take landscapers from 3 booked jobs a month to 12, without lifting a finger.",
+    "We take trades and home service companies from 3 booked jobs a month to 12, without lifting a finger.",
   email: "admin@pvamedia.co.uk",
   phone: "+44 7782 985932",
   phoneHref: "+447782985932",
@@ -40,7 +40,7 @@ export const HERO_STATS = [
 export const TICKER = [
   "60% more enquiries in 90 days, or you don't pay",
   "Live in 5 days",
-  "Built only for landscapers",
+  "Built only for trades and home service companies",
   "Under 60 second lead response",
   "200+ websites built",
   "Zero missed calls",
@@ -63,7 +63,7 @@ export const PAIN_POINTS = [
   },
   {
     title: "Competitors win on their website alone",
-    body: "They are not better landscapers. They just look more legitimate the moment someone lands on the page.",
+    body: "They are not better at the work. They just look more legitimate the moment someone lands on the page.",
   },
   {
     title: "Enquiries go missing while you work",

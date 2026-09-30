@@ -1,6 +1,7 @@
 import LaserBackground from "../fx/LaserBackground";
 import MagneticCTA from "../ui/MagneticCTA";
 import Reveal from "../ui/Reveal";
+import TextHoverReveal from "../motion/TextHoverReveal";
 import { SITE } from "../../lib/site";
 
 export default function FinalCTA() {
@@ -17,6 +18,10 @@ export default function FinalCTA() {
         }}
       >
         <LaserBackground centerX={-0.78} centerY={-0.12} opacity={0.85} />
+      </div>
+
+      <div className="relative flex w-full items-center justify-center overflow-hidden py-24" style={{ background: "var(--bg)" }}>
+        <TextHoverReveal text="LET'S TALK" fontSize="text-[clamp(28px,6vw,64px)]" />
       </div>
 
       <div className="relative z-10 mx-auto flex min-h-[80vh] max-w-[1240px] flex-col items-center justify-center px-5 py-28 text-center md:px-8 md:py-36">

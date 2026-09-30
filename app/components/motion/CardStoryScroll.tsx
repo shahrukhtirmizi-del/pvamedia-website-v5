@@ -1,6 +1,7 @@
 "use client";
 
 import React, { CSSProperties, useEffect, useRef } from "react";
+import { SITE, SERVICES } from "../../lib/site";
 
 const CSS = `
 * {
@@ -14,14 +15,14 @@ body {
 
 .kex-scroll-page {
   width: 100%;
-  background: #ff4b00;
+  background: #3A2418;
   font-family: Inter, Arial, Helvetica, sans-serif;
 }
 
 .kex-scroll-scene {
   position: relative;
-  height: 560vh;
-  background: #ff4b00;
+  height: 700vh;
+  background: #3A2418;
 }
 
 .kex-sticky-stage {
@@ -30,7 +31,7 @@ body {
   width: 100%;
   height: 100vh;
   overflow: hidden;
-  background: #ff4b00;
+  background: #3A2418;
 }
 
 /* HERO */
@@ -191,12 +192,12 @@ body {
 
 .kex-after-section {
   min-height: 80vh;
-  background: #080808;
+  background: #241811;
 }
 
 @media (max-width: 800px) {
   .kex-scroll-scene {
-    height: 540vh;
+    height: 675vh;
   }
 
   .kex-hero-title {
@@ -247,52 +248,46 @@ type CardStyle = CSSProperties & {
   "--card-number": string;
 };
 
-const cards: Card[] = [
+const CARD_COLORS: Array<Pick<Card, "bg" | "text" | "muted" | "numberColor">> = [
   {
-    number: "01",
-    kicker: "01 — The Belief",
-    title: "Create Without Fear",
-    description:
-      "A bold space for ideas to rise, move, and become visible without waiting for permission.",
-    bg: "#000000",
-    text: "#ffffff",
-    muted: "rgba(255,255,255,0.72)",
-    numberColor: "rgba(255,255,255,0.22)",
+    bg: "#3A2418",
+    text: "#F2EAD3",
+    muted: "rgba(242,234,211,0.72)",
+    numberColor: "rgba(242,234,211,0.22)",
   },
   {
-    number: "02",
-    kicker: "02 — The Mission",
-    title: "Art First Always",
-    description:
-      "Every card arrives like a statement, cutting through the page with strong motion and clean contrast.",
-    bg: "#1117ff",
-    text: "#ffffff",
-    muted: "rgba(255,255,255,0.76)",
-    numberColor: "rgba(255,255,255,0.22)",
+    bg: "#D9C08C",
+    text: "#3A2418",
+    muted: "rgba(58,36,24,0.62)",
+    numberColor: "rgba(58,36,24,0.18)",
   },
   {
-    number: "03",
-    kicker: "03 — The Method",
-    title: "Build Loud Ideas",
-    description:
-      "Smooth scroll movement, cinematic angles, and bold typography make each section feel alive.",
-    bg: "#f2f0e8",
-    text: "#050505",
-    muted: "rgba(0,0,0,0.62)",
-    numberColor: "rgba(0,0,0,0.13)",
+    bg: "#FAF6EC",
+    text: "#3A2418",
+    muted: "rgba(58,36,24,0.62)",
+    numberColor: "rgba(58,36,24,0.13)",
   },
   {
-    number: "04",
-    kicker: "04 — The Future",
-    title: "No More Limits",
-    description:
-      "A premium scroll experience designed for portfolios, agencies, artists, and experimental landing pages.",
-    bg: "#ff3f00",
-    text: "#ffffff",
-    muted: "rgba(255,255,255,0.76)",
-    numberColor: "rgba(255,255,255,0.24)",
+    bg: "#3A2418",
+    text: "#F2EAD3",
+    muted: "rgba(242,234,211,0.72)",
+    numberColor: "rgba(242,234,211,0.22)",
+  },
+  {
+    bg: "#ECE0C8",
+    text: "#3A2418",
+    muted: "rgba(58,36,24,0.62)",
+    numberColor: "rgba(58,36,24,0.18)",
   },
 ];
+
+const cards: Card[] = SERVICES.map((service, index) => ({
+  number: `0${index + 1}`,
+  kicker: `0${index + 1} — ${service.name}`,
+  title: service.name,
+  description: service.short,
+  ...CARD_COLORS[index],
+}));
 
 const clamp = (value: number, min: number, max: number) =>
   Math.min(max, Math.max(min, value));
@@ -367,8 +362,8 @@ export default function CardStoryScroll() {
           The first card fully covers the orange hero.
           Each next card fully covers the previous card.
         */
-        const start = 0.08 + index * 0.215;
-        const end = start + 0.22;
+        const start = 0.08 + index * 0.172;
+        const end = start + 0.176;
 
         const raw = clamp((progress - start) / (end - start), 0, 1);
         const eased = easeOutCubic(raw);
@@ -430,15 +425,13 @@ export default function CardStoryScroll() {
           <div className="kex-sticky-stage">
             <div className="kex-hero-content">
               <h1 ref={heroTitleRef} className="kex-hero-title">
-                CREATE
+                OUR
                 <br />
-                WITHOUT
-                <br />
-                LIMITS
+                SERVICES
               </h1>
 
               <p ref={heroSubtitleRef} className="kex-hero-subtitle">
-
+                {SITE.tagline}
               </p>
             </div>
 

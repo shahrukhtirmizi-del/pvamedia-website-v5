@@ -8,7 +8,6 @@ import Footer from "./components/site/Footer";
 import Grain from "./components/site/Grain";
 import SmoothScroll from "./components/site/SmoothScroll";
 import CookieBanner from "./components/site/CookieBanner";
-import IntroReveal from "./components/site/IntroReveal";
 import Atmosphere from "./components/site/Atmosphere";
 import Cursor from "./components/site/Cursor";
 import GlowCursor from "./components/fx/GlowCursor";
@@ -41,38 +40,38 @@ const serif = Cormorant_Garamond({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.domain),
   title: {
-    default: "PVA Media | Websites and Local SEO for Landscapers",
+    default: "PVA Media | Websites and Local SEO for Trades",
     template: "%s | PVA Media",
   },
   description:
-    "Custom websites, local SEO and AI receptionists built only for landscaping companies. Live in 5 days, with a 60 day guarantee.",
+    "Custom websites, local SEO and AI receptionists built for trades and home service companies. Live in 5 days, with a 60 day guarantee.",
   keywords: [
-    "landscaper website design",
-    "landscaping SEO",
-    "lawn care marketing",
-    "AI receptionist for landscapers",
-    "landscaping lead generation",
+    "trades website design",
+    "home service SEO",
+    "local trades marketing",
+    "AI receptionist for trades",
+    "trades lead generation",
   ],
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     url: SITE.domain,
     siteName: SITE.name,
-    title: "PVA Media | Websites and Local SEO for Landscapers",
+    title: "PVA Media | Websites and Local SEO for Trades",
     description:
-      "We take landscapers from 3 booked jobs a month to 12, without lifting a finger.",
+      "We take trades and home service companies from 3 booked jobs a month to 12, without lifting a finger.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "PVA Media | Websites and Local SEO for Landscapers",
+    title: "PVA Media | Websites and Local SEO for Trades",
     description:
-      "We take landscapers from 3 booked jobs a month to 12, without lifting a finger.",
+      "We take trades and home service companies from 3 booked jobs a month to 12, without lifting a finger.",
   },
   robots: { index: true, follow: true },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#070707",
+  themeColor: "#F2EAD3",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -82,18 +81,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${sans.variable} ${mono.variable} ${serif.variable}`}>
       <body className="font-display">
-        {/* the intro overlay is server-rendered so it covers on first paint;
-            without scripting there is nothing to dismiss it, so hide it */}
-        <noscript>
-          <style>{`.intro-root{display:none !important}`}</style>
-        </noscript>
-
         <a href="#main" className="skip-link">
           Skip to content
         </a>
 
         <SmoothScroll />
-        <IntroReveal />
         <Atmosphere />
         <Grain />
 

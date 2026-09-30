@@ -119,7 +119,7 @@ export default function OrbitHeading({
       const x = c.getContext("2d");
       if (!x) return null;
 
-      x.fillStyle = "#121212";
+      x.fillStyle = "#FAF6EC";
       x.fillRect(0, 0, TS, TS);
 
       const scale = Math.max(TS / img.width, TS / img.height);
@@ -204,7 +204,7 @@ export default function OrbitHeading({
       // two lines, centred on the ring centre
       const blockTop = d2sy(RING.cy) - (cap + gap) / 2;
       drawLine(x, lineOne, fontFamily, "700", size, d2sx(RING.cx), blockTop + cap, "#8f8f8f");
-      drawLine(x, lineTwo, fontFamily, "700", size, d2sx(RING.cx), blockTop + cap + gap, "#f4f4f2");
+      drawLine(x, lineTwo, fontFamily, "700", size, d2sx(RING.cx), blockTop + cap + gap, "#3A2418");
     }
 
     function project(p: number[]) {

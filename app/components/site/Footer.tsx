@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Logo from "../Logo";
 import { SITE, NAV } from "../../lib/site";
+import ChromaticFooter from "../motion/ChromaticGradientFooter";
 
 const LEGAL = [
   { label: "Privacy policy", href: "/privacy" },
@@ -11,7 +12,7 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t" style={{ borderColor: "var(--line)" }}>
+    <ChromaticFooter className="border-t" style={{ borderColor: "var(--line)" }}>
       <div className="mx-auto max-w-[1240px] px-5 py-14 md:px-8 md:py-20">
         <div className="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr]">
           <div>
@@ -19,7 +20,7 @@ export default function Footer() {
               <Logo className="h-5 w-auto" />
             </Link>
             <p className="mt-5 max-w-[34ch] text-[15px]" style={{ color: "var(--ink-60)" }}>
-              Websites, local SEO and AI receptionists built only for landscaping companies.
+              Websites, local SEO and AI receptionists built for trades and home service companies.
             </p>
           </div>
 
@@ -66,10 +67,10 @@ export default function Footer() {
           <p>
             {"©"} {year} {SITE.name}. All rights reserved.
           </p>
-          <p>Built for landscapers across the United States.</p>
+          <p>Built for trades across the United States.</p>
         </div>
       </div>
-    </footer>
+    </ChromaticFooter>
   );
 }
 
