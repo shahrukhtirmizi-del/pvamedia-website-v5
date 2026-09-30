@@ -309,7 +309,7 @@ export default function CardStoryScroll() {
   const sceneRef = useRef<HTMLElement | null>(null);
   const heroTitleRef = useRef<HTMLHeadingElement | null>(null);
   const heroSubtitleRef = useRef<HTMLParagraphElement | null>(null);
-  const cardRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const cardRefs = useRef<Array<HTMLElement | null>>([]);
 
   const currentProgress = useRef(0);
   const targetProgress = useRef(0);
