@@ -21,7 +21,7 @@ export default function FinalCTA() {
       </div>
 
       <div className="relative flex w-full items-center justify-center overflow-hidden py-24" style={{ background: "var(--bg)" }}>
-        <TextHoverReveal text="LET'S TALK" fontSize="text-[clamp(28px,6vw,64px)]" />
+        <TextHoverReveal text="LET'S TALK" fontSize="text-[clamp(28px,6vw,64px)]" textColor="text-[color:var(--ink)]" />
       </div>
 
       <div className="relative z-10 mx-auto flex min-h-[80vh] max-w-[1240px] flex-col items-center justify-center px-5 py-28 text-center md:px-8 md:py-36">
