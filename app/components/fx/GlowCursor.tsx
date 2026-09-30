@@ -341,7 +341,7 @@ export default function GlowCursor() {
     <canvas
       ref={canvasRef}
       aria-hidden
-      className="pointer-events-none fixed inset-0 z-[115]"
+      className="glow-cursor-canvas pointer-events-none fixed inset-0 z-[115]"
       // normal compositing: a screen blend on a full-viewport layer made the
       // browser re-blend the entire page every frame
       style={{ width: "100%", height: "100%" }}

@@ -409,7 +409,8 @@ export default function PainPoints() {
       <style>{CSS}</style>
       <style>{`
         html[data-hide-site-cursor="true"] .cursor-dot,
-        html[data-hide-site-cursor="true"] .cursor-ring { opacity: 0 !important; }
+        html[data-hide-site-cursor="true"] .cursor-ring,
+        html[data-hide-site-cursor="true"] .glow-cursor-canvas { opacity: 0 !important; }
       `}</style>
 
       <section
