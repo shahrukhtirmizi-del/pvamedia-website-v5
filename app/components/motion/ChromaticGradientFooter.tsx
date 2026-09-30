@@ -17,14 +17,15 @@ type GradientStop = {
 const VIEW_WIDTH = 1440;
 const VIEW_HEIGHT = 620;
 
+// monochrome: ink at the base, greying out to nothing as the glow rises
 const GRADIENT_STOPS: GradientStop[] = [
-  { offset: 0, color: "#06111f" },
-  { offset: 0.17, color: "#006eff" },
-  { offset: 0.34, color: "#00d9ff" },
-  { offset: 0.5, color: "#e6fffb" },
-  { offset: 0.66, color: "#c5ff42" },
-  { offset: 0.82, color: "#ff695a" },
-  { offset: 1, color: "#ff695a00" },
+  { offset: 0, color: "#0a0a0a" },
+  { offset: 0.17, color: "#1c1c1c" },
+  { offset: 0.34, color: "#3d3d3d" },
+  { offset: 0.5, color: "#767676" },
+  { offset: 0.66, color: "#b4b4b4" },
+  { offset: 0.82, color: "#e2e2e2" },
+  { offset: 1, color: "#ffffff00" },
 ];
 
 const navigation = [

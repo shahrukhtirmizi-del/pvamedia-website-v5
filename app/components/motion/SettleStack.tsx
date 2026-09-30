@@ -159,7 +159,7 @@ export default function SettleStack({
       <div className="st-track" ref={pinRef}>
         <section className="st-stage">
           <div className="st-headline" ref={headlineRef}>
-            <h1>{headline}</h1>
+            <h2>{headline}</h2>
           </div>
 
           <header className="st-chrome st-top">
@@ -228,8 +228,9 @@ const css = `
 
   .st-headline{position:absolute;inset:0;display:flex;align-items:center;
     justify-content:center;will-change:transform,opacity;z-index:2;}
-  .st-headline h1{width:62%;text-align:center;margin:0;text-transform:uppercase;
-    font-weight:900;line-height:.85;
+  .st-headline h2{width:62%;text-align:center;margin:0;text-transform:uppercase;
+    font-family:var(--font-display, var(--font-sans, sans-serif));
+    font-weight:800;line-height:.85;
     font-size:clamp(2.6rem,5vw,6.4rem);letter-spacing:-0.02em;}
 
   .st-deck{position:absolute;inset:0;transform-style:preserve-3d;z-index:3;}
@@ -246,8 +247,10 @@ const css = `
   .st-back{transform:translate(-50%,-50%) rotateY(-180deg);}
 
   .st-card h3{margin:0;text-transform:uppercase;
-    font-weight:900;line-height:.9;font-size:clamp(1.4rem,2.2vw,2.2rem);}
-  .st-card p{margin:0;font-size:1rem;font-weight:450;line-height:1.2;}
+    font-family:var(--font-display, var(--font-sans, sans-serif));
+    font-weight:800;line-height:.9;font-size:clamp(1.4rem,2.2vw,2.2rem);}
+  .st-card p{margin:0;font-size:1rem;font-weight:450;line-height:1.2;
+    white-space:pre-line;}
   .st-tag{text-transform:uppercase;font-size:.72rem;font-weight:700;
     letter-spacing:.08em;padding:.4rem .65rem;border-radius:.3rem;
     background:#ffffff;color:#000000;}
@@ -271,7 +274,7 @@ const css = `
     background:currentColor;margin-right:10px;vertical-align:middle;}
 
   @media (max-width:1000px){
-    .st-headline h1{width:86%;}
+    .st-headline h2{width:86%;}
     .st-card{width:70%;min-width:0;}
   }
 `;

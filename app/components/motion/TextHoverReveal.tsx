@@ -18,7 +18,7 @@ interface RevealTextProps {
 export function RevealText({
   text = "Okara",
   textColor = "text-white",
-  overlayColor = "text-purple-500",
+  overlayColor = "text-neutral-400",
   fontSize = "text-[clamp(70px,16vw,250px)]",
   letterDelay = 0.08,
   overlayDelay = 0.05,
@@ -56,7 +56,10 @@ export function RevealText({
     <div className="relative flex w-full items-center justify-center overflow-hidden py-24" style={{ background: "var(--bg)" }}>
       <div className="relative flex items-center justify-center px-4">
         <div className="flex">
-          {text.split("").map((letter, index) => (
+          {/* a plain space inside an inline-block collapses to zero width,
+              and even a non-breaking one nearly vanishes under the tight
+              tracking, so space cells get an explicit width */}
+          {text.split("").map((char) => (char === " " ? "\u00A0" : char)).map((letter, index) => (
             <motion.span
               key={`${letter}-${index}`}
               onMouseEnter={() => setHoveredIndex(index)}
@@ -70,6 +73,7 @@ export function RevealText({
                 font-black
                 leading-[0.82]
                 tracking-[-0.09em]
+                ${letter === "\u00A0" ? "w-[0.32em]" : ""}
               `}
               initial={{
                 scale: 0,

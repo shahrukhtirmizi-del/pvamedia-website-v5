@@ -1,19 +1,17 @@
 import SplitCurtainPreloader from "./motion/SplitCurtainPreloader";
 import ScrollExpandMedia from "./motion/ScrollExpansionHero";
+import HeroBackdrop from "./fx/HeroBackdrop";
 import Statement from "./sections/Statement";
 import Ticker from "./ui/Ticker";
 import PainPoints from "./sections/PainPoints";
-import CaseStudy from "./sections/CaseStudy";
-import Portfolio from "./sections/Portfolio";
 import CardStoryScroll from "./motion/CardStoryScroll";
-import Pricing from "./sections/Pricing";
+import ServiceIncludes from "./sections/ServiceIncludes";
 import WhatYouGet from "./sections/WhatYouGet";
-import Testimonials from "./sections/Testimonials";
 import CircularCardDeck from "./motion/CircularCardDeck";
+import Results from "./sections/Results";
 import FinalCTA from "./sections/FinalCTA";
-import LaserBand from "./fx/LaserBand";
 import SectionRouter from "./site/SectionRouter";
-import { SITE, TICKER } from "../lib/site";
+import { SITE, TICKER, CLIENT_TESTIMONIALS } from "../lib/site";
 
 const structuredData = {
   "@context": "https://schema.org",
@@ -23,10 +21,17 @@ const structuredData = {
   email: SITE.email,
   telephone: SITE.phone,
   description:
-    "Web design, local SEO and AI receptionist services built for trades and home service companies across the United States.",
-  areaServed: { "@type": "Country", name: "United States" },
+    "A UK marketing agency for trades and home service companies: local SEO, paid advertising, AI receptionists and AI automation agents, backed by websites built to convert.",
+  areaServed: { "@type": "Country", name: "United Kingdom" },
   slogan: SITE.tagline,
 };
+
+/**
+ * Marks the intro as playing before first paint, so the site nav starts
+ * hidden behind the curtain instead of flashing over it. Same conditions the
+ * preloader uses to decide whether to run at all.
+ */
+const introFlag = `try{if(location.pathname==="/"&&scrollY<10&&!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.setAttribute("data-intro","playing")}catch(e){}`;
 
 export default function HomePage() {
   return (
@@ -35,43 +40,50 @@ export default function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
+      <script dangerouslySetInnerHTML={{ __html: introFlag }} />
+      {/* without scripting nothing would ever open the curtain */}
+      <noscript>
+        <style>{`.sf-overlay{display:none !important}`}</style>
+      </noscript>
 
       <SectionRouter />
-      <SplitCurtainPreloader
-        studio="PVA Media"
-        cardTitle="PVA Media"
-        tags={["Websites", "Local SEO", "AI Receptionist"]}
-        heroImage="/images/portfolio/t7-hero.jpg"
-        footerRight="Websites for trades and home service companies"
-      />
+      <HeroBackdrop />
+
+      {/* the preloader plays inside the hero's pinned stage and lands its
+          image in the hero frame, so the two read as one reveal */}
       <ScrollExpandMedia
         mediaType="image"
-        mediaSrc="/images/portfolio/t7-hero.jpg"
-        bgImageSrc="/images/mood/paper-sheets-angled.png"
-        title="Live in 5 days"
+        mediaSrc="/images/hero/media-ink.png"
+        title="Found. Called. Booked."
+        textBlend
+        intro={
+          <SplitCurtainPreloader
+            overlay
+            studio="PVA Media"
+            numeral="VA"
+            logo=""
+            menuLabel=""
+            cardTitle="PVA Media"
+            tags={["Local SEO", "Paid ads", "AI automation"]}
+            heroImage="/images/hero/preloader-bg.png"
+            footerLeft="Scroll"
+            footerRight="Marketing for trades and home services"
+          />
+        }
       >
-        <p>{SITE.tagline}</p>
+        <p className="font-display text-[clamp(22px,2.6vw,34px)] font-semibold leading-tight">
+          {SITE.tagline}
+        </p>
       </ScrollExpandMedia>
+
       <Statement />
       <Ticker items={TICKER} />
-
-      {/* the beams run behind two sections at a time and dissolve at each
-          end of the band, so nothing ends on a line. Every other pair. */}
-      <LaserBand centerX={0.55} centerY={-0.25} opacity={0.5}>
-        <PainPoints />
-        <CaseStudy />
-      </LaserBand>
-
-      <Portfolio />
+      <PainPoints />
       <CardStoryScroll />
-
-      <LaserBand centerX={-0.6} centerY={0.3} opacity={0.42}>
-        <Pricing />
-        <WhatYouGet />
-      </LaserBand>
-
-      <Testimonials />
-      <CircularCardDeck />
+      <ServiceIncludes />
+      <WhatYouGet />
+      <CircularCardDeck testimonials={CLIENT_TESTIMONIALS} />
+      <Results />
       <FinalCTA />
     </>
   );

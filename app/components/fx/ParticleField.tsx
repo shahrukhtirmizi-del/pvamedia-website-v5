@@ -212,9 +212,9 @@ export default function ParticleField({
       const y = m.getContext("2d");
       if (!y) return;
       const g2 = y.createRadialGradient(DOT / 2, DOT / 2, 0, DOT / 2, DOT / 2, DOT / 2);
-      g2.addColorStop(0, "rgba(150,240,205,1)");
-      g2.addColorStop(0.45, "rgba(217, 192, 140, 0.6)");
-      g2.addColorStop(1, "rgba(217, 192, 140, 0)");
+      g2.addColorStop(0, "rgba(10, 10, 10, 1)");
+      g2.addColorStop(0.45, "rgba(10, 10, 10, 0.6)");
+      g2.addColorStop(1, "rgba(10, 10, 10, 0)");
       y.fillStyle = g2;
       y.fillRect(0, 0, DOT, DOT);
       mintSprite = m;
@@ -228,9 +228,9 @@ export default function ParticleField({
       const x = c.getContext("2d");
       if (!x) return;
       x.translate(c.width / 2, c.height / 2);
-      x.shadowColor = "rgba(217, 192, 140, 0.95)";
+      x.shadowColor = "rgba(10, 10, 10, 0.95)";
       x.shadowBlur = 22 * dpr;
-      x.fillStyle = "rgba(150,240,205,1)";
+      x.fillStyle = "rgba(10, 10, 10, 1)";
       x.beginPath();
       // four-point star: long spikes, pinched waist
       for (let i = 0; i < 8; i++) {

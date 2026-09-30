@@ -123,9 +123,23 @@ const css = `
   pointer-events:none;mix-blend-mode:difference;}
 `;
 
-export default function PlumeField() {
+/**
+ * Other components can push ink into the field without a pointer, e.g. the
+ * preloader blooming ink off the hero frame as it lands:
+ *   window.dispatchEvent(new CustomEvent(PLUME_SPLAT, { detail: { x, y, vx, vy } }))
+ * x/y are client pixels, vx/vy a push in pixels per frame.
+ */
+export const PLUME_SPLAT = "pva:plume-splat";
+export type PlumeSplat = { x: number; y: number; vx: number; vy: number };
+
+export default function PlumeField({ active = true }: { active?: boolean }) {
   const rootRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  // read inside the rAF loop, so toggling it never tears the solver down
+  const activeRef = useRef(active);
+  useEffect(() => {
+    activeRef.current = active;
+  }, [active]);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -276,6 +290,14 @@ export default function PlumeField() {
     };
     if (!isCard) window.addEventListener("pointermove", onPointer);
 
+    // splats pushed in from outside, drained one per frame alongside the pointer
+    const queued: PlumeSplat[] = [];
+    const onSplat = (e: Event) => {
+      const d = (e as CustomEvent<PlumeSplat>).detail;
+      if (d) queued.push(d);
+    };
+    window.addEventListener(PLUME_SPLAT, onSplat);
+
     const splat = (x: number, y: number, vx: number, vy: number) => {
       set(mats.splat, {
         aspect: width / height,
@@ -370,6 +392,30 @@ export default function PlumeField() {
       const dt = Math.min((now - last) / 1000, 0.016);
       last = now;
 
+      // off screen, or hidden behind the home page's intro curtain (see
+      // lib/intro.ts): keep the loop alive but skip the solver entirely
+      const html = document.documentElement;
+      const behindCurtain =
+        html.getAttribute("data-intro") === "playing" &&
+        html.getAttribute("data-intro-phase") !== "handoff";
+      if (!activeRef.current || behindCurtain) {
+        queued.length = 0;
+        mouse.moved = false;
+        raf = requestAnimationFrame(loop);
+        return;
+      }
+
+      while (queued.length) {
+        const q = queued.shift()!;
+        const r = root.getBoundingClientRect();
+        splat(
+          (q.x - r.left) * dpr,
+          (q.y - r.top) * dpr,
+          q.vx * dpr * CONFIG.forceStrength,
+          q.vy * dpr * CONFIG.forceStrength
+        );
+      }
+
       if (isCard) {
         // No real pointer in the card — trace a slow Lissajous figure and feed
         // its motion into the solver so the field draws itself.
@@ -405,6 +451,7 @@ export default function PlumeField() {
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("pointermove", onPointer);
+      window.removeEventListener(PLUME_SPLAT, onSplat);
       window.removeEventListener("resize", onResize);
       renderer.dispose();
       [velocity, dye, pressure].forEach((d) => {

@@ -6,7 +6,7 @@ import { X } from "lucide-react";
 import { useIsClient } from "./hooks";
 
 /**
- * The detail popup used by portfolio, services and pricing.
+ * The detail popup used by the portfolio rail.
  *
  * Opens on a gentle scale and fade, closes the same way rather than
  * disappearing: `closing` keeps the panel mounted for the length of the exit
@@ -112,7 +112,7 @@ export default function Modal({
         }`}
         style={{
           borderRadius: "var(--radius-card)",
-          background: "rgba(250, 246, 236, 0.97)",
+          background: "rgba(250, 250, 249, 0.97)",
           maxHeight: "88vh",
           overflowY: "auto",
           boxShadow: "var(--shadow-lift)",
@@ -122,10 +122,10 @@ export default function Modal({
           type="button"
           onClick={beginClose}
           aria-label="Close"
-          className="sticky top-4 z-10 ml-auto mr-4 grid h-10 w-10 shrink-0 place-items-center rounded-full border transition-colors hover:bg-[rgba(58,36,24,0.08)]"
+          className="sticky top-4 z-10 ml-auto mr-4 grid h-10 w-10 shrink-0 place-items-center rounded-full border transition-colors hover:bg-[rgba(10,10,10,0.08)]"
           style={{
             borderColor: "var(--line-strong)",
-            background: "rgba(242, 234, 211, 0.75)",
+            background: "rgba(255, 255, 255, 0.75)",
             float: "right",
           }}
         >

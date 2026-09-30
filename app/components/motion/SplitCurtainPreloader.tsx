@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useLayoutEffect, useRef } from "react";
+import { INTRO_DONE } from "../../lib/intro";
+import { PLUME_SPLAT, type PlumeSplat } from "./PlumeField";
 
 type Triple = [string, string, string];
 
@@ -15,7 +17,25 @@ export interface SplitRevealHeroProps {
   footerLeft?: string;
   footerRight?: string;
   className?: string;
+  /**
+   * Render as an overlay over the hero's sticky stage instead of as its own
+   * section. After the card reveals, the full-bleed image shrinks into the
+   * hero's media frame ([data-hero-media]) and cross-fades to it, then the
+   * overlay removes itself. Skipped outright on deep links, reloads part way
+   * down the page and under reduced motion.
+   */
+  overlay?: boolean;
 }
+
+/**
+ * Where the studio name's first letter travels to while the numeral grows,
+ * so it lands just left of the numeral as a small cap ("P" + "VA" reads
+ * PVA). Tuned for the display face; [slide, settle] per breakpoint.
+ */
+const FIRST_SHIFT = {
+  desktop: ["4.5rem", "4rem"],
+  mobile: ["2.2rem", "2rem"],
+};
 
 const splitChars = (text: string, markFirst = false) =>
   Array.from(text).map((char, index) => (
@@ -50,6 +70,7 @@ export default function SplitRevealHero({
   footerLeft = "Scroll Down",
   footerRight = "Independent Creative Studio",
   className = "",
+  overlay = false,
 }: SplitRevealHeroProps) {
   const rootRef = useRef<HTMLElement>(null);
 
@@ -65,6 +86,30 @@ export default function SplitRevealHero({
     const timers: number[] = [];
     let frame = 0;
     let cancelled = false;
+    let finished = false;
+    const html = document.documentElement;
+
+    // overlay mode: take the curtain away and hand the page to the hero
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      root.style.display = "none";
+      html.removeAttribute("data-intro-phase");
+      if (html.getAttribute("data-intro") === "playing") {
+        html.removeAttribute("data-intro");
+        window.dispatchEvent(new Event(INTRO_DONE));
+      }
+    };
+
+    if (
+      overlay &&
+      (reducedMotion || window.location.pathname !== "/" || window.scrollY > 10)
+    ) {
+      finish();
+      return;
+    }
+
+    if (overlay) html.setAttribute("data-intro", "playing");
 
     const mobile = root.clientWidth <= 1000;
     const ease = "cubic-bezier(.8,0,.3,1)";
@@ -92,7 +137,7 @@ export default function SplitRevealHero({
     const later = (delay: number, callback: () => void) => {
       timers.push(
         window.setTimeout(() => {
-          if (!cancelled) callback();
+          if (!cancelled && !finished) callback();
         }, delay),
       );
     };
@@ -207,12 +252,12 @@ export default function SplitRevealHero({
               offset: 0,
             },
             {
-              transform: `translate3d(${mobile ? "8rem" : "19rem"},0,0) scale(1)`,
+              transform: `translate3d(${mobile ? FIRST_SHIFT.mobile[0] : FIRST_SHIFT.desktop[0]},0,0) scale(1)`,
               fontWeight: 600,
               offset: 0.57,
             },
             {
-              transform: `translate3d(${mobile ? "7.5rem" : "18rem"},${
+              transform: `translate3d(${mobile ? FIRST_SHIFT.mobile[1] : FIRST_SHIFT.desktop[1]},${
                 mobile ? "-0.15rem" : "-0.35rem"
               },0) scale(.75)`,
               fontWeight: 900,
@@ -313,14 +358,24 @@ export default function SplitRevealHero({
         }
 
         if (scene) {
-          animate(
-            scene,
-            [
-              { clipPath: "inset(48% 0)" },
-              { clipPath: "inset(0)" },
-            ],
-            { duration: 980, easing: ease },
-          );
+          if (overlay) {
+            // The parting halves already draw this edge. Opening the image
+            // fully behind them keeps the reveal on the compositor alone, so
+            // a busy main thread can never let the halves outrun a lagging
+            // clip-path and flash the hero behind.
+            animate(scene, [{ clipPath: "inset(0)" }, { clipPath: "inset(0)" }], {
+              duration: 1,
+            });
+          } else {
+            animate(
+              scene,
+              [
+                { clipPath: "inset(48% 0)" },
+                { clipPath: "inset(0)" },
+              ],
+              { duration: 980, easing: ease },
+            );
+          }
         }
       });
 
@@ -351,7 +406,132 @@ export default function SplitRevealHero({
           },
         );
       });
+
+      if (!overlay) return;
+
+      /* ── hand-off to the hero ─────────────────────────────────────────
+         The card sits exactly where the hero frame rests. Its lettering
+         drops away, the full-bleed image closes in onto that frame while
+         the white ink field opens up around it (with ink blooming off the
+         frame's edges), and the image cross-fades to the hero media in
+         place. Nothing moves in the hero itself, so there is no cut. */
+      const exitAt = 6420 + cardCharacters.length * 45 + 720 + 380;
+
+      cardCharacters.forEach((character, index) => {
+        animate(
+          character,
+          [
+            { transform: "translate3d(0,0,0)" },
+            { transform: "translate3d(0,-110%,0)" },
+          ],
+          { duration: 520, delay: exitAt + index * 28, easing: ease },
+        );
+      });
+
+      const shrinkAt = exitAt + 360;
+      const shrinkFor = 1050;
+
+      later(shrinkAt, () => {
+        // wake the ink field: it idles while the curtain hides it
+        html.setAttribute("data-intro-phase", "handoff");
+        const media = document.querySelector<HTMLElement>("[data-hero-media]");
+        const bounds = root.getBoundingClientRect();
+        const target = media?.getBoundingClientRect();
+        if (!scene || !target) {
+          finish();
+          return;
+        }
+
+        const top = target.top - bounds.top;
+        const left = target.left - bounds.left;
+        const right = bounds.right - target.right;
+        const bottom = bounds.bottom - target.bottom;
+
+        const shrink = scene.animate(
+          [
+            { clipPath: "inset(0px 0px 0px 0px round 0px)" },
+            { clipPath: `inset(${top}px ${right}px ${bottom}px ${left}px round 16px)` },
+          ],
+          { duration: shrinkFor, easing: ease, fill: "forwards" },
+        );
+        animations.push(shrink);
+
+        // Cross-fade only once the image has actually landed on the frame.
+        // clip-path runs on the main thread, so on a busy page it can finish
+        // late; chaining off it (not a timer) keeps the two frames aligned.
+        shrink.finished
+          .then(() => {
+            if (cancelled || finished) return;
+            const fade = scene.animate([{ opacity: 1 }, { opacity: 0 }], {
+              duration: 560,
+              easing: "ease-in-out",
+              fill: "forwards",
+            });
+            animations.push(fade);
+            return fade.finished;
+          })
+          .then(() => {
+            if (!cancelled) finish();
+          })
+          .catch(() => {
+            // cancelled on unmount
+          });
+
+        if (card) {
+          animate(card, [{ opacity: 1 }, { opacity: 0 }], {
+            duration: 520,
+            easing: "ease-out",
+          });
+        }
+
+        // ink blooms off the closing frame: a ring of pushes, outward from
+        // its centre, placed along the frame as it travels inward
+        const cx = target.left + target.width / 2;
+        const cy = target.top + target.height / 2;
+        const inOut = (t: number) =>
+          t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        const bursts = 14;
+        for (let i = 0; i < bursts; i++) {
+          const at = (i / bursts) * shrinkFor * 0.9;
+          later(shrinkAt + at, () => {
+            const k = inOut(at / shrinkFor);
+            const l = bounds.left + left * k;
+            const t = bounds.top + top * k;
+            const w = bounds.width - (left + right) * k;
+            const h = bounds.height - (top + bottom) * k;
+            const angle = (i / bursts) * Math.PI * 2 + 0.4;
+            const x = Math.min(Math.max(cx + Math.cos(angle) * w, l), l + w);
+            const y = Math.min(Math.max(cy + Math.sin(angle) * h, t), t + h);
+            const len = Math.hypot(x - cx, y - cy) || 1;
+            const detail: PlumeSplat = {
+              x,
+              y,
+              vx: ((x - cx) / len) * 14,
+              vy: ((y - cy) / len) * 14,
+            };
+            window.dispatchEvent(new CustomEvent(PLUME_SPLAT, { detail }));
+          });
+        }
+      });
+
+      // safety net: never leave the curtain up if an animation stalls
+      later(shrinkAt + shrinkFor + 4000, finish);
     };
+
+    // Scrolling during the intro skips straight to the hero: the curtain
+    // fades rather than making anyone sit through the rest of it.
+    const onScroll = () => {
+      if (!overlay || finished || window.scrollY < 30) return;
+      window.removeEventListener("scroll", onScroll);
+      const fade = root.animate([{ opacity: 1 }, { opacity: 0 }], {
+        duration: 320,
+        easing: "ease-out",
+        fill: "forwards",
+      });
+      animations.push(fade);
+      fade.onfinish = finish;
+    };
+    if (overlay) window.addEventListener("scroll", onScroll, { passive: true });
 
     // Two frames let the browser create compositor layers before movement starts.
     frame = window.requestAnimationFrame(() => {
@@ -360,11 +540,17 @@ export default function SplitRevealHero({
 
     return () => {
       cancelled = true;
+      window.removeEventListener("scroll", onScroll);
       window.cancelAnimationFrame(frame);
       animations.forEach((animation) => animation.cancel());
       timers.forEach(window.clearTimeout);
+      if (overlay && html.getAttribute("data-intro") === "playing") {
+        html.removeAttribute("data-intro-phase");
+        html.removeAttribute("data-intro");
+        window.dispatchEvent(new Event(INTRO_DONE));
+      }
     };
-  }, []);
+  }, [overlay]);
 
   const Cover = ({ position }: { position: "top" | "bottom" }) => (
     <div className={`sf-cover sf-${position}`} aria-hidden="true">
@@ -379,7 +565,11 @@ export default function SplitRevealHero({
   );
 
   return (
-    <section ref={rootRef} className={`sf-root ${className}`}>
+    <section
+      ref={rootRef}
+      className={`sf-root${overlay ? " sf-overlay" : ""} ${className}`}
+      aria-hidden={overlay || undefined}
+    >
       <style>{styles}</style>
 
       <Cover position="bottom" />
@@ -397,7 +587,7 @@ export default function SplitRevealHero({
         <img
           className="sf-image"
           src={heroImage}
-          alt="Modern architectural interior"
+          alt=""
           draggable={false}
           loading="eager"
           decoding="async"
@@ -406,27 +596,29 @@ export default function SplitRevealHero({
 
         <div className="sf-shade" />
 
-        <nav className="sf-nav">
-          <strong>{logo}</strong>
-          <span>{menuLabel}</span>
-        </nav>
+        {(logo || menuLabel) && (
+          <nav className="sf-nav">
+            <strong>{logo}</strong>
+            <span>{menuLabel}</span>
+          </nav>
+        )}
 
         <div className="sf-card">
           <h1>{splitChars(cardTitle)}</h1>
         </div>
 
-        <footer className="sf-footer">
-          <span>{footerLeft}</span>
-          <span>{footerRight}</span>
-        </footer>
+        {(footerLeft || footerRight) && (
+          <footer className="sf-footer">
+            <span>{footerLeft}</span>
+            <span>{footerRight}</span>
+          </footer>
+        )}
       </div>
     </section>
   );
 }
 
 const styles = `
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;900&display=swap");
-
 .sf-root,
 .sf-root * {
   box-sizing: border-box;
@@ -439,9 +631,20 @@ const styles = `
   min-height: 560px;
   overflow: hidden;
   isolation: isolate;
-  background: #0a0a0a;
+  /* transparent: the black comes from the two curtain halves alone, so once
+     they part, whatever sits behind the root (the ink field) shows through */
+  background: transparent;
   color: #fff;
-  font-family: "DM Sans", Arial, sans-serif;
+  font-family: var(--font-display), var(--font-sans), Arial, sans-serif;
+}
+
+/* overlay mode: fill the hero's sticky stage, above its frame and title */
+.sf-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  height: 100%;
+  min-height: 0;
 }
 
 .sf-root h1,

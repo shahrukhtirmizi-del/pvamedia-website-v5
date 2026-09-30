@@ -20,7 +20,7 @@ export default function Footer() {
               <Logo className="h-5 w-auto" />
             </Link>
             <p className="mt-5 max-w-[34ch] text-[15px]" style={{ color: "var(--ink-60)" }}>
-              Websites, local SEO and AI receptionists built for trades and home service companies.
+              Marketing, AI automation and websites for trades and home service companies.
             </p>
           </div>
 
@@ -67,7 +67,7 @@ export default function Footer() {
           <p>
             {"©"} {year} {SITE.name}. All rights reserved.
           </p>
-          <p>Built for trades across the United States.</p>
+          <p>A UK marketing agency for trades and home service companies.</p>
         </div>
       </div>
     </ChromaticFooter>

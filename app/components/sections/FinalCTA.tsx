@@ -21,7 +21,17 @@ export default function FinalCTA() {
       </div>
 
       <div className="relative flex w-full items-center justify-center overflow-hidden py-24" style={{ background: "var(--bg)" }}>
-        <TextHoverReveal text="LET'S TALK" fontSize="text-[clamp(28px,6vw,64px)]" textColor="text-[color:var(--ink)]" />
+        <TextHoverReveal
+          text="LET'S TALK"
+          fontSize="text-[clamp(28px,6vw,64px)]"
+          textColor="text-[color:var(--ink)]"
+          overlayColor="text-[color:var(--ink-45)]"
+          letterImages={[
+            "/images/hero/media-ink.png",
+            "/images/hero/bg-texture.png",
+            "/images/hero/preloader-bg.png",
+          ]}
+        />
       </div>
 
       <div className="relative z-10 mx-auto flex min-h-[80vh] max-w-[1240px] flex-col items-center justify-center px-5 py-28 text-center md:px-8 md:py-36">
@@ -30,10 +40,7 @@ export default function FinalCTA() {
             className="font-display max-w-[15ch] font-semibold"
             style={{ fontSize: "clamp(36px, 6.4vw, 82px)", lineHeight: 1.05 }}
           >
-            Ready to see what{"’"}s{" "}
-            <span className="font-em" style={{ color: "var(--accent)" }}>
-              possible?
-            </span>
+            Ready to see what{"’"}s possible?
           </h2>
         </Reveal>
 
@@ -42,8 +49,8 @@ export default function FinalCTA() {
             className="mx-auto mt-7 max-w-[44ch] text-[16px] leading-relaxed md:text-[18px]"
             style={{ color: "var(--ink-60)" }}
           >
-            Thirty minutes, no pitch. We look at what you rank for now, and what the site would need
-            to do to fill next month.
+            Thirty minutes, no pitch. We look at where your enquiries come from now, and what it
+            would take to fill next month.
           </p>
         </Reveal>
 

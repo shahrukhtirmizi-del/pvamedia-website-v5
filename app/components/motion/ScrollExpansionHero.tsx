@@ -1,6 +1,7 @@
 "use client"
 
 import {
+  type CSSProperties,
   ReactNode,
   useCallback,
   useEffect,
@@ -15,10 +16,26 @@ interface ScrollExpandMediaProps {
   mediaType?: MediaType
   mediaSrc: string
   posterSrc?: string
-  bgImageSrc: string
   title?: string
   textBlend?: boolean
+  /**
+   * Rendered over the sticky stage, e.g. the preloader curtain. It shares
+   * the stage's box, so it can hand off to the media frame in place.
+   */
+  intro?: ReactNode
   children?: ReactNode
+}
+
+/**
+ * The media frame's resting size, before any scroll. It matches the
+ * preloader's centre card at every breakpoint (SplitCurtainPreloader's
+ * .sf-card), so the curtain can land its image exactly where the hero
+ * frame already is.
+ */
+export function heroFrameStart(vw: number, vh: number) {
+  if (vw <= 560) return { w: vw * 0.78, h: vh * 0.64 }
+  if (vw <= 1000) return { w: vw * 0.75, h: vh * 0.7 }
+  return { w: Math.min(vw * 0.3, 520), h: vh * 0.7 }
 }
 
 function getYouTubeEmbedUrl(source: string) {
@@ -47,19 +64,56 @@ function getYouTubeEmbedUrl(source: string) {
   }
 }
 
+/** One copy of the split title: first word slides left, the rest right. */
+function TitleLayer({
+  first,
+  rest,
+  shift,
+  className = "",
+  style,
+}: {
+  first: string
+  rest: string
+  shift: number
+  className?: string
+  style?: CSSProperties
+}) {
+  const word =
+    "font-display text-[clamp(2.75rem,7vw,7rem)] font-extrabold leading-[0.9] tracking-[-0.05em]"
+  return (
+    <div
+      aria-hidden
+      className={`pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-center gap-2 px-4 text-center ${className}`}
+      style={style}
+    >
+      <span
+        className={word}
+        style={{ transform: `translateX(-${shift}vw)`, willChange: "transform" }}
+      >
+        {first}
+      </span>
+      <span
+        className={word}
+        style={{ transform: `translateX(${shift}vw)`, willChange: "transform" }}
+      >
+        {rest}
+      </span>
+    </div>
+  )
+}
+
 function ScrollExpandMedia({
   mediaType = "video",
   mediaSrc,
   posterSrc,
-  bgImageSrc,
   title = "",
   textBlend = false,
+  intro,
   children,
 }: ScrollExpandMediaProps) {
   const [scrollProgress, setScrollProgress] = useState(0)
   const [showContent, setShowContent] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
-  const [viewportHeight, setViewportHeight] = useState(900)
+  const [viewport, setViewport] = useState({ w: 1440, h: 900 })
 
   const sceneRef = useRef<HTMLDivElement | null>(null)
 
@@ -80,8 +134,7 @@ function ScrollExpandMedia({
 
   useEffect(() => {
     const checkViewport = () => {
-      setIsMobile(window.innerWidth < 768)
-      setViewportHeight(window.innerHeight)
+      setViewport({ w: window.innerWidth, h: window.innerHeight })
     }
 
     checkViewport()
@@ -124,22 +177,24 @@ function ScrollExpandMedia({
     }
   }, [updateProgress])
 
-  const mediaWidth =
-    300 + scrollProgress * (isMobile ? 650 : 1250)
+  // grows from the preloader card's footprint to nearly the full stage
+  const start = heroFrameStart(viewport.w, viewport.h)
+  const endW = viewport.w * 0.95
+  const endH = viewport.h * 0.85
+  const mediaWidth = start.w + scrollProgress * Math.max(0, endW - start.w)
+  const mediaHeight = start.h + scrollProgress * Math.max(0, endH - start.h)
 
-  const mediaHeight =
-    400 + scrollProgress * (isMobile ? 200 : 400)
-
-  const displayedMediaHeight = Math.min(
-    mediaHeight,
-    viewportHeight * 0.85
-  )
-
-  const indicatorTop =
-    viewportHeight / 2 + displayedMediaHeight / 2 + 34
+  const indicatorTop = viewport.h / 2 + mediaHeight / 2 + 28
 
   const textTranslateX =
-    scrollProgress * (isMobile ? 180 : 150)
+    scrollProgress * (viewport.w < 768 ? 180 : 150)
+
+  // everything on the stage except the frame, as an even-odd cut-out
+  const frameL = (viewport.w - mediaWidth) / 2
+  const frameT = (viewport.h - mediaHeight) / 2
+  const frameR = frameL + mediaWidth
+  const frameB = frameT + mediaHeight
+  const outsideFrame = `polygon(evenodd, 0 0, 100% 0, 100% 100%, 0 100%, 0 0, ${frameL}px ${frameT}px, ${frameR}px ${frameT}px, ${frameR}px ${frameB}px, ${frameL}px ${frameB}px, ${frameL}px ${frameT}px)`
 
   const titleWords = title.trim().split(/\s+/)
   const firstWord = titleWords[0] ?? ""
@@ -151,194 +206,138 @@ function ScrollExpandMedia({
       mediaSrc.includes("youtu.be"))
 
   return (
-    <main className="overflow-x-clip" style={{ background: "var(--bg)" }}>
+    // transparent all the way through so the fixed ink field behind the page
+    // shows around the frame. Pulled up under the sticky nav so the stage
+    // fills the whole viewport: the nav's box is its height plus 14px of fade,
+    // and this margin collapses with the nav's own -14px rather than adding
+    // to it, so it has to cover the whole box
+    <div
+      id="top"
+      className="relative -mt-[78px] overflow-x-clip md:-mt-[86px]"
+      style={{ background: "transparent" }}
+    >
       <div ref={sceneRef} className="relative" style={{ height: "250vh" }}>
         <section className="sticky top-0 h-[100dvh] w-full overflow-hidden">
-          <motion.div
-            className="absolute inset-0 z-0"
-            animate={{
-              opacity: 1 - scrollProgress,
-              scale: 1 + scrollProgress * 0.05,
-            }}
-            transition={{
-              duration: 0.1,
-              ease: "linear",
-            }}
-          >
-            <img
-              src={bgImageSrc}
-              alt=""
-              draggable={false}
-              className="h-full w-full object-cover object-center"
-            />
-
-            <div className="absolute inset-0 bg-black/20" />
-          </motion.div>
-
-          <div className="relative z-10 mx-auto flex min-h-[100dvh] w-full max-w-[1800px] flex-col items-center">
-            <div className="relative flex min-h-[100dvh] w-full items-center justify-center">
-              <div
-                className="absolute left-1/2 top-1/2 overflow-hidden rounded-2xl"
-                style={{
-                  width: `${mediaWidth}px`,
-                  height: `${mediaHeight}px`,
-                  maxWidth: "95vw",
-                  maxHeight: "85vh",
-                  transform: "translate(-50%, -50%)",
-                  boxShadow:
-                    "0 30px 100px rgba(0, 0, 0, 0.42)",
-                  willChange: "width, height",
-                }}
-              >
-                {mediaType === "video" ? (
-                  isYouTubeVideo ? (
-                    <div className="relative h-full w-full overflow-hidden rounded-2xl">
-                      <iframe
-                        src={getYouTubeEmbedUrl(mediaSrc)}
-                        title={title || "Space video"}
-                        className="pointer-events-none h-full w-full scale-[1.02]"
-                        frameBorder="0"
-                        allow="autoplay; encrypted-media; picture-in-picture"
-                        allowFullScreen
-                      />
-
-                      <motion.div
-                        className="pointer-events-none absolute inset-0 bg-black"
-                        animate={{
-                          opacity:
-                            0.45 - scrollProgress * 0.28,
-                        }}
-                        transition={{
-                          duration: 0.1,
-                          ease: "linear",
-                        }}
-                      />
-                    </div>
-                  ) : (
-                    <div className="relative h-full w-full overflow-hidden rounded-2xl">
-                      <video
-                        key={mediaSrc}
-                        src={mediaSrc}
-                        poster={posterSrc}
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                        preload="auto"
-                        controls={false}
-                        disablePictureInPicture
-                        disableRemotePlayback
-                        className="pointer-events-none h-full w-full object-cover"
-                      />
-
-                      <motion.div
-                        className="pointer-events-none absolute inset-0 bg-black"
-                        animate={{
-                          opacity:
-                            0.42 - scrollProgress * 0.26,
-                        }}
-                        transition={{
-                          duration: 0.1,
-                          ease: "linear",
-                        }}
-                      />
-                    </div>
-                  )
+          <div className="relative z-10 flex h-full w-full items-center justify-center">
+            <div
+              data-hero-media
+              className="absolute left-1/2 top-1/2 overflow-hidden rounded-2xl"
+              style={{
+                width: `${mediaWidth}px`,
+                height: `${mediaHeight}px`,
+                transform: "translate(-50%, -50%)",
+                boxShadow: "0 30px 90px -30px rgba(10, 10, 10, 0.35)",
+                willChange: "width, height",
+              }}
+            >
+              {mediaType === "video" ? (
+                isYouTubeVideo ? (
+                  <div className="relative h-full w-full overflow-hidden rounded-2xl">
+                    <iframe
+                      src={getYouTubeEmbedUrl(mediaSrc)}
+                      title={title || "Featured video"}
+                      className="pointer-events-none h-full w-full scale-[1.02]"
+                      frameBorder="0"
+                      allow="autoplay; encrypted-media; picture-in-picture"
+                      allowFullScreen
+                    />
+                  </div>
                 ) : (
                   <div className="relative h-full w-full overflow-hidden rounded-2xl">
-                    <img
+                    <video
+                      key={mediaSrc}
                       src={mediaSrc}
-                      alt={title || "Featured visual"}
-                      draggable={false}
-                      className="h-full w-full object-cover"
-                    />
-
-                    <motion.div
-                      className="pointer-events-none absolute inset-0 bg-black"
-                      animate={{
-                        opacity:
-                          0.5 - scrollProgress * 0.28,
-                      }}
-                      transition={{
-                        duration: 0.1,
-                        ease: "linear",
-                      }}
+                      poster={posterSrc}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      preload="auto"
+                      controls={false}
+                      disablePictureInPicture
+                      disableRemotePlayback
+                      className="pointer-events-none h-full w-full object-cover"
                     />
                   </div>
-                )}
-              </div>
-
-              <div
-                className={`pointer-events-none relative z-20 flex w-full flex-col items-center justify-center gap-2 px-4 text-center ${
-                  textBlend
-                    ? "mix-blend-difference"
-                    : "mix-blend-normal"
-                }`}
-              >
-                <h1
-                  className="text-[clamp(2.5rem,6vw,6rem)] font-bold leading-[0.9] tracking-[-0.06em] text-blue-100"
-                  style={{
-                    transform: `translateX(-${textTranslateX}vw)`,
-                    willChange: "transform",
-                  }}
-                >
-                  {firstWord}
-                </h1>
-
-                <h1
-                  className="text-[clamp(2.5rem,6vw,6rem)] font-bold leading-[0.9] tracking-[-0.06em] text-blue-100"
-                  style={{
-                    transform: `translateX(${textTranslateX}vw)`,
-                    willChange: "transform",
-                  }}
-                >
-                  {remainingTitle}
-                </h1>
-              </div>
-
-              <motion.div
-                className="pointer-events-none absolute left-1/2 z-30 -translate-x-1/2"
-                style={{
-                  top: `${indicatorTop}px`,
-                }}
-                animate={{
-                  opacity: scrollProgress < 0.16 ? 1 : 0,
-                  y: scrollProgress < 0.16 ? 0 : 12,
-                }}
-                transition={{
-                  duration: 0.25,
-                  ease: "easeOut",
-                }}
-              >
-                <div className="flex flex-col items-center justify-center gap-3 text-white">
-                  <span className="text-center text-[11px] font-semibold uppercase tracking-[0.32em]">
-                    Scroll
-                  </span>
-
-                  <div className="flex h-11 w-7 justify-center rounded-full border border-white/50 p-1.5">
-                    <motion.span
-                      className="h-1.5 w-1.5 rounded-full bg-white"
-                      animate={{
-                        y: [0, 20, 0],
-                        opacity: [0.35, 1, 0.35],
-                      }}
-                      transition={{
-                        duration: 1.8,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      }}
-                    />
-                  </div>
+                )
+              ) : (
+                <div className="relative h-full w-full overflow-hidden rounded-2xl">
+                  <img
+                    src={mediaSrc}
+                    alt=""
+                    draggable={false}
+                    className="h-full w-full object-cover"
+                  />
                 </div>
-              </motion.div>
+              )}
             </div>
+
+            <h1 className="sr-only">{title}</h1>
+
+            {/* The stage is its own stacking context, so a difference blend
+                only ever sees the frame, never the page around it. Two
+                copies of the title, perfectly aligned: a white one that
+                inverts against the media inside the frame, and an ink one
+                clipped to everything outside it. */}
+            <TitleLayer
+              first={firstWord}
+              rest={remainingTitle}
+              shift={textTranslateX}
+              className={`text-white ${textBlend ? "mix-blend-difference" : ""}`}
+            />
+            {textBlend && (
+              <TitleLayer
+                first={firstWord}
+                rest={remainingTitle}
+                shift={textTranslateX}
+                className="text-[color:var(--ink)]"
+                style={{ clipPath: outsideFrame }}
+              />
+            )}
+
+            <motion.div
+              className="pointer-events-none absolute left-1/2 z-30 -translate-x-1/2"
+              style={{
+                top: `${indicatorTop}px`,
+                color: "var(--ink)",
+              }}
+              animate={{
+                opacity: scrollProgress < 0.16 ? 1 : 0,
+                y: scrollProgress < 0.16 ? 0 : 12,
+              }}
+              transition={{
+                duration: 0.25,
+                ease: "easeOut",
+              }}
+            >
+              <div className="flex items-center justify-center gap-3">
+                <span className="text-center text-[11px] font-semibold uppercase tracking-[0.32em]">
+                  Scroll
+                </span>
+                <motion.span
+                  className="h-1.5 w-1.5 rounded-full"
+                  style={{ background: "var(--ink)" }}
+                  animate={{
+                    y: [0, 6, 0],
+                    opacity: [0.35, 1, 0.35],
+                  }}
+                  transition={{
+                    duration: 1.8,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                />
+              </div>
+            </motion.div>
           </div>
+
+          {intro}
         </section>
       </div>
 
-      <div className="mx-auto w-full max-w-[1800px]">
-        <motion.section
-          className="w-full px-8 py-12 md:px-16 lg:py-24"
+      <div className="mx-auto w-full max-w-[1240px]">
+        <motion.div
+          className="w-full px-5 py-12 md:px-8 lg:py-20"
           initial={false}
           animate={{
             opacity: showContent ? 1 : 0,
@@ -353,9 +352,9 @@ function ScrollExpandMedia({
           }}
         >
           {children}
-        </motion.section>
+        </motion.div>
       </div>
-    </main>
+    </div>
   )
 }
 

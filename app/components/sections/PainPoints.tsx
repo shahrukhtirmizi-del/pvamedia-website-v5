@@ -1,18 +1,7 @@
-import Image from "next/image";
 import Reveal from "../ui/Reveal";
 import ScrollWords from "../ui/ScrollWords";
 import TiltCard from "../ui/TiltCard";
 import { PAIN_POINTS, PAIN_CLOSER } from "../../lib/site";
-
-/** Every cell sits on a photograph, sunk deep into the palette. */
-const PHOTO = [
-  "/images/portfolio/t2-hero-960.jpg",
-  "/images/portfolio/t5-hero-960.jpg",
-  "/images/portfolio/t9-hero-960.jpg",
-  "/images/portfolio/t10-real-960.jpg",
-  "/images/portfolio/t6-gallery-1-960.jpg",
-  "/images/portfolio/t6-hero-960.jpg",
-];
 
 const SPANS = [
   "lg:col-span-7",
@@ -31,43 +20,26 @@ export default function PainPoints() {
           className="font-display max-w-[20ch] font-semibold"
           style={{ fontSize: "clamp(30px, 4.6vw, 56px)", lineHeight: 1.08 }}
         >
-          Most trades and home service companies lose jobs before the phone even rings
+          Most trades businesses don{"’"}t have a work problem. They have a marketing problem.
         </h2>
       </Reveal>
 
       <div className="mt-14 grid gap-4 md:mt-20 lg:grid-cols-12">
         {PAIN_POINTS.map((point, i) => {
-          const photo = PHOTO[i % PHOTO.length];
           return (
             <Reveal key={point.title} delay={(i % 2) * 70} className={SPANS[i]}>
               <TiltCard maxTilt={4} lift={5} className="h-full">
                 <article
-                  className="surface card-lift relative h-full overflow-hidden p-7 md:p-9"
+                  className="surface card-lift relative h-full p-7 md:p-9"
                   style={{ borderRadius: "var(--radius-card)" }}
                 >
-                  {photo && (
-                    <>
-                      <Image
-                        src={photo}
-                        alt=""
-                        aria-hidden
-                        fill
-                        sizes="(max-width: 1024px) 100vw, 50vw"
-                        className="object-cover"
-                        style={{ opacity: 0.55 }}
-                      />
-                      <div
-                        aria-hidden
-                        className="absolute inset-0"
-                        style={{
-                          background:
-                            "linear-gradient(150deg, rgba(242, 234, 211, 0.94), rgba(242, 234, 211, 0.6) 58%, rgba(242, 234, 211, 0.86))",
-                        }}
-                      />
-                    </>
-                  )}
-
                   <div className="relative">
+                    <span
+                      className="font-mono mb-5 block text-[11px] uppercase tracking-[0.18em]"
+                      style={{ color: "var(--ink-45)" }}
+                    >
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
                     <h3
                       className="font-display text-[19px] font-semibold md:text-[22px]"
                       style={{ letterSpacing: "-0.02em" }}

@@ -22,65 +22,61 @@ export const SITE = {
 };
 
 export const NAV = [
-  { label: "Work", href: "/work" },
   { label: "Services", href: "/services" },
-  { label: "AI Receptionist", href: "/ai-receptionist" },
-  { label: "Pricing", href: "/pricing" },
+  { label: "Results", href: "/results" },
   { label: "Contact", href: "/contact" },
 ];
 
 /* -------------------------------------------------------------------------- */
 
 export const HERO_STATS = [
-  { value: 200, suffix: "+", label: "Websites built" },
-  { value: 5, suffix: "", label: "Days to go live" },
-  { value: 60, suffix: "", label: "Day guarantee" },
+  { value: 60, prefix: "", suffix: "%", label: "More enquiries in 90 days", note: "Guaranteed, or you don't pay." },
+  { value: 60, prefix: "<", suffix: "s", label: "Lead response time", note: "" },
+  { value: 200, prefix: "", suffix: "+", label: "Websites built", note: "" },
 ];
 
 export const TICKER = [
   "60% more enquiries in 90 days, or you don't pay",
-  "Live in 5 days",
+  "Local SEO and paid ads that book jobs",
   "Built only for trades and home service companies",
   "Under 60 second lead response",
-  "200+ websites built",
+  "AI agents that follow up every lead",
   "Zero missed calls",
-  "No templates",
-  "Hosting and updates handled",
+  "Reporting on booked jobs, not clicks",
+  "200+ websites built",
 ];
-
-/* -------------------------------------------------------------------------- */
 
 /* -------------------------------------------------------------------------- */
 
 export const PAIN_POINTS = [
   {
-    title: "Word of mouth is drying up",
-    body: "The referrals that carried the business for years are thinning out, and there is nothing underneath them.",
+    title: "Homeowners can't find you",
+    body: "Someone nearby searches for exactly what you do, and three competitors show up on the map before you.",
   },
   {
-    title: "You cannot be found on Google",
-    body: "Homeowners search, three other companies come up, and your name is not one of them.",
+    title: "Referrals are drying up",
+    body: "Word of mouth carried the business for years. When it slows down, there is no steady source of new enquiries underneath it.",
   },
   {
-    title: "Competitors win on their website alone",
-    body: "They are not better at the work. They just look more legitimate the moment someone lands on the page.",
+    title: "Lead flow is feast or famine",
+    body: "Slammed one month, quiet the next. Without a predictable flow of enquiries you cannot plan crews, hiring or growth.",
   },
   {
-    title: "Enquiries go missing while you work",
-    body: "The phone rings while you are on a site. By the time you call back, the job is already booked elsewhere.",
+    title: "Ad spend disappears",
+    body: "You pay for clicks, but nobody can tell you which ones became booked jobs, or why the rest did not.",
   },
   {
-    title: "You look smaller than you are",
-    body: "A five-person crew doing high-end work reads like a one-man operation online.",
+    title: "Enquiries go cold before you reply",
+    body: "The phone rings while you are on a job. By the time you call back, they have already booked someone else.",
   },
   {
-    title: "Ads point at a page that cannot convert",
-    body: "You pay for the click and then hand it to a page that gives the homeowner nothing to act on.",
+    title: "Visitors leave without calling",
+    body: "People land on your site, look around and go, because nothing gives them a clear reason to get in touch today.",
   },
 ];
 
 export const PAIN_CLOSER =
-  "We fix all of that with one thing: a website that works while you work.";
+  "We fix that with one marketing system that keeps working while you work.";
 
 /* -------------------------------------------------------------------------- */
 
@@ -92,66 +88,55 @@ export type Service = {
   includes: string[];
 };
 
+/**
+ * Marketing leads: it is what the business sells first. Websites, the AI
+ * receptionist and the automation agents all support it.
+ */
 export const SERVICES: Service[] = [
   {
-    slug: "website-design",
-    name: "Website design & build",
+    slug: "marketing",
+    name: "Marketing",
     short:
-      "A custom site built around your own work, live in five days, fast on a phone.",
+      "Local SEO and paid ads that put you in front of homeowners ready to book, and turn clicks into jobs.",
     detail: [
-      "Every site is designed from scratch for the company it belongs to. No templates, no theme with your logo dropped into the corner.",
-      "We build around your photography, your service area, and the jobs you actually want more of. The whole thing is live in five days.",
-    ],
-    includes: [
-      "Custom design, no templates",
-      "Live in 5 days",
-      "Built mobile-first",
-      "Your own project photography",
-      "Quote form on every page",
-    ],
-  },
-  {
-    slug: "local-seo",
-    name: "Local SEO",
-    short:
-      "Rank in the suburbs you want to work in, not just the one you are based in.",
-    detail: [
-      "Local SEO is what puts you in front of a homeowner three streets away at the moment they start looking.",
-      "We build a page for each service in each area you serve, keep your Google Business Profile current, and get the citations consistent so the map results start trusting you.",
+      "Local SEO puts you in front of homeowners in the areas you want to work, at the moment they start looking. We build out service-area pages, keep your Google Business Profile active and clean up your citations so the map results start trusting you.",
+      "Paid ads fill the gaps search cannot cover yet. Every Google and Meta campaign points at a landing page built for that service, with call and form tracking, so you can see which spend becomes booked work.",
     ],
     includes: [
       "Google Business Profile management",
-      "Service pages per area",
-      "Citation clean-up",
+      "Service-area pages and citation clean-up",
       "Review generation",
-      "Monthly ranking reports",
+      "Google and Meta ad campaigns",
+      "A landing page for every advertised service",
+      "Reporting on leads and booked jobs, not clicks",
     ],
   },
   {
-    slug: "paid-ads",
-    name: "Paid ads & landing pages",
+    slug: "websites",
+    name: "Websites",
     short:
-      "Ads that point at a page built to convert, not at your homepage.",
+      "A fast, custom site built to turn the traffic we send you into calls and quote requests.",
     detail: [
-      "Most trades ad budgets are wasted after the click, not before it. The targeting is usually fine. The page is the problem.",
-      "We build a dedicated landing page for every service you advertise, matched to the ad that feeds it, and keep the two in step as the campaign runs.",
+      "Your website is where the marketing pays off, so we build it to convert: clear services, your own project photos and a quote path on every page. No templates, and live in five days.",
+      "Hosting, security, backups and edits are handled for you, and new project photos go up whenever you send them.",
     ],
     includes: [
-      "Google and Meta campaigns",
-      "One landing page per service",
-      "Call and form tracking",
-      "Weekly spend review",
-      "Creative refreshed monthly",
+      "Custom design, no templates",
+      "Built mobile-first, live in 5 days",
+      "Quote form on every page",
+      "Fast managed hosting",
+      "SSL and daily backups",
+      "Content edits and new project photos",
     ],
   },
   {
     slug: "ai-receptionist",
     name: "AI Receptionist",
     short:
-      "Answers every call and web enquiry, qualifies the job, books it in.",
+      "Answers every call and web enquiry, qualifies the job and books it in, day or night.",
     detail: [
-      "It picks up when you cannot, which on a working day is most of the time.",
-      "It knows your service area, your pricing bands, and the work you turn down. It qualifies the enquiry, books it into your calendar, and sends you the summary before you are off the site.",
+      "One of the automations we run for clients. It picks up when you cannot, which on a working day is most of the time.",
+      "It knows your service area, your pricing bands and the work you turn down, so it qualifies each enquiry, books it into your calendar and sends you the summary before you are off the site.",
     ],
     includes: [
       "24/7 call answering",
@@ -162,86 +147,20 @@ export const SERVICES: Service[] = [
     ],
   },
   {
-    slug: "hosting-care",
-    name: "Hosting & ongoing care",
-    short: "Hosting, updates, backups and edits, handled without you asking.",
+    slug: "ai-automation",
+    name: "AI Automation Agents",
+    short:
+      "Agents that confirm bookings, chase unbooked leads and answer routine questions for you.",
     detail: [
-      "The site does not go stale after launch. Hosting, security, backups and updates are all on us.",
-      "When you finish a job worth showing off, send us the photos and we put them on the site.",
+      "Most of the work between an enquiry and a booked job is repetitive admin. Our AI agents take it off your plate, so every lead hears back in minutes, not hours.",
+      "They confirm bookings, follow up with leads that have not booked yet, reply to email and text enquiries, and hand the conversation to your team when a person is needed.",
     ],
     includes: [
-      "Fast managed hosting",
-      "SSL and daily backups",
-      "Content edits included",
-      "New project photos added",
-      "Uptime monitoring",
-    ],
-  },
-];
-
-/* -------------------------------------------------------------------------- */
-
-export type Tier = {
-  slug: string;
-  name: string;
-  monthly: string;
-  setup: string;
-  popular?: boolean;
-  summary: string;
-  headline: string[];
-  full: string[];
-};
-
-export const TIERS: Tier[] = [
-  {
-    slug: "standard",
-    name: "Standard",
-    monthly: "$647",
-    setup: "$1,200 setup",
-    summary: "Every call answered, every enquiry qualified and booked in.",
-    headline: [
-      "24/7 call answering",
-      "Job qualification and booking",
-      "Calendar sync",
-      "Call transcripts and summaries",
-    ],
-    full: [
-      "24/7 call answering",
-      "Web enquiry replies in under a minute",
-      "Job qualification against your criteria",
-      "Direct calendar booking",
-      "Call transcripts and summaries",
-      "Service area and pricing awareness",
-      "Voicemail and after-hours capture",
-      "Monthly performance report",
-      "Email support",
-    ],
-  },
-  {
-    slug: "premium",
-    name: "Premium",
-    monthly: "$797",
-    setup: "$1,500 setup",
-    popular: true,
-    summary:
-      "Everything in Standard, plus follow-up, quoting and a custom voice.",
-    headline: [
-      "Everything in Standard",
-      "Automatic lead follow-up",
-      "Quote collection on the call",
-      "Custom voice and script",
-    ],
-    full: [
-      "Everything in Standard",
-      "Automatic follow-up on unbooked leads",
-      "Quote details collected on the call",
-      "Custom voice and script",
-      "SMS follow-up sequences",
-      "Priority routing for high-value jobs",
-      "CRM integration",
-      "Seasonal campaign scripts",
-      "Weekly performance report",
-      "Priority support",
+      "Automatic booking confirmations and reminders",
+      "Follow-up emails and texts on unbooked leads",
+      "Instant replies to email and text enquiries",
+      "Routine query handling",
+      "Hand-off to your team when a person is needed",
     ],
   },
 ];
@@ -250,28 +169,28 @@ export const TIERS: Tier[] = [
 
 export const WHAT_YOU_GET = [
   {
-    title: "A custom website",
-    body: "Designed for your company from scratch. No templates.",
+    title: "More people find you",
+    body: "Local SEO and ads that put you in front of homeowners searching in your area.",
   },
   {
-    title: "Live in 5 days",
-    body: "From kickoff call to a site homeowners can find and use.",
+    title: "A steady flow of enquiries",
+    body: "Campaigns built around booked jobs, so busy weeks stop being followed by quiet ones.",
   },
   {
-    title: "You show up on Google",
-    body: "Local SEO built in from day one, not sold to you later.",
+    title: "Every lead answered",
+    body: "Calls and messages get a reply in under a minute, whether you are on site or asleep.",
   },
   {
-    title: "24/7 lead capture",
-    body: "Enquiries get answered whether you are on site or asleep.",
+    title: "Follow-up that never slips",
+    body: "AI agents chase unbooked leads and confirm bookings, so nothing falls through the cracks.",
   },
   {
-    title: "Looks right on every device",
-    body: "Most of your homeowners are on a phone. It is built for them first.",
+    title: "Reporting on jobs, not clicks",
+    body: "You see which spend turns into enquiries and booked work, every month.",
   },
   {
-    title: "Hosting and maintenance",
-    body: "Updates, backups and edits handled. You never touch it.",
+    title: "A website that converts",
+    body: "Fast, custom and hosted for you, built to turn visits into calls. You never touch it.",
   },
 ];
 
@@ -279,40 +198,10 @@ export const GUARANTEE = "60% more enquiries in 90 days, or you don't pay.";
 
 /* -------------------------------------------------------------------------- */
 
-export const TESTIMONIALS = [
-  {
-    quote:
-      "The site paid for itself in the first fortnight. We stopped chasing work and started picking it.",
-    name: "James",
-    location: "Texas",
-  },
-  {
-    quote:
-      "Every call gets answered now, even when the whole crew is out. That alone changed the month.",
-    name: "Ryan",
-    location: "California",
-  },
-];
-
-export const CASE_STUDY = {
-  name: "Marco",
-  detail: "5-man crew, San Diego",
-  quote:
-    "Homeowners find us on Google now. By the time they call, they're already half sold. My close rate has more than doubled.",
-  image: "/images/portfolio/t7-hero.jpg",
-  stats: [
-    { value: 4, suffix: "x", label: "More jobs per month", percent: 100 },
-    { value: 64, suffix: "%", label: "More enquiries", percent: 64 },
-    { value: 2, suffix: "x", label: "Better close rate", percent: 50 },
-  ],
-};
-
-/* -------------------------------------------------------------------------- */
 /**
- * Real client testimonials and results, grouped by service line. Not yet
- * wired into any component — CLIENT_TESTIMONIALS replaces the placeholder
- * TESTIMONIALS above (via a genericized CircularCardDeck), and CLIENT_RESULTS
- * feeds a new results section built with ScrollSwipeStack.
+ * Real client testimonials and results, grouped by service line.
+ * CLIENT_TESTIMONIALS feeds the CircularCardDeck testimonials section and
+ * CLIENT_RESULTS feeds the Results section built on ScrollSwipeStack.
  */
 
 export type ClientCategory = "Website" | "Marketing" | "AI Automation";

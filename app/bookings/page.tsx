@@ -7,7 +7,7 @@ import Reveal from "../components/ui/Reveal";
 export const metadata: Metadata = {
   title: "Book a free call",
   description:
-    "Book a free 30 minute call with PVA Media. We look at what you rank for now and what your site would need to fill next month.",
+    "Book a free 30 minute call with PVA Media. We look at where your enquiries come from now and what it would take to fill next month.",
   alternates: { canonical: "/bookings" },
 };
 
@@ -64,7 +64,7 @@ export default function BookingsPage() {
             className="surface p-6 md:p-10"
             style={{
               borderRadius: "var(--radius-card)",
-              background: "rgba(236, 224, 200, 0.9)",
+              background: "rgba(244, 244, 242, 0.9)",
               backdropFilter: "blur(10px)",
               WebkitBackdropFilter: "blur(10px)",
             }}

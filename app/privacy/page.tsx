@@ -21,7 +21,7 @@ export default function PrivacyPage() {
         {
           heading: "Who we are",
           body: [
-            `${SITE.name} is a web design and marketing company based in the United Kingdom, working with trades and home service companies in the United States and elsewhere. We are the data controller for the personal data described in this policy.`,
+            `${SITE.name} is a marketing company based in the United Kingdom, working with trades and home service companies in the United States and elsewhere. We are the data controller for the personal data described in this policy.`,
             `You can reach us about anything in this policy at ${SITE.email} or on ${SITE.phone}.`,
           ],
         },

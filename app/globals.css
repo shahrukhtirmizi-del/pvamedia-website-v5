@@ -1,9 +1,11 @@
 @import "tailwindcss";
 
 /* ==========================================================================
-   PVA Media - Cream, Espresso & Gold
+   PVA Media - Monochrome
    --------------------------------------------------------------------------
-   ONE theme (light), ONE accent (gold #D9C08C), ONE radius system.
+   ONE theme (light): near-black ink on white, no colour accent. The accent
+   token is ink itself, so emphasis comes from weight and scale, not hue.
+   ONE radius system.
 
    Radius rule, applied everywhere with no exceptions:
      - interactive (buttons, chips, pills, badges) ... 999px
@@ -12,36 +14,36 @@
    ========================================================================== */
 
 @theme {
-  --color-base: #F2EAD3;
-  --color-raised: #ECE0C8;
-  --color-card: #FAF6EC;
-  --color-ink: #3A2418;
-  --color-accent: #D9C08C;
+  --color-base: #FFFFFF;
+  --color-raised: #F4F4F2;
+  --color-card: #FAFAF9;
+  --color-ink: #0A0A0A;
+  --color-accent: #0A0A0A;
 
   --radius-tile: 14px;
   --radius-card: 24px;
 }
 
 :root {
-  --bg: #F2EAD3;
-  --bg-raised: #ECE0C8;
-  --bg-card: #FAF6EC;
-  --ink: #3A2418;
-  --accent: #D9C08C;
+  --bg: #FFFFFF;
+  --bg-raised: #F4F4F2;
+  --bg-card: #FAFAF9;
+  --ink: #0A0A0A;
+  --accent: #0A0A0A;
 
   /* text tiers - real hierarchy lives here, not in font size alone */
-  --ink-80: rgba(58, 36, 24, 0.8);
-  --ink-60: rgba(58, 36, 24, 0.6);
-  --ink-45: rgba(58, 36, 24, 0.45);
-  --ink-30: rgba(58, 36, 24, 0.3);
+  --ink-80: rgba(10, 10, 10, 0.8);
+  --ink-60: rgba(10, 10, 10, 0.6);
+  --ink-45: rgba(10, 10, 10, 0.45);
+  --ink-30: rgba(10, 10, 10, 0.3);
 
-  --line: rgba(58, 36, 24, 0.1);
-  --line-strong: rgba(58, 36, 24, 0.18);
+  --line: rgba(10, 10, 10, 0.1);
+  --line-strong: rgba(10, 10, 10, 0.18);
 
-  /* shadows are tinted to the background hue, never pure black */
-  --shadow-soft: 0 18px 50px -20px rgba(58, 36, 24, 0.35);
-  --shadow-lift: 0 34px 80px -28px rgba(58, 36, 24, 0.45);
-  --glow: 0 0 60px -12px rgba(217, 192, 140, 0.35);
+  /* shadows come off the ink, kept soft so white surfaces still read flat */
+  --shadow-soft: 0 18px 50px -20px rgba(10, 10, 10, 0.22);
+  --shadow-lift: 0 34px 80px -28px rgba(10, 10, 10, 0.3);
+  --glow: 0 0 60px -12px rgba(10, 10, 10, 0.12);
 }
 
 * {
@@ -62,7 +64,7 @@ html {
   /* offset for the sticky nav when jumping to #anchors */
   scroll-padding-top: 88px;
   background: var(--bg);
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 /* Lenis drives scroll with rAF; native smooth would fight it. */
@@ -80,6 +82,7 @@ body {
   margin: 0;
   background: transparent;
   color: var(--ink);
+  font-family: var(--font-sans), system-ui, sans-serif;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -101,24 +104,16 @@ body {
    Type roles
    -------------------------------------------------------------------------- */
 .font-display {
-  font-family: var(--font-sans), system-ui, sans-serif;
-  letter-spacing: -0.03em;
+  font-family: var(--font-display), var(--font-sans), system-ui, sans-serif;
+  letter-spacing: -0.035em;
 }
 
+/* Small uppercase labels. Set in the body face with tabular figures and wide
+   tracking rather than a separate monospace family. */
 .font-mono {
-  font-family: var(--font-mono), ui-monospace, monospace;
-}
-
-/* The one italic serif. Reserved for single accent words inside headlines.
-   leading + padding reserve keeps descenders (j, g, y, p, q) from clipping. */
-.font-em {
-  font-family: var(--font-serif), Georgia, serif;
-  font-style: italic;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-feature-settings: "tnum" 1;
   font-weight: 500;
-  letter-spacing: -0.01em;
-  line-height: 1.1;
-  padding-bottom: 0.06em;
-  display: inline-block;
 }
 
 /* --------------------------------------------------------------------------
@@ -127,9 +122,9 @@ body {
 .surface {
   background: linear-gradient(
     160deg,
-    rgba(58, 36, 24, 0.045),
-    rgba(58, 36, 24, 0.012) 46%,
-    rgba(58, 36, 24, 0.03)
+    rgba(10, 10, 10, 0.045),
+    rgba(10, 10, 10, 0.012) 46%,
+    rgba(10, 10, 10, 0.03)
   );
   border: 1px solid var(--line);
   box-shadow: var(--shadow-soft);
@@ -137,10 +132,10 @@ body {
 
 /* The Milan-style glowing bordered frame. */
 .frame-glow {
-  border: 1px solid rgba(217, 192, 140, 0.26);
+  border: 1px solid rgba(10, 10, 10, 0.26);
   box-shadow:
-    inset 0 0 60px -20px rgba(217, 192, 140, 0.35),
-    0 0 120px -30px rgba(217, 192, 140, 0.42);
+    inset 0 0 60px -20px rgba(10, 10, 10, 0.35),
+    0 0 120px -30px rgba(10, 10, 10, 0.42);
 }
 
 .hairline {
@@ -168,6 +163,19 @@ body {
   transform: none;
   opacity: 1;
   pointer-events: auto;
+}
+
+/* The site nav steps back while the home page intro plays over the hero,
+   and fades in as the curtain hands over. visibility, not just opacity, so
+   nothing invisible stays clickable. */
+[data-site-nav] {
+  transition:
+    opacity 0.6s ease,
+    visibility 0.6s ease;
+}
+html[data-intro="playing"] [data-site-nav] {
+  opacity: 0;
+  visibility: hidden;
 }
 
 /* --------------------------------------------------------------------------
@@ -240,7 +248,7 @@ body {
 .btn-secondary:hover {
   transform: translateY(-2px);
   border-color: var(--accent);
-  background: rgba(58, 36, 24, 0.05);
+  background: rgba(10, 10, 10, 0.05);
   box-shadow: var(--shadow-soft);
 }
 
@@ -413,7 +421,9 @@ body {
   width: 7px;
   height: 7px;
   margin: -3.5px 0 0 -3.5px;
-  background: var(--ink);
+  /* white under difference inverts whatever it sits on: black on the white
+     page, white on the black curtain and dark cards */
+  background: #fff;
   mix-blend-mode: difference;
 }
 
@@ -424,7 +434,8 @@ body {
   width: 38px;
   height: 38px;
   margin: -19px 0 0 -19px;
-  border: 1px solid rgba(58, 36, 24, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  mix-blend-mode: difference;
   transition:
     background-color 0.35s ease,
     border-color 0.35s ease,
@@ -433,8 +444,8 @@ body {
 
 .cursor-ring.is-hover {
   --s: 1.8;
-  border-color: rgba(217, 192, 140, 0.9);
-  background: rgba(217, 192, 140, 0.1);
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .cursor-ring.is-down {
@@ -472,7 +483,7 @@ body {
   aspect-ratio: 16 / 10;
   overflow: hidden;
   border-radius: var(--radius-tile);
-  background: #FAF6EC;
+  background: #FAFAF9;
 }
 
 @keyframes hero-bob {

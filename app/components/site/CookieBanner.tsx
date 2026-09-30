@@ -51,7 +51,7 @@ export default function CookieBanner() {
         className="surface p-5 md:p-6"
         style={{
           borderRadius: "var(--radius-card)",
-          background: "rgba(236, 224, 200, 0.96)",
+          background: "rgba(244, 244, 242, 0.96)",
           backdropFilter: "blur(16px)",
           WebkitBackdropFilter: "blur(16px)",
         }}

@@ -16,10 +16,7 @@ export default function Statement() {
             className="font-display max-w-[14ch] font-semibold"
             style={{ fontSize: "clamp(40px, 7.2vw, 96px)", lineHeight: 1.02 }}
           >
-            Websites that book the{" "}
-            <span className="font-em" style={{ color: "var(--accent)" }}>
-              jobs.
-            </span>
+            Marketing that books the jobs.
           </h2>
         </Reveal>
 
@@ -29,8 +26,8 @@ export default function Statement() {
               className="max-w-[46ch] text-[16px] leading-relaxed md:text-[18px]"
               style={{ color: "var(--ink-60)" }}
             >
-              Custom websites and local SEO built specifically to turn searches into 12 booked
-              jobs a month.
+              Local SEO, paid ads and AI automation for trades and home service companies,
+              built to turn searches into booked jobs, not just clicks.
             </p>
           </Reveal>
           <Reveal delay={180}>
@@ -38,8 +35,8 @@ export default function Statement() {
               <Link href="/bookings" className="btn btn-primary">
                 Book a free call
               </Link>
-              <Link href="/work" className="btn btn-secondary">
-                See the work
+              <Link href="/results" className="btn btn-secondary">
+                See the results
               </Link>
             </div>
           </Reveal>
@@ -54,7 +51,7 @@ export default function Statement() {
                 className="font-display font-semibold"
                 style={{ fontSize: "clamp(38px, 5vw, 60px)", lineHeight: 1, color: "var(--ink)" }}
               >
-                <CountUp to={stat.value} suffix={stat.suffix} />
+                <CountUp to={stat.value} prefix={stat.prefix} suffix={stat.suffix} />
               </div>
               <div
                 className="font-mono mt-3 text-[11px] uppercase tracking-[0.18em]"
@@ -62,9 +59,9 @@ export default function Statement() {
               >
                 {stat.label}
               </div>
-              {i === 2 && (
+              {stat.note && (
                 <p className="mt-2 text-[14px]" style={{ color: "var(--ink-60)" }}>
-                  Money back if it fails.
+                  {stat.note}
                 </p>
               )}
             </div>

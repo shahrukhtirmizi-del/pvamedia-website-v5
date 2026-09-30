@@ -4,25 +4,27 @@ import React, { CSSProperties, useEffect, useRef } from "react";
 import { SITE, SERVICES } from "../../lib/site";
 
 const CSS = `
-* {
+.kex-scroll-page,
+.kex-scroll-page * {
   box-sizing: border-box;
-}
-
-html,
-body {
-  margin: 0;
 }
 
 .kex-scroll-page {
   width: 100%;
-  background: #3A2418;
-  font-family: Inter, Arial, Helvetica, sans-serif;
+  background: #0A0A0A;
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+.kex-hero-title,
+.kex-card-title,
+.kex-card-number {
+  font-family: var(--font-display), var(--font-sans), system-ui, sans-serif;
 }
 
 .kex-scroll-scene {
   position: relative;
-  height: 700vh;
-  background: #3A2418;
+  height: 560vh;
+  background: #0A0A0A;
 }
 
 .kex-sticky-stage {
@@ -31,7 +33,7 @@ body {
   width: 100%;
   height: 100vh;
   overflow: hidden;
-  background: #3A2418;
+  background: #0A0A0A;
 }
 
 /* HERO */
@@ -190,14 +192,9 @@ body {
   letter-spacing: -0.08em;
 }
 
-.kex-after-section {
-  min-height: 80vh;
-  background: #241811;
-}
-
 @media (max-width: 800px) {
   .kex-scroll-scene {
-    height: 675vh;
+    height: 540vh;
   }
 
   .kex-hero-title {
@@ -209,7 +206,9 @@ body {
   }
 
   .kex-card-title {
-    font-size: clamp(58px, 17vw, 108px);
+    /* long single words (RECEPTIONIST, AUTOMATION) have to fit a phone */
+    font-size: clamp(34px, 10.5vw, 108px);
+    overflow-wrap: anywhere;
   }
 
   .kex-card-description {
@@ -248,36 +247,34 @@ type CardStyle = CSSProperties & {
   "--card-number": string;
 };
 
+/**
+ * One colour set per SERVICES entry, by index. Alternating light and dark so
+ * each card reads clearly as it lands over the one before it.
+ */
 const CARD_COLORS: Array<Pick<Card, "bg" | "text" | "muted" | "numberColor">> = [
   {
-    bg: "#3A2418",
-    text: "#F2EAD3",
-    muted: "rgba(242,234,211,0.72)",
-    numberColor: "rgba(242,234,211,0.22)",
+    bg: "#FFFFFF",
+    text: "#0A0A0A",
+    muted: "rgba(10, 10, 10, 0.62)",
+    numberColor: "rgba(10, 10, 10, 0.14)",
   },
   {
-    bg: "#D9C08C",
-    text: "#3A2418",
-    muted: "rgba(58,36,24,0.62)",
-    numberColor: "rgba(58,36,24,0.18)",
+    bg: "#161616",
+    text: "#FFFFFF",
+    muted: "rgba(255, 255, 255, 0.7)",
+    numberColor: "rgba(255, 255, 255, 0.2)",
   },
   {
-    bg: "#FAF6EC",
-    text: "#3A2418",
-    muted: "rgba(58,36,24,0.62)",
-    numberColor: "rgba(58,36,24,0.13)",
+    bg: "#F4F4F2",
+    text: "#0A0A0A",
+    muted: "rgba(10, 10, 10, 0.62)",
+    numberColor: "rgba(10, 10, 10, 0.14)",
   },
   {
-    bg: "#3A2418",
-    text: "#F2EAD3",
-    muted: "rgba(242,234,211,0.72)",
-    numberColor: "rgba(242,234,211,0.22)",
-  },
-  {
-    bg: "#ECE0C8",
-    text: "#3A2418",
-    muted: "rgba(58,36,24,0.62)",
-    numberColor: "rgba(58,36,24,0.18)",
+    bg: "#0A0A0A",
+    text: "#FFFFFF",
+    muted: "rgba(255, 255, 255, 0.7)",
+    numberColor: "rgba(255, 255, 255, 0.2)",
   },
 ];
 
@@ -359,11 +356,11 @@ export default function CardStoryScroll() {
 
         /*
           Each card enters as a full-screen panel.
-          The first card fully covers the orange hero.
+          The first card fully covers the dark hero.
           Each next card fully covers the previous card.
         */
-        const start = 0.08 + index * 0.172;
-        const end = start + 0.176;
+        const start = 0.08 + index * 0.215;
+        const end = start + 0.22;
 
         const raw = clamp((progress - start) / (end - start), 0, 1);
         const eased = easeOutCubic(raw);
@@ -420,7 +417,7 @@ export default function CardStoryScroll() {
     <>
       <style>{CSS}</style>
 
-      <main className="kex-scroll-page">
+      <div className="kex-scroll-page">
         <section id="services" ref={sceneRef} className="kex-scroll-scene">
           <div className="kex-sticky-stage">
             <div className="kex-hero-content">
@@ -470,9 +467,7 @@ export default function CardStoryScroll() {
             </div>
           </div>
         </section>
-
-        <section className="kex-after-section" />
-      </main>
+      </div>
     </>
   );
 }

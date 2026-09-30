@@ -129,15 +129,15 @@ function hexToRgb(hex: string): [number, number, number] {
 const clamp = (v: number, a: number, b: number) => Math.min(Math.max(v, a), b);
 
 const CONFIG = {
-  color: "#a6f0d4",
-  secondaryColor: "#3fb18c",
+  color: "#1a1a1a",
+  secondaryColor: "#5c5c5c",
   trailLength: 28,
   trailWidth: 5,
   trailTaper: 0.85,
   followSpeed: 0.18,
   glowIntensity: 1.4,
   glowSpread: 1.1,
-  hotspot: 0.55,
+  hotspot: 0,
   brightness: 1.1,
   opacity: 0.75,
   pulseSpeed: 1.0,

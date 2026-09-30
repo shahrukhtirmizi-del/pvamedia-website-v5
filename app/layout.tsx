@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Cormorant_Garamond } from "next/font/google";
+import { Bricolage_Grotesque, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
@@ -13,57 +13,47 @@ import Cursor from "./components/site/Cursor";
 import GlowCursor from "./components/fx/GlowCursor";
 import { SITE } from "./lib/site";
 
-const sans = Geist({
+/** Body copy, labels and UI. */
+const sans = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
 });
 
-const mono = Geist_Mono({
+/** Headlines and display numbers: bold, tight, editorial. */
+const display = Bricolage_Grotesque({
   subsets: ["latin"],
-  variable: "--font-mono",
-  display: "swap",
-});
-
-/**
- * The one serif on the site, italic only, used for a single accent word inside
- * a headline and nowhere else.
- */
-const serif = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["500", "600"],
-  style: ["normal", "italic"],
-  variable: "--font-serif",
+  variable: "--font-display",
   display: "swap",
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.domain),
   title: {
-    default: "PVA Media | Websites and Local SEO for Trades",
+    default: "PVA Media | Marketing for Trades and Home Services",
     template: "%s | PVA Media",
   },
   description:
-    "Custom websites, local SEO and AI receptionists built for trades and home service companies. Live in 5 days, with a 60 day guarantee.",
+    "Local SEO, paid ads and AI automation for trades and home service companies, with websites built to convert. 60% more enquiries in 90 days, or you don't pay.",
   keywords: [
-    "trades website design",
-    "home service SEO",
-    "local trades marketing",
-    "AI receptionist for trades",
+    "trades marketing agency",
+    "home service marketing",
+    "local SEO for trades",
     "trades lead generation",
+    "AI automation for trades",
   ],
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     url: SITE.domain,
     siteName: SITE.name,
-    title: "PVA Media | Websites and Local SEO for Trades",
+    title: "PVA Media | Marketing for Trades and Home Services",
     description:
       "We take trades and home service companies from 3 booked jobs a month to 12, without lifting a finger.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "PVA Media | Websites and Local SEO for Trades",
+    title: "PVA Media | Marketing for Trades and Home Services",
     description:
       "We take trades and home service companies from 3 booked jobs a month to 12, without lifting a finger.",
   },
@@ -71,7 +61,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#F2EAD3",
+  themeColor: "#FFFFFF",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -79,8 +69,9 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${sans.variable} ${mono.variable} ${serif.variable}`}>
-      <body className="font-display">
+    // the home page's intro flag lands on <html> before hydration
+    <html lang="en" className={`${sans.variable} ${display.variable}`} suppressHydrationWarning>
+      <body>
         <a href="#main" className="skip-link">
           Skip to content
         </a>

@@ -1,39 +1,28 @@
 "use client";
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import type { ClientTestimonial } from "../../lib/site";
 
-type CardData = {
-  theme: "ink" | "paper" | "signal";
-  type: "count" | "pulse" | "statement" | "brief";
-  kicker: string;
-  title: string;
-};
+/**
+ * Testimonials on a circular arc. Every card rides one shared circle; the
+ * deck drifts on its own until someone drags, scrolls over it or clicks a
+ * card, then springs one card at a time. The card in the centre of the arc
+ * (slot 2) is the one being read.
+ */
 
-const cards: CardData[] = [
-  { theme: "signal", type: "count", kicker: "TRACK RECORD", title: "Proof, not promises" },
-  { theme: "ink", type: "pulse", kicker: "BY THE NUMBERS", title: "What clients see" },
-  { theme: "signal", type: "statement", kicker: "THE GUARANTEE", title: "No risk to start" },
-  { theme: "paper", type: "brief", kicker: "WHY PVA", title: "Speed, proof, risk" },
-];
+export interface CircularCardDeckProps {
+  testimonials: ClientTestimonial[];
+  kicker?: string;
+  heading?: string;
+}
 
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
 const easeInOutCubic = (t: number) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
-function CardArt({ card }: { card: CardData }) {
-  if (card.type === "count") {
-    return <><div className="micro">WEBSITES BUILT FOR TRADES<br />AND HOME SERVICE COMPANIES</div><strong className="giant">200<small style={{ fontSize: "0.3em", verticalAlign: "top", letterSpacing: 0 }}>+</small></strong><i className="rule" /></>;
-  }
-  if (card.type === "pulse") {
-    return <><div className="metrics"><b>200+</b><b>5</b><b>60%</b></div><div className="portrait"><i /></div><div className="swatches"><i /><i /><i /><i /></div><div className="cities">WHERE WE WORK<br />TEXAS<br />CALIFORNIA<br />SAN DIEGO</div></>;
-  }
-  if (card.type === "statement") {
-    return <><div className="edgeNote">60% MORE ENQUIRIES<br />IN 90 DAYS</div><div className="word">guarantee</div></>;
-  }
-  return <><div className="briefNo">08.24</div><div className="columns"><p>SPEED<br /><b>LIVE IN 5 DAYS</b></p><p>PROOF<br /><b>200+ BUILT</b></p><p>RISK<br /><b>60% GUARANTEE</b></p></div></>;
-}
-
 function ArcCard({
-  card,
+  testimonial,
+  index,
+  total,
   slot,
   width,
   motion,
@@ -41,7 +30,9 @@ function ArcCard({
   onHoverChange,
   onChoose,
 }: {
-  card: CardData;
+  testimonial: ClientTestimonial;
+  index: number;
+  total: number;
   slot: number;
   width: number;
   motion: number;
@@ -62,9 +53,8 @@ function ArcCard({
   const edge = Math.max(0, Math.abs(slot - 2) - 3.15);
   const visible = slot > -2.2 && slot < 6.2;
 
-  // The reference has a second, quieter movement on each card. Cards peel and
-  // counter-rotate most strongly near the ends of the arc, then softly settle
-  // back onto the track when the deck loses momentum.
+  // Cards peel and counter-rotate most strongly near the ends of the arc,
+  // then softly settle back onto the track when the deck loses momentum.
   const side = clamp(Math.abs(slot - 2) / 2.6, 0, 1);
   const travel = clamp(motion, -1, 1);
   const travelStrength = Math.abs(travel) * (0.34 + side * 0.66);
@@ -73,10 +63,14 @@ function ArcCard({
   const counterRotation = travel * (slot < 2 ? -1 : 1) * (0.7 + side * 1.8);
   const travelScale = 1 + travelStrength * 0.012;
 
+  // alternate ink and paper faces around the deck
+  const theme = index % 2 === 0 ? "ccd-ink" : "ccd-paper";
+
   return (
     <article
-      className={`card ${card.theme} ${card.type}`}
-      aria-label={card.title}
+      className={`ccd-card ${theme}`}
+      aria-label={`${testimonial.name}, ${testimonial.company}`}
+      aria-hidden={!visible}
       onMouseEnter={() => onHoverChange(true)}
       onMouseLeave={() => onHoverChange(false)}
       onClick={onChoose}
@@ -89,21 +83,38 @@ function ArcCard({
       }}
     >
       <div
-        className="cardMotion"
+        className="ccd-motion"
         style={{ transform: `translate3d(${slipX}px,${peelY}px,0) rotate(${counterRotation}deg) scale(${travelScale})` }}
       >
-        <div className="cardSurface">
-          <header><span>{card.kicker}</span><span>ARC / {String(cards.indexOf(card) + 1).padStart(2, "0")}</span></header>
-          <h2>{card.title}</h2>
-          <CardArt card={card} />
+        <div className="ccd-surface">
+          <header>
+            <span>{testimonial.category}</span>
+            <span>
+              {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+            </span>
+          </header>
+          <blockquote>
+            <p>{"“"}{testimonial.quote}{"”"}</p>
+          </blockquote>
+          <footer>
+            <strong>{testimonial.name}</strong>
+            <span>{testimonial.company}</span>
+          </footer>
         </div>
       </div>
     </article>
   );
 }
 
-export default function CircularCardDeck() {
+export default function CircularCardDeck({
+  testimonials,
+  kicker = "From our clients",
+  heading = "What clients say",
+}: CircularCardDeckProps) {
+  const count = testimonials.length;
+  const sceneRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
+  const inView = useRef(false);
   const value = useRef(-1);
   const target = useRef(-1);
   const velocity = useRef(0);
@@ -128,10 +139,25 @@ export default function CircularCardDeck() {
     return () => observer.disconnect();
   }, []);
 
+  // the deck only animates, and only answers the wheel, while it is on screen
   useEffect(() => {
+    const scene = sceneRef.current;
+    if (!scene) return;
+    const io = new IntersectionObserver(([entry]) => {
+      inView.current = entry.isIntersecting;
+    });
+    io.observe(scene);
+    return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (count === 0) return;
     let frame = 0;
     const started = performance.now();
     const tick = (now: number) => {
+      frame = requestAnimationFrame(tick);
+      if (!inView.current) return;
+
       if (!manual.current) {
         const time = ((now - started) % 5300) / 1000;
         let next = -1;
@@ -147,15 +173,15 @@ export default function CircularCardDeck() {
           value.current = target.current;
           velocity.current = 0;
         }
-        if (Math.abs(value.current) > cards.length) {
-          const cycle = Math.round(value.current / cards.length) * cards.length;
+        if (Math.abs(value.current) > count) {
+          const cycle = Math.round(value.current / count) * count;
           value.current -= cycle;
           target.current -= cycle;
         }
       }
 
       let frameDelta = value.current - lastFrameValue.current;
-      frameDelta -= Math.round(frameDelta / cards.length) * cards.length;
+      frameDelta -= Math.round(frameDelta / count) * count;
       lastFrameValue.current = value.current;
       const requestedMotion = clamp(frameDelta * 28, -1, 1);
       const motionResponse = Math.abs(requestedMotion) > Math.abs(visualMotion.current) ? 0.38 : 0.115;
@@ -163,11 +189,10 @@ export default function CircularCardDeck() {
       if (Math.abs(visualMotion.current) < 0.0005) visualMotion.current = 0;
       setPosition(value.current);
       setMotion(visualMotion.current);
-      frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, []);
+  }, [count]);
 
   const takeControl = useCallback(() => {
     manual.current = true;
@@ -180,7 +205,10 @@ export default function CircularCardDeck() {
   }, [takeControl]);
 
   const onWheel = useCallback((event: WheelEvent) => {
-    if (Math.abs(event.deltaY) < 4) return;
+    if (!inView.current || Math.abs(event.deltaY) < 4) return;
+    const rect = sceneRef.current?.getBoundingClientRect();
+    // only while the deck fills most of the screen, not as it scrolls past
+    if (!rect || rect.top > window.innerHeight * 0.25 || rect.bottom < window.innerHeight * 0.75) return;
     const now = performance.now();
     if (now - lastWheel.current < 420) return;
     lastWheel.current = now;
@@ -191,6 +219,16 @@ export default function CircularCardDeck() {
     window.addEventListener("wheel", onWheel, { passive: true });
     return () => window.removeEventListener("wheel", onWheel);
   }, [onWheel]);
+
+  const onKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+      event.preventDefault();
+      moveOne(-1);
+    } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+      event.preventDefault();
+      moveOne(1);
+    }
+  };
 
   const onPointerDown = (event: React.PointerEvent) => {
     takeControl();
@@ -216,24 +254,38 @@ export default function CircularCardDeck() {
     event.currentTarget.releasePointerCapture(event.pointerId);
   };
 
+  if (count === 0) return null;
+
   const logicalCards = Array.from({ length: 19 }, (_, index) => index - 7);
 
   return (
-    <main className="scene">
+    <section ref={sceneRef} className="ccd-scene" aria-label={heading}>
+      <div className="ccd-heading">
+        <span>{kicker}</span>
+        <h2 className="font-display">{heading}</h2>
+      </div>
+
       <div
         ref={stageRef}
-        className="stage"
+        className="ccd-stage"
+        tabIndex={0}
+        role="group"
+        aria-roledescription="carousel"
+        aria-label="Client testimonials. Use the arrow keys to move through them."
+        onKeyDown={onKeyDown}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
       >
         {logicalCards.map((logical) => {
-          const dataIndex = ((logical % cards.length) + cards.length) % cards.length;
+          const dataIndex = ((logical % count) + count) % count;
           const slot = logical + position;
           return <ArcCard
             key={logical}
-            card={cards[dataIndex]}
+            testimonial={testimonials[dataIndex]}
+            index={dataIndex}
+            total={count}
             slot={slot}
             width={stageWidth}
             motion={motion}
@@ -245,55 +297,44 @@ export default function CircularCardDeck() {
           />;
         })}
       </div>
-      <div className="hint"><span>DRAG</span><i /><span>SCROLL</span></div>
+      <div className="ccd-hint" aria-hidden><span>DRAG</span><i /><span>SCROLL</span></div>
 
       <style>{`
-        * { box-sizing: border-box; }
-        button, article { -webkit-tap-highlight-color: transparent; }
-        .scene { position: relative; width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; background: linear-gradient(180deg, #F2EAD3 0%, #F2EAD3 72%, #ECE0C8 118%); }
-        .scene:after { content: ""; position: absolute; inset: auto 0 0; height: 22%; pointer-events: none; background: linear-gradient(transparent,rgba(67,71,74,.16)); }
-        .stage { position: absolute; left: 50%; top: 0; width: min(100vw,62vh); height: 100%; transform: translateX(-50%); touch-action: none; user-select: none; cursor: grab; }
-        .stage:active { cursor: grabbing; }
-        .card { position: absolute; left: 0; top: 0; width: 91.5%; aspect-ratio: 1.75/1; container-type: inline-size; transform-origin: center; backface-visibility: hidden; will-change: transform,filter; transition: opacity .12s linear; cursor: pointer; }
-        .cardMotion { position: absolute; inset: 0; transform-origin: center; backface-visibility: hidden; will-change: transform; }
-        .cardSurface { position: absolute; inset: 0; overflow: hidden; border-radius: max(5px,1.35%); box-shadow: 0 1px 0 rgba(255,255,255,.4) inset,0 9px 20px rgba(20,24,27,.12); transform: translateZ(0) scale(1); transform-origin: center; backface-visibility: hidden; will-change: transform,box-shadow; transition: transform .36s cubic-bezier(.2,.78,.2,1),box-shadow .36s cubic-bezier(.2,.78,.2,1); }
-        .card:hover .cardSurface { transform: translateZ(0) scale(1.055); box-shadow: 0 1px 0 rgba(255,255,255,.55) inset,0 24px 52px rgba(20,24,27,.3); }
-        .card header { position: absolute; z-index: 3; left: 6.5%; right: 6.5%; top: 8%; display: flex; justify-content: space-between; font-size: clamp(4px,1.45cqw,8px); font-weight: 700; letter-spacing: .05em; opacity: .82; }
-        .card h2 { position: absolute; z-index: 3; margin: 0; left: 6.5%; top: 22%; max-width: 48%; font-size: clamp(10px,5.8cqw,27px); line-height: .92; letter-spacing: -.055em; font-weight: 580; }
-        .ink .cardSurface { color: #F2EAD3; background: #241811; border: 1px solid rgba(255,255,255,.09); }
-        .ink .cardSurface:after { content: ""; position: absolute; inset: 0; opacity: .13; background: repeating-linear-gradient(0deg,transparent 0 12%,#fff 12.4% 12.8%); }
-        .paper .cardSurface { color: #3A2418; background: #FAF6EC; border: 1px solid rgba(10,12,13,.11); }
-        .signal .cardSurface { color: #F2EAD3; background: #3A2418; border: 1px solid rgba(217,192,140,0.25); }
-        .micro { position: absolute; left: 7%; bottom: 12%; font-size: clamp(4px,1.55cqw,8px); line-height: 1.35; letter-spacing: .05em; }
-        .giant { position: absolute; right: 7%; bottom: -17%; font-size: clamp(76px,44cqw,210px); line-height: 1; font-weight: 350; letter-spacing: -.1em; }
-        .rule { position: absolute; left: 7%; right: 7%; bottom: 8%; border-bottom: 1px solid rgba(255,255,255,.5); }
-        .steps { position: absolute; left: 19%; top: 34%; font-size: clamp(9px,5.1cqw,25px); line-height: .86; letter-spacing: -.04em; }
-        .steps span { display: inline-block; width: 15%; margin-left: -15%; color: #727276; font-size: .55em; vertical-align: top; padding-top: .2em; }
-        .bars { position: absolute; right: 7%; top: 27%; width: 26%; display: grid; gap: 12%; }
-        .bars i { height: 3px; background: #55555a; border-radius: 9px; }
-        .bars i:nth-child(2) { width: 70%; }.bars i:nth-child(3) { width: 89%; }.bars i:nth-child(4) { width: 48%; }
-        .rows { position: absolute; left: 7%; right: 45%; bottom: 10%; font-size: clamp(4px,1.7cqw,9px); }
-        .rows p { padding: 8% 0; margin: 0; display: flex; justify-content: space-between; border-top: 1px solid #d8d8d4; }.rows b { color: #a3a39e; }
-        .portalArt { position: absolute; right: 6%; top: 26%; width: 33%; height: 64%; background: #171719; box-shadow: -13px 13px 23px rgba(0,0,0,.13); }
-        .portalArt i { position: absolute; inset: 11% 21%; background: linear-gradient(115deg,#fff,#d7d7d3); box-shadow: 0 0 16px #fff; }
-        .portalArt b { position: absolute; right: 22%; top: 43%; color: #18191a; font: 8px monospace; }
-        .metrics { position: absolute; left: 7%; right: 7%; top: 26%; display: flex; justify-content: space-around; border-top: 1px solid #454549; padding-top: 4%; font-size: clamp(5px,2.7cqw,13px); }
-        .portrait { position: absolute; left: 7%; bottom: 7%; width: 34%; height: 45%; background: radial-gradient(circle at 50% 35%,#c9cac7 0 7%,#19191b 8% 27%,transparent 28%),linear-gradient(135deg,#e8e8e4,#bfc1bf); overflow: hidden; }
-        .portrait:after { content: ""; position: absolute; width: 48%; height: 8%; background: #D9C08C; top: 35%; left: 45%; box-shadow: 0 0 10px #D9C08C; }
-        .portrait i { position: absolute; width: 58%; height: 52%; border-radius: 50% 50% 0 0; background: #111; left: 22%; bottom: -5%; }
-        .swatches { position: absolute; left: 48%; top: 51%; display: flex; gap: 4px; }.swatches i { width: clamp(9px,5cqw,23px); aspect-ratio: 1; background: #D9C08C; }.swatches i:nth-child(2){background:#C9A968}.swatches i:nth-child(3){background:#eee}.swatches i:nth-child(4){background:#777}
-        .cities { position: absolute; left: 49%; bottom: 7%; font-size: clamp(4px,1.9cqw,9px); line-height: .92; }
-        .edgeNote { position: absolute; right: 7%; top: 19%; text-align: right; font-size: clamp(4px,1.45cqw,8px); line-height: 1.2; }
-        .word { position: absolute; left: -3%; bottom: -18%; color: rgba(242,234,211,0.85); font-size: clamp(43px,29cqw,140px); line-height: 1; letter-spacing: -.09em; font-weight: 450; }
-        .briefNo { position: absolute; left: 7%; bottom: 7%; color: #d0d0cb; font-size: clamp(28px,18cqw,88px); letter-spacing: -.08em; }
-        .columns { position: absolute; left: 50%; right: 6%; top: 32%; font-size: clamp(4px,1.6cqw,8px); }.columns p { margin: 0; padding: 6% 0; border-top: 1px solid #ddd; color: #999; }.columns b { color: #202020; }
-        .orbitArt { position: absolute; width: 47%; aspect-ratio: 1; right: 4%; bottom: -38%; border: 1px solid #555; border-radius: 50%; }.orbitArt i { position: absolute; inset: 12%; border: 1px solid #414145; border-radius: 50%; }.orbitArt i:nth-child(2){inset:27%}.orbitArt i:nth-child(3){inset:42%}.orbitArt b { position:absolute;width:9%;aspect-ratio:1;border-radius:50%;background:#ff4b32;left:4%;top:23%; }
-        .route { position: absolute; left: 7%; bottom: 11%; font-size: clamp(4px,1.4cqw,8px); color: #a3a3a6; }
-        .hint { position: absolute; z-index: 99; left: 50%; bottom: 3.2%; transform: translateX(-50%); display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,.75); font-size: 7px; letter-spacing: .16em; pointer-events: none; }
-        .hint i { width: 16px; height: 1px; background: currentColor; }
-        @media (hover: none) { .card:hover .cardSurface { transform: translateZ(0) scale(1); box-shadow: 0 1px 0 rgba(255,255,255,.4) inset,0 9px 20px rgba(20,24,27,.12); } }
-        @media (prefers-reduced-motion: reduce) { .card,.cardMotion,.cardSurface { transition: none; } }
+        .ccd-scene, .ccd-scene * { box-sizing: border-box; }
+        .ccd-scene button, .ccd-scene article { -webkit-tap-highlight-color: transparent; }
+        .ccd-scene { position: relative; width: 100%; height: 100vh; height: 100dvh; min-height: 620px; overflow: hidden; background: linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 70%, #F4F4F2 118%); }
+        .ccd-scene:after { content: ""; position: absolute; inset: auto 0 0; height: 22%; pointer-events: none; background: linear-gradient(transparent, rgba(10,10,10,.06)); }
+        .ccd-heading { position: absolute; z-index: 1100; left: clamp(20px, 4vw, 64px); top: clamp(88px, 12vh, 128px); pointer-events: none; }
+        .ccd-heading span { display: block; font-size: 11px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-45); }
+        .ccd-heading h2 { margin: 12px 0 0; font-size: clamp(30px, 4.2vw, 56px); line-height: 1.02; font-weight: 700; color: var(--ink); max-width: 9ch; }
+        .ccd-stage { position: absolute; left: 50%; top: 0; width: min(100vw, 64vh); height: 100%; transform: translateX(-50%); touch-action: none; user-select: none; cursor: grab; outline: none; }
+        .ccd-stage:focus-visible { outline: 2px solid var(--ink); outline-offset: -6px; }
+        .ccd-stage:active { cursor: grabbing; }
+        .ccd-card { position: absolute; left: 0; top: 0; width: 91.5%; aspect-ratio: 1.5/1; container-type: inline-size; transform-origin: center; backface-visibility: hidden; will-change: transform,filter; transition: opacity .12s linear; cursor: pointer; }
+        .ccd-motion { position: absolute; inset: 0; transform-origin: center; backface-visibility: hidden; will-change: transform; }
+        .ccd-surface { position: absolute; inset: 0; overflow: hidden; border-radius: max(6px,1.6%); box-shadow: 0 1px 0 rgba(255,255,255,.4) inset, 0 9px 20px rgba(10,10,10,.1); transform: translateZ(0) scale(1); transform-origin: center; backface-visibility: hidden; will-change: transform,box-shadow; transition: transform .36s cubic-bezier(.2,.78,.2,1), box-shadow .36s cubic-bezier(.2,.78,.2,1); font-family: var(--font-sans), system-ui, sans-serif; }
+        .ccd-card:hover .ccd-surface { transform: translateZ(0) scale(1.045); box-shadow: 0 1px 0 rgba(255,255,255,.55) inset, 0 24px 52px rgba(10,10,10,.22); }
+        .ccd-surface header { position: absolute; z-index: 3; left: 6.5%; right: 6.5%; top: 7%; display: flex; justify-content: space-between; font-size: clamp(6px,1.7cqw,10px); font-weight: 600; letter-spacing: .12em; text-transform: uppercase; opacity: .6; }
+        .ccd-surface blockquote { position: absolute; z-index: 3; margin: 0; left: 6.5%; right: 6.5%; top: 17%; bottom: 25%; overflow: hidden; }
+        .ccd-surface blockquote p { margin: 0; font-size: clamp(8px, 2.45cqw, 15px); line-height: 1.4; letter-spacing: -.005em; display: -webkit-box; -webkit-line-clamp: 10; -webkit-box-orient: vertical; overflow: hidden; }
+        .ccd-surface footer { position: absolute; z-index: 3; left: 6.5%; right: 6.5%; bottom: 7%; display: flex; flex-direction: column; gap: .2em; border-top: 1px solid currentColor; padding-top: 3.2%; font-size: clamp(7px, 2.2cqw, 13px); line-height: 1.2; }
+        .ccd-surface footer strong { font-family: var(--font-display), var(--font-sans), sans-serif; font-weight: 700; letter-spacing: -.01em; }
+        .ccd-surface footer span { opacity: .6; }
+        .ccd-ink .ccd-surface { color: #FFFFFF; background: #0A0A0A; border: 1px solid rgba(255,255,255,.08); }
+        .ccd-ink .ccd-surface footer { border-color: rgba(255,255,255,.2); }
+        .ccd-paper .ccd-surface { color: #0A0A0A; background: #FFFFFF; border: 1px solid rgba(10,10,10,.12); }
+        .ccd-paper .ccd-surface footer { border-color: rgba(10,10,10,.14); }
+        .ccd-hint { position: absolute; z-index: 1100; left: 50%; bottom: 3.2%; transform: translateX(-50%); display: flex; align-items: center; gap: 8px; color: var(--ink-45); font-size: 9px; letter-spacing: .16em; pointer-events: none; }
+        .ccd-hint i { width: 16px; height: 1px; background: currentColor; }
+        @media (max-width: 700px) {
+          .ccd-heading { left: 0; right: 0; top: 64px; padding: 20px 20px 36px; background: linear-gradient(#FFFFFF 70%, rgba(255,255,255,0)); }
+          .ccd-heading h2 { font-size: 30px; }
+          .ccd-card { aspect-ratio: 1.15/1; }
+          .ccd-surface blockquote p { font-size: clamp(9px, 3.3cqw, 13px); -webkit-line-clamp: 12; }
+        }
+        @media (hover: none) { .ccd-card:hover .ccd-surface { transform: translateZ(0) scale(1); box-shadow: 0 1px 0 rgba(255,255,255,.4) inset, 0 9px 20px rgba(10,10,10,.1); } }
+        @media (prefers-reduced-motion: reduce) { .ccd-card, .ccd-motion, .ccd-surface { transition: none; } }
       `}</style>
-    </main>
+    </section>
   );
 }

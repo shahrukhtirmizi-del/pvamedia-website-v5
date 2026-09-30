@@ -9,10 +9,11 @@ import { SITE } from "../lib/site";
 type Errors = Partial<Record<"name" | "email" | "phone" | "message", string>>;
 
 const NEEDS = [
-  "A new website",
   "Local SEO",
   "Paid ads and landing pages",
+  "A new website",
   "AI Receptionist",
+  "AI automation agents",
   "The full package",
   "Not sure yet",
 ];
@@ -80,7 +81,7 @@ export default function BookingForm() {
           className="mb-8 flex items-start gap-3 p-5"
           style={{
             borderRadius: "var(--radius-tile)",
-            background: "rgba(58, 36, 24, 0.06)",
+            background: "rgba(10, 10, 10, 0.06)",
             border: "1px solid var(--line-strong)",
           }}
         >
@@ -137,13 +138,13 @@ export default function BookingForm() {
             className="mt-2.5 w-full px-4 py-3.5 text-[15px] outline-none transition-colors"
             style={{
               borderRadius: "var(--radius-tile)",
-              background: "rgba(58, 36, 24, 0.05)",
+              background: "rgba(10, 10, 10, 0.05)",
               border: "1px solid var(--line-strong)",
               color: "var(--ink)",
             }}
           >
             {NEEDS.map((option) => (
-              <option key={option} value={option} style={{ background: "#FAF6EC", color: "#3A2418" }}>
+              <option key={option} value={option} style={{ background: "#FAFAF9", color: "#0A0A0A" }}>
                 {option}
               </option>
             ))}
@@ -170,7 +171,7 @@ export default function BookingForm() {
             className="mt-2.5 w-full resize-y px-4 py-3.5 text-[15px] outline-none transition-colors"
             style={{
               borderRadius: "var(--radius-tile)",
-              background: "rgba(58, 36, 24, 0.05)",
+              background: "rgba(10, 10, 10, 0.05)",
               border: `1px solid ${errors.message ? "var(--accent)" : "var(--line-strong)"}`,
               color: "var(--ink)",
             }}
@@ -256,7 +257,7 @@ function Field({
         className="mt-2.5 w-full px-4 py-3.5 text-[15px] outline-none transition-colors"
         style={{
           borderRadius: "var(--radius-tile)",
-          background: "rgba(58, 36, 24, 0.05)",
+          background: "rgba(10, 10, 10, 0.05)",
           border: `1px solid ${error ? "var(--accent)" : "var(--line-strong)"}`,
           color: "var(--ink)",
         }}

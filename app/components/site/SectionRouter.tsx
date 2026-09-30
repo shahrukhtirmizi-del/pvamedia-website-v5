@@ -118,7 +118,7 @@ export default function SectionRouter() {
     for (const t of targets) io.observe(t.el);
 
     // the hero counts as "home": when nothing else is in the band we are at /
-    const hero = document.querySelector("main > section");
+    const hero = document.getElementById("top");
     const heroIo = hero
       ? new IntersectionObserver(
           ([entry]) => {

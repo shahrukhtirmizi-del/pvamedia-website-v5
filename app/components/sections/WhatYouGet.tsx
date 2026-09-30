@@ -1,16 +1,19 @@
 import Link from "next/link";
-import { LayoutTemplate, Timer, Search, PhoneCall, Smartphone, ShieldCheck } from "lucide-react";
+import { Search, TrendingUp, PhoneCall, Bot, ChartColumn, MonitorSmartphone } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import Reveal from "../ui/Reveal";
 import ScrollWords from "../ui/ScrollWords";
 import { WHAT_YOU_GET, GUARANTEE } from "../../lib/site";
 
-/** one mark per statement, in the same lit disc the services cards use */
-const ICONS: LucideIcon[] = [LayoutTemplate, Timer, Search, PhoneCall, Smartphone, ShieldCheck];
+/**
+ * One mark per WHAT_YOU_GET entry, matched by index: found, enquiries,
+ * answered, follow-up, reporting, website. Keep the two lists in step.
+ */
+const ICONS: LucideIcon[] = [Search, TrendingUp, PhoneCall, Bot, ChartColumn, MonitorSmartphone];
 
 /**
  * The heading holds still on the left while six statements scroll past on
- * the right, each with its mark in a lit disc, lighting up as it reaches the
+ * the right, each with its mark in a solid ink disc, lighting up as it reaches the
  * middle of the screen. The guarantee closes the run.
  */
 export default function WhatYouGet() {
@@ -29,15 +32,15 @@ export default function WhatYouGet() {
               className="mt-6 max-w-[34ch] text-[15px] leading-relaxed"
               style={{ color: "var(--ink-60)" }}
             >
-              Everything a trades or home service company needs to be found, trusted and booked, handled by
-              one team.
+              Everything a trades or home service business needs to be found, win enquiries and fill
+              the calendar, run by one team.
             </p>
           </Reveal>
         </div>
 
         <div className="mt-16 lg:mt-0">
           {WHAT_YOU_GET.map((item, i) => {
-            const Icon = ICONS[i] ?? LayoutTemplate;
+            const Icon = ICONS[i] ?? Search;
             return (
               <div
                 key={item.title}
@@ -51,11 +54,8 @@ export default function WhatYouGet() {
                     aria-hidden
                     className="grid h-12 w-12 place-items-center rounded-full md:h-14 md:w-14"
                     style={{
-                      background:
-                        "radial-gradient(circle at 35% 30%, rgba(217, 192, 140, 0.22), rgba(217, 192, 140, 0.05) 70%)",
-                      border: "1px solid rgba(217, 192, 140, 0.25)",
-                      boxShadow: "0 0 40px -10px rgba(217, 192, 140, 0.35)",
-                      color: "var(--ink)",
+                      background: "var(--ink)",
+                      color: "var(--bg)",
                     }}
                   >
                     <Icon size={20} strokeWidth={1.5} />
