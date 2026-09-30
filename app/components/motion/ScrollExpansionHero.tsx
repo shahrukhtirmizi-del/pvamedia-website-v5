@@ -116,6 +116,7 @@ function ScrollExpandMedia({
   const [viewport, setViewport] = useState({ w: 1440, h: 900 })
 
   const sceneRef = useRef<HTMLDivElement | null>(null)
+  const stageRef = useRef<HTMLElement | null>(null)
 
   const updateProgress = useCallback((nextProgress: number) => {
     const clampedProgress = Math.min(
@@ -132,16 +133,25 @@ function ScrollExpandMedia({
     }
   }, [])
 
+  // Sized from the pinned stage (100svh), not window.innerHeight: on phones
+  // innerHeight changes every time the address bar slides in or out, which
+  // made the frame and the scroll maths twitch mid-scroll. The stage's small-
+  // viewport height only changes on a real resize or rotation.
   useEffect(() => {
+    const stage = stageRef.current
     const checkViewport = () => {
-      setViewport({ w: window.innerWidth, h: window.innerHeight })
+      const h = stage?.clientHeight || window.innerHeight
+      setViewport((v) => (v.w === window.innerWidth && v.h === h ? v : { w: window.innerWidth, h }))
     }
 
     checkViewport()
-    window.addEventListener("resize", checkViewport)
+    const ro = stage ? new ResizeObserver(checkViewport) : null
+    if (stage && ro) ro.observe(stage)
+    window.addEventListener("orientationchange", checkViewport)
 
     return () => {
-      window.removeEventListener("resize", checkViewport)
+      ro?.disconnect()
+      window.removeEventListener("orientationchange", checkViewport)
     }
   }, [])
 
@@ -157,7 +167,8 @@ function ScrollExpandMedia({
       if (!scene) return
 
       const rect = scene.getBoundingClientRect()
-      const scrollable = rect.height - window.innerHeight
+      const stageHeight = stageRef.current?.clientHeight || window.innerHeight
+      const scrollable = rect.height - stageHeight
 
       updateProgress(-rect.top / Math.max(scrollable, 1))
     }
@@ -216,8 +227,8 @@ function ScrollExpandMedia({
       className="relative -mt-[78px] overflow-x-clip md:-mt-[86px]"
       style={{ background: "transparent" }}
     >
-      <div ref={sceneRef} className="relative" style={{ height: "250vh" }}>
-        <section className="sticky top-0 h-[100dvh] w-full overflow-hidden">
+      <div ref={sceneRef} className="relative h-[250vh] supports-[height:100svh]:h-[250svh]">
+        <section ref={stageRef} className="sticky top-0 h-[100vh] w-full overflow-hidden supports-[height:100svh]:h-[100svh]">
           <div className="relative z-10 flex h-full w-full items-center justify-center">
             <div
               data-hero-media

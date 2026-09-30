@@ -252,7 +252,7 @@ export default function CircularCardDeck({
       <style>{`
         .ccd-scene, .ccd-scene * { box-sizing: border-box; }
         .ccd-scene button, .ccd-scene article { -webkit-tap-highlight-color: transparent; }
-        .ccd-scene { position: relative; width: 100%; min-height: 100vh; min-height: 100dvh; padding: clamp(96px, 14vh, 150px) 0 clamp(64px, 8vh, 96px); overflow: hidden; background: linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 70%, #F4F4F2 118%); }
+        .ccd-scene { position: relative; width: 100%; min-height: 100vh; min-height: 100svh; padding: clamp(96px, 14vh, 150px) 0 clamp(64px, 8vh, 96px); overflow: hidden; background: linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 70%, #F4F4F2 118%); }
         .ccd-heading { position: relative; z-index: 10; max-width: 1240px; margin: 0 auto clamp(28px, 5vh, 56px); padding: 0 clamp(20px, 4vw, 64px); }
         .ccd-heading span { display: block; font-size: 11px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-45); }
         .ccd-heading h2 { margin: 12px 0 0; font-size: clamp(30px, 4.2vw, 56px); line-height: 1.02; font-weight: 700; color: var(--ink); max-width: 9ch; }

@@ -146,7 +146,10 @@ export default function SettleStack({
       let shown = -1;
       const tick = () => {
         const rect = pin.getBoundingClientRect();
-        const span = pin.offsetHeight - window.innerHeight;
+        // against the pinned stage (100svh), not innerHeight, which moves
+        // with a phone's address bar
+        const stageH = (pin.firstElementChild as HTMLElement | null)?.offsetHeight || window.innerHeight;
+        const span = pin.offsetHeight - stageH;
         const target = clamp01(span > 0 ? -rect.top / span : 0);
         shown = shown < 0 ? target : shown + (target - shown) * 0.09;
         if (Math.abs(target - shown) < 0.0004) shown = target;

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { CSSProperties, useEffect, useRef } from "react";
-import { SITE, SERVICES } from "../../lib/site";
+import { SERVICES } from "../../lib/site";
 
 const CSS = `
 .kex-scroll-page,
@@ -24,6 +24,7 @@ const CSS = `
 .kex-scroll-scene {
   position: relative;
   height: 560vh;
+  height: 560svh;
   background: #0A0A0A;
 }
 
@@ -32,6 +33,7 @@ const CSS = `
   top: 0;
   width: 100%;
   height: 100vh;
+  height: 100svh;
   overflow: hidden;
   background: #0A0A0A;
 }
@@ -56,17 +58,6 @@ const CSS = `
   text-transform: uppercase;
 }
 
-.kex-hero-subtitle {
-  position: absolute;
-  left: clamp(24px, 4vw, 72px);
-  bottom: clamp(26px, 5vw, 72px);
-  max-width: 980px;
-  margin: 0;
-  font-size: clamp(22px, 2.5vw, 44px);
-  font-weight: 400;
-  line-height: 1.35;
-  letter-spacing: -0.035em;
-}
 
 /* CARD LAYER */
 
@@ -84,6 +75,7 @@ const CSS = `
 
   width: 100%;
   height: 100vh;
+  height: 100svh;
 
   background: var(--card-bg);
   color: var(--card-text);
@@ -144,7 +136,7 @@ const CSS = `
 }
 
 .kex-card-kicker {
-  margin: 0 0 clamp(100px, 16vh, 170px);
+  margin: 0 0 clamp(100px, 16svh, 170px);
 
   color: var(--card-muted);
 
@@ -208,15 +200,13 @@ const CSS = `
 @media (max-width: 800px) {
   .kex-scroll-scene {
     height: 540vh;
+    height: 540svh;
   }
 
   .kex-hero-title {
     font-size: clamp(58px, 17vw, 120px);
   }
 
-  .kex-hero-subtitle {
-    font-size: 21px;
-  }
 
   .kex-card-title {
     /* long single words (RECEPTIONIST, AUTOMATION) have to fit a phone */
@@ -316,7 +306,7 @@ const easeInOutCubic = (x: number) =>
 export default function CardStoryScroll() {
   const sceneRef = useRef<HTMLElement | null>(null);
   const heroTitleRef = useRef<HTMLHeadingElement | null>(null);
-  const heroSubtitleRef = useRef<HTMLParagraphElement | null>(null);
+  const stageRef = useRef<HTMLDivElement | null>(null);
   const cardRefs = useRef<Array<HTMLElement | null>>([]);
 
   const currentProgress = useRef(0);
@@ -329,7 +319,10 @@ export default function CardStoryScroll() {
       if (!scene) return;
 
       const rect = scene.getBoundingClientRect();
-      const scrollable = rect.height - window.innerHeight;
+      // measured against the pinned stage (100svh), not window.innerHeight,
+      // which changes as a phone's address bar slides in and out mid-scroll
+      const stageHeight = stageRef.current?.offsetHeight || window.innerHeight;
+      const scrollable = rect.height - stageHeight;
 
       targetProgress.current = clamp(
         -rect.top / Math.max(scrollable, 1),
@@ -355,16 +348,6 @@ export default function CardStoryScroll() {
         `;
 
         heroTitleRef.current.style.opacity = `${lerp(1, 0.58, heroLift)}`;
-      }
-
-      if (heroSubtitleRef.current) {
-        const subtitleFade = clamp(progress / 0.16, 0, 1);
-
-        heroSubtitleRef.current.style.transform = `
-          translate3d(0, ${lerp(0, -45, subtitleFade)}px, 0)
-        `;
-
-        heroSubtitleRef.current.style.opacity = `${lerp(1, 0, subtitleFade)}`;
       }
 
       cardRefs.current.forEach((card, index) => {
@@ -435,17 +418,13 @@ export default function CardStoryScroll() {
 
       <div className="kex-scroll-page">
         <section id="services" ref={sceneRef} className="kex-scroll-scene">
-          <div className="kex-sticky-stage">
+          <div ref={stageRef} className="kex-sticky-stage">
             <div className="kex-hero-content">
               <h1 ref={heroTitleRef} className="kex-hero-title">
                 OUR
                 <br />
                 SERVICES
               </h1>
-
-              <p ref={heroSubtitleRef} className="kex-hero-subtitle">
-                {SITE.tagline}
-              </p>
             </div>
 
             <div className="kex-card-layer">
