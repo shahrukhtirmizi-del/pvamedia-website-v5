@@ -34,3 +34,10 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# local agent/tooling state (not project source)
+.claude-flow/
+.claude/.proven-config-version
+.claude/proven-config.json
+.swarm/
+ruvector.db
