@@ -134,7 +134,9 @@ export default function PainPoints() {
 
                 <div className="ps-description">
                   <span className="ps-spark" aria-hidden="true">
-                    ✳
+                    <svg viewBox="0 0 16 16">
+                      <path d="M2 8h11M9 4l4 4-4 4" />
+                    </svg>
                   </span>
                   <p>{card.body}</p>
                 </div>
@@ -263,11 +265,22 @@ const CSS = `
     gap: 8px;
     align-items: start;
   }
+  /* a thin arrow leading into the line, sized and centred on its first row */
   .ps-spark {
-    font-size: 15px;
-    line-height: 1;
+    display: flex;
+    align-items: center;
+    height: 1.4em;
+    font-size: 14px;
     color: rgba(255,255,255,.85);
-    transform: translateY(1px);
+  }
+  .ps-spark svg {
+    width: 1em;
+    height: 1em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
   .ps-description p {
     margin: 0;
@@ -316,7 +329,7 @@ const CSS = `
       grid-template-columns: 2vw 1fr;
       gap: .9vw;
     }
-    .ps-spark { font-size: clamp(16px, 2vw, 27px); }
+    .ps-spark { font-size: clamp(15px, 1.4vw, 20px); }
     .ps-description p {
       max-width: 62%;
       font-size: clamp(15px, 1.4vw, 20px);
