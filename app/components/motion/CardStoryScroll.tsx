@@ -1,7 +1,7 @@
 "use client";
 
 import React, { CSSProperties, useEffect, useRef } from "react";
-import { SERVICES } from "../../lib/site";
+import { SERVICES, SERVICES_INTRO } from "../../lib/site";
 
 const CSS = `
 .kex-scroll-page,
@@ -46,6 +46,15 @@ const CSS = `
   z-index: 1;
   padding: clamp(24px, 4vw, 72px);
   color: #ffffff;
+}
+
+.kex-hero-intro {
+  margin: clamp(18px, 2.4vw, 32px) 0 0;
+  max-width: 34rem;
+  font-size: clamp(16px, 1.35vw, 21px);
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.62);
 }
 
 .kex-hero-title {
@@ -388,7 +397,7 @@ const easeInOutCubic = (x: number) =>
 
 export default function CardStoryScroll() {
   const sceneRef = useRef<HTMLElement | null>(null);
-  const heroTitleRef = useRef<HTMLHeadingElement | null>(null);
+  const heroTitleRef = useRef<HTMLDivElement | null>(null);
   const stageRef = useRef<HTMLDivElement | null>(null);
   const cardRefs = useRef<Array<HTMLElement | null>>([]);
 
@@ -544,11 +553,15 @@ export default function CardStoryScroll() {
         <section id="services" ref={sceneRef} className="kex-scroll-scene">
           <div ref={stageRef} className="kex-sticky-stage">
             <div className="kex-hero-content">
-              <h1 ref={heroTitleRef} className="kex-hero-title">
-                OUR
-                <br />
-                SERVICES
-              </h1>
+              {/* the intro line lifts away with the title */}
+              <div ref={heroTitleRef} className="kex-hero-head">
+                <h1 className="kex-hero-title">
+                  OUR
+                  <br />
+                  SERVICES
+                </h1>
+                <p className="kex-hero-intro">{SERVICES_INTRO}</p>
+              </div>
             </div>
 
             <div className="kex-card-layer">

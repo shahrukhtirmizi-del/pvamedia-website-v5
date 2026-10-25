@@ -25,6 +25,10 @@ export type SettleStackCard = {
   body: string;
   /** When given, rendered as a ruled list instead of the body paragraph. */
   items?: string[];
+  /** List layout only: a short description under the title. */
+  lead?: string;
+  /** List layout only: a small label above the list. */
+  listLabel?: string;
   flipTilt: number; // rotationZ when the stack settles
   dismissTilt: number; // rotationZ at the top of its exit
   bg: string;
@@ -234,6 +238,8 @@ export default function SettleStack({
                       </span>
                     </div>
                     <h3>{c.title}</h3>
+                    {c.lead && <p className="st-lead">{c.lead}</p>}
+                    {c.listLabel && <p className="st-listlabel">{c.listLabel}</p>}
                     <ul className="st-list">
                       {c.items.map((item) => (
                         <li key={item}>{item}</li>
@@ -293,7 +299,8 @@ const css = `
 
   .st-card{position:absolute;top:50%;left:50%;
     transform:translate(-50%,-50%);
-    width:25%;min-width:300px;aspect-ratio:4/5;padding:3.4rem 2rem;
+    width:clamp(320px,30vw,440px);height:min(calc(100vh - 160px),700px);height:min(calc(100svh - 160px),700px);
+    padding:3.4rem 2rem;
     border-radius:0.5rem;display:flex;flex-direction:column;
     justify-content:space-between;align-items:center;text-align:center;
     backface-visibility:hidden;will-change:transform,opacity;
@@ -326,13 +333,17 @@ const css = `
   .st-num{font-size:.72rem;font-weight:700;letter-spacing:.18em;opacity:.55;}
   .st-icon--sm{width:2.6rem;height:2.6rem;}
   .st-icon--sm svg{width:1.15rem;height:1.15rem;}
-  .st-listcard h3{margin:0 0 1.1rem;line-height:.95;
+  .st-listcard h3{margin:0 0 .7rem;line-height:.95;
     font-size:clamp(1.35rem,1.9vw,1.9rem);}
+  .st-card p.st-lead{margin:0 0 .9rem;font-size:.88rem;line-height:1.35;
+    font-weight:450;opacity:.78;white-space:normal;}
+  .st-card p.st-listlabel{margin:0 0 .35rem;font-size:.66rem;font-weight:700;
+    letter-spacing:.14em;text-transform:uppercase;opacity:.6;}
   .st-list{list-style:none;margin:0;padding:0;}
-  .st-list li{position:relative;padding:.62rem 0 .62rem 1.35rem;
+  .st-list li{position:relative;padding:.44rem 0 .44rem 1.35rem;
     border-top:1px solid color-mix(in srgb,currentColor 16%,transparent);
-    font-size:.9rem;font-weight:450;line-height:1.3;letter-spacing:-.005em;}
-  .st-list li::before{content:"";position:absolute;left:0;top:1.02rem;
+    font-size:.86rem;font-weight:450;line-height:1.28;letter-spacing:-.005em;}
+  .st-list li::before{content:"";position:absolute;left:0;top:.98rem;
     width:.55rem;height:1px;background:currentColor;opacity:.6;}
 
   .st-chrome{position:absolute;left:0;right:0;z-index:6;display:flex;
@@ -356,10 +367,11 @@ const css = `
   @media (max-width:640px){
     /* a finger covers ground faster than a wheel: less track per card */
     .st-track{height:620vh;height:620svh;}
-    .st-card{width:84%;aspect-ratio:3/4.1;}
-    .st-back:has(.st-listcard){padding:1.4rem 1.25rem 1.1rem;}
-    .st-listcard h3{font-size:1.35rem;margin-bottom:.8rem;}
-    .st-list li{font-size:.82rem;padding:.5rem 0 .5rem 1.1rem;}
-    .st-list li::before{top:.9rem;width:.45rem;}
+    .st-card{width:88%;height:min(calc(100vh - 160px),640px);height:min(calc(100svh - 160px),640px);}
+    .st-back:has(.st-listcard){padding:1.25rem 1.15rem 1rem;}
+    .st-listcard h3{font-size:1.3rem;margin-bottom:.5rem;}
+    .st-card p.st-lead{font-size:.78rem;margin-bottom:.6rem;}
+    .st-list li{font-size:.76rem;padding:.34rem 0 .34rem 1.05rem;}
+    .st-list li::before{top:.8rem;width:.45rem;}
   }
 `;

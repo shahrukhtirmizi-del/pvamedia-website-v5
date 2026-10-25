@@ -124,10 +124,10 @@ export const SERVICES: Service[] = [
     name: "Marketing",
     specialism: "Local search and ads specialists",
     short:
-      "Local SEO and paid ads that put you in front of homeowners ready to book, and turn clicks into jobs.",
+      "Google and Meta ads, your Google Business Profile and local SEO, bringing in homeowners ready to book.",
     shortLines: [
-      "Local SEO and paid ads that put you in front of homeowners ready to book.",
-      "Turns clicks into jobs, not just traffic.",
+      "Google and Meta ads, your Google Business Profile and local SEO,",
+      "bringing in homeowners ready to book.",
     ],
     detail: [
       "Local SEO puts you in front of homeowners in the areas you want to work, at the moment they start looking. We build out service-area pages, keep your Google Business Profile active and clean up your citations so the map results start trusting you.",
@@ -147,10 +147,10 @@ export const SERVICES: Service[] = [
     name: "Websites",
     specialism: "Trade website specialists",
     short:
-      "A fast, custom site built to turn the traffic we send you into calls and quote requests.",
+      "Fast, mobile-first websites and landing pages built to turn visitors into calls and booked jobs.",
     shortLines: [
-      "A fast, custom site built for conversion.",
-      "Turns the traffic we send you into calls and quote requests.",
+      "Fast, mobile-first websites and landing pages",
+      "built to turn visitors into calls and booked jobs.",
     ],
     detail: [
       "Your website is where the marketing pays off, so we build it to convert: clear services, your own project photos and a quote path on every page. No templates, and live in five days.",
@@ -170,10 +170,10 @@ export const SERVICES: Service[] = [
     name: "AI Receptionist",
     specialism: "Specialist call handling",
     short:
-      "Answers every call and web enquiry, qualifies the job and books it in, day or night.",
+      "Answers every call and web enquiry 24/7, qualifies the job and books it into your calendar.",
     shortLines: [
-      "Answers every call and web enquiry, day or night.",
-      "Qualifies the job and books it straight into your calendar.",
+      "Answers every call and web enquiry 24/7,",
+      "qualifies the job and books it into your calendar.",
     ],
     detail: [
       "One of the automations we run for clients. It picks up when you cannot, which on a working day is most of the time.",
@@ -192,10 +192,10 @@ export const SERVICES: Service[] = [
     name: "AI Automation Agents",
     specialism: "Specialist lead follow-up",
     short:
-      "Agents that confirm bookings, chase unbooked leads and answer routine questions for you.",
+      "Confirm bookings, send reminders, follow up quotes and unbooked leads, reply instantly and hand off to your team when it matters.",
     shortLines: [
-      "Agents that confirm bookings and chase unbooked leads.",
-      "Answer routine questions so you don't have to.",
+      "Confirm bookings, send reminders, follow up quotes and unbooked leads,",
+      "reply instantly and hand off to your team when it matters.",
     ],
     detail: [
       "Most of the work between an enquiry and a booked job is repetitive admin. Our AI agents take it off your plate, so every lead hears back in minutes, not hours.",
@@ -207,6 +207,80 @@ export const SERVICES: Service[] = [
       "Instant replies to email and text enquiries",
       "Routine query handling",
       "Hand-off to your team when a person is needed",
+    ],
+  },
+];
+
+export const SERVICES_INTRO =
+  "Four services that work as one system. Our packages bring them together, adding more of each as you move up.";
+
+/* -------------------------------------------------------------------------- */
+
+export type Package = {
+  name: string;
+  /** who the package is for */
+  forLine: string;
+  /** the package this one builds on, shown as "Everything in X, plus:" */
+  builds?: string;
+  items: string[];
+};
+
+export const PACKAGES: Package[] = [
+  {
+    name: "Starter",
+    forLine:
+      "Smaller or newer businesses that want every lead answered fast and followed up, while testing ads on one channel.",
+    items: [
+      "A high-converting landing page (full website available as an add-on)",
+      "Ads on one channel: Google search or Facebook & Instagram",
+      "24/7 AI chat & text that replies in 60 seconds, qualifies and books",
+      "Missed-call text-back",
+      "Follow-up until booked, plus appointment reminders",
+      "A review request after every job",
+      "Your pipeline on your phone, a monthly report and a quarterly check-in",
+    ],
+  },
+  {
+    name: "Lead Engine",
+    forLine:
+      "Growing businesses that want a steady flow of booked jobs from Google and Facebook, tracked from first click to sold job.",
+    builds: "Starter",
+    items: [
+      "A full website built for you",
+      "Google search, Google Verified (where eligible) and Facebook & Instagram ads",
+      "Follow-up on every unsigned quote, with your financing options",
+      "Call tracking",
+      "Sold jobs fed back to Google & Meta, so your ads find more people like them",
+      "A monthly strategy call",
+    ],
+  },
+  {
+    name: "Market Leader",
+    forLine: "Established businesses competing with the top names in their area.",
+    builds: "Lead Engine",
+    items: [
+      "An AI receptionist that answers every call, 24/7",
+      "An AI call to every new web lead within a minute",
+      "A page for every service and area you cover, plus monthly SEO",
+      "Your Google Business Profile managed for you",
+      "Fresh Facebook & Instagram ads every month",
+      "Old quotes, past customers and referrals followed up automatically",
+      "A strategy call every two weeks",
+    ],
+  },
+  {
+    name: "Market Dominator",
+    forLine: "Bigger and multi-location businesses that want to own their market.",
+    builds: "Market Leader",
+    items: [
+      "A dedicated account manager, weekly report & call, and a quarterly review",
+      "Same-day priority changes",
+      "YouTube & video ads, retargeting and Microsoft (Bing) ads",
+      "Up to 3 locations, each with its own campaigns, Google profile and pages",
+      "A/B-tested landing pages for every campaign",
+      "Seasonal, storm and emergency campaigns",
+      "Longer follow-up for bigger jobs, plus maintenance & membership plan campaigns",
+      "AI call summaries & scorecards for your team, connected to your job software where possible",
     ],
   },
 ];
