@@ -56,6 +56,18 @@ export default function BookingsPage() {
               ))}
             </ul>
           </Reveal>
+
+          <Reveal delay={180}>
+            <div className="mt-11 max-w-[46ch] border-t pt-7" style={{ borderColor: "var(--line)" }}>
+              <h2 className="font-display text-[19px] font-semibold">Our 60-day guarantee</h2>
+              <p className="mt-3 text-[15px] leading-relaxed" style={{ color: "var(--ink-60)" }}>
+                Before your ads launch, we agree a lead target with you and put it in the contract. A
+                lead is a call, form or text from a new customer. If we miss the target within 60 days
+                of your ads going live, we refund every dollar of our fees. Your ad spend goes straight
+                to Google and Meta, so it is not part of the refund.
+              </p>
+            </div>
+          </Reveal>
         </div>
 
         <Reveal delay={80}>
