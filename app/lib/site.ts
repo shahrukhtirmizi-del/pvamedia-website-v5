@@ -18,7 +18,7 @@ export const SITE = {
   /** Live Formspree endpoint carried over from the previous site. */
   formEndpoint: "https://formspree.io/f/mljrldao",
   /** The 30 minute call. */
-  calendly: "https://calendly.com/admin-pvamedia/30min",
+  calendly: "https://calendly.com/dano-clarke-white-pvamedia/30min",
 };
 
 export const NAV = [
