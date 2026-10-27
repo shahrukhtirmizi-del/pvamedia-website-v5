@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/privacy" },
 };
 
-const UPDATED = "10 September 2026";
+const UPDATED = "27 October 2026";
 
 export default function PrivacyPage() {
   return (
@@ -28,7 +28,7 @@ export default function PrivacyPage() {
         {
           heading: "What we collect",
           body: [
-            "When you submit the booking form we collect the details you enter: your name, company name, email address, phone number, current website address if you give one, what you are looking for, and anything you write in the message field.",
+            "When you submit the booking form we collect the details you enter: your first name, business name, mobile number and email address, along with the page you sent it from and, if you arrived from one of our ads, which ad it was. When you book a call we also receive the time you chose and anything you add in the calendar.",
             "We also collect limited technical and usage information when you browse the site, such as which pages were viewed, approximate region, referring site, and general device and browser type. This is aggregated and is not used to identify you personally.",
             "We do not collect payment card details through this website, and we never ask for them by email.",
           ],
@@ -44,16 +44,17 @@ export default function PrivacyPage() {
         {
           heading: "Cookies and analytics",
           body: [
-            "Essential cookies and local storage are used to remember your cookie choice and whether the site introduction has already played. These are required for the site to work as expected and are not used for tracking.",
+            "Essential cookies and local storage are used to remember your cookie choice, your approximate country so we know which cookie rules apply, and whether the site introduction has already played. These are required for the site to work as expected and are not used for tracking.",
             "We use Vercel Analytics to measure page views and traffic sources. It is privacy-focused: it does not use cross-site tracking cookies and does not build a profile of you across other websites.",
-            "You can decline non-essential measurement in the cookie banner, and you can clear cookies and site data at any time in your browser settings.",
+            "We use the Meta Pixel to measure how our Facebook and Instagram ads perform, for example whether someone who saw an ad went on to book a call. It sets advertising cookies and sends Meta details of the pages you visit and those actions. In the United States the pixel runs unless you decline it; everywhere else it only runs after you accept. We work out which applies from the approximate country of your connection, which our host provides.",
+            "You can decline non-essential measurement and advertising cookies in the cookie banner, and you can clear cookies and site data at any time in your browser settings.",
           ],
         },
         {
           heading: "Who we share it with",
           body: [
             "We do not sell personal data, and we do not share it for anyone else's marketing.",
-            "We use a small number of service providers who process data on our behalf: Formspree to deliver form submissions to our inbox, Vercel to host the site and provide analytics, and our email provider. Each is bound to process the data only on our instructions.",
+            "We use a small number of service providers who process data on our behalf: Formspree to deliver form submissions to our inbox, Calendly to book calls, Meta to measure our ads through the Meta Pixel, Vercel to host the site and provide analytics, and our email provider. Each is bound to process the data only on our instructions.",
             "Some of these providers operate servers outside the United Kingdom. Where personal data is transferred internationally, it is protected by the safeguards those providers have in place, such as standard contractual clauses.",
           ],
         },

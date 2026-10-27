@@ -1,20 +1,26 @@
 import type { Metadata } from "next";
 import { Check } from "lucide-react";
-import BookingForm from "../components/BookingForm";
+import BookingFlow from "../components/BookingFlow";
 import HeroBackdrop from "../components/fx/HeroBackdrop";
 import Reveal from "../components/ui/Reveal";
 
+const TITLE = "Book a free call";
+const DESCRIPTION =
+  "Book a free 30-minute call with our Lead Advisor. We’ll look at where your leads come from now and agree a lead target with you, backed by a 60-day money-back guarantee.";
+
 export const metadata: Metadata = {
-  title: "Book a free call",
-  description:
-    "Book a free 30 minute call with PVA Media. We look at where your enquiries come from now and what it would take to fill next month.",
+  title: TITLE,
+  description: DESCRIPTION,
   alternates: { canonical: "/bookings" },
+  // set here so link previews do not fall back to the site-wide copy
+  openGraph: { title: `${TITLE} | PVA Media`, description: DESCRIPTION, url: "/bookings" },
+  twitter: { title: `${TITLE} | PVA Media`, description: DESCRIPTION },
 };
 
-const REASSURANCE = [
-  "Thirty minutes with a specialist",
-  "We look at your current search visibility live",
-  "You leave with the plan whether you hire us or not",
+const TICKS = [
+  "Your ad accounts and data are yours from day one",
+  "Month to month, 30 days’ notice",
+  "Free 30-minute call",
 ];
 
 export default function BookingsPage() {
@@ -23,66 +29,56 @@ export default function BookingsPage() {
       {/* the same ink field as the rest of the site, in its quiet mode */}
       <HeroBackdrop subtle />
 
-      <div className="relative mx-auto grid max-w-[1240px] gap-14 px-5 py-20 md:px-8 md:py-28 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
-        <div>
-          <Reveal>
-            <h1
-              className="font-display max-w-[13ch] font-semibold"
-              style={{ fontSize: "clamp(36px, 5.6vw, 64px)", lineHeight: 1.05 }}
-            >
-              Let{"’"}s fill next month
-            </h1>
-            <p
-              className="mt-7 max-w-[40ch] text-[16px] leading-relaxed md:text-[18px]"
-              style={{ color: "var(--ink-60)" }}
-            >
-              Tell us where the business is now. We will tell you honestly what lead target we can
-              commit to, and put it in writing.
-            </p>
-          </Reveal>
-
-          <Reveal delay={120}>
-            <ul className="mt-11 space-y-4">
-              {REASSURANCE.map((item) => (
-                <li key={item} className="flex items-start gap-3 text-[15px]">
-                  <Check
-                    size={16}
-                    strokeWidth={2}
-                    className="mt-1 shrink-0"
-                    style={{ color: "var(--accent)" }}
-                  />
-                  <span style={{ color: "var(--ink-80)" }}>{item}</span>
-                </li>
-              ))}
-            </ul>
-          </Reveal>
-
-          <Reveal delay={180}>
-            <div className="mt-11 max-w-[46ch] border-t pt-7" style={{ borderColor: "var(--line)" }}>
-              <h2 className="font-display text-[19px] font-semibold">Our 60-day guarantee</h2>
-              <p className="mt-3 text-[15px] leading-relaxed" style={{ color: "var(--ink-60)" }}>
-                Before your ads launch, we agree on a lead target with you and put it in the contract. A
-                lead is a call, form or text from a potential customer. If we miss the target within 60 days
-                of your ads going live, we refund every dollar of our fees. Your ad spend goes straight
-                to Google and Meta, so it is not part of the refund. There is nothing extra you need to do to qualify.
-              </p>
-            </div>
-          </Reveal>
-        </div>
-
-        <Reveal delay={80}>
-          <div
-            className="surface p-6 md:p-10"
-            style={{
-              borderRadius: "var(--radius-card)",
-              background: "rgba(244, 244, 242, 0.9)",
-              backdropFilter: "blur(10px)",
-              WebkitBackdropFilter: "blur(10px)",
-            }}
+      {/* phones read headline, form, then reassurance; desktop puts the form in its own column */}
+      <div className="relative mx-auto grid max-w-[1240px] gap-6 px-5 pt-6 pb-20 md:px-8 md:py-28 lg:grid-cols-[0.85fr_1.15fr] lg:grid-rows-[auto_1fr] lg:gap-x-20 lg:gap-y-0">
+        <Reveal className="min-w-0 lg:col-start-1 lg:row-start-1">
+          <h1
+            className="font-display max-w-[14ch] font-semibold"
+            style={{ fontSize: "clamp(34px, 5.6vw, 64px)", lineHeight: 1.05 }}
           >
-            <h2 className="font-display text-[21px] font-semibold">Book your call</h2>
-            <BookingForm />
+            More customers for your business.
+          </h1>
+          <p
+            className="mt-3 max-w-[42ch] text-[16px] leading-relaxed md:mt-7 md:text-[18px]"
+            style={{ color: "var(--ink-60)" }}
+          >
+            Book a free 30-minute call with our Lead Advisor. We{"’"}ll look at where your leads come
+            from now and agree a lead target with you.
+          </p>
+        </Reveal>
+
+        <Reveal delay={80} className="min-w-0 lg:col-start-2 lg:row-span-2 lg:row-start-1">
+          <BookingFlow />
+        </Reveal>
+
+        <Reveal delay={140} className="min-w-0 lg:col-start-1 lg:row-start-2">
+          <div
+            className="max-w-[46ch] p-6 lg:mt-11"
+            style={{ borderRadius: "var(--radius-tile)", border: "1px solid var(--line-strong)" }}
+          >
+            <h2 className="font-display text-[19px] font-semibold">60-day money-back guarantee</h2>
+            <p className="mt-3 text-[15px] leading-relaxed" style={{ color: "var(--ink-60)" }}>
+              On the call we agree a lead target with you and write it into your contract. A lead is a
+              call, form or text from a potential customer. Miss it within 60 days of your ads going
+              live and we refund every agency fee you{"’"}ve paid. Your ad spend goes from your card
+              straight to Google and Meta, so it isn{"’"}t part of the refund. It applies to every
+              package, and there{"’"}s nothing extra you need to do to qualify.
+            </p>
           </div>
+
+          <ul className="mt-8 space-y-4">
+            {TICKS.map((item) => (
+              <li key={item} className="flex items-start gap-3 text-[15px]">
+                <Check
+                  size={16}
+                  strokeWidth={2}
+                  className="mt-1 shrink-0"
+                  style={{ color: "var(--accent)" }}
+                />
+                <span style={{ color: "var(--ink-80)" }}>{item}</span>
+              </li>
+            ))}
+          </ul>
         </Reveal>
       </div>
     </section>

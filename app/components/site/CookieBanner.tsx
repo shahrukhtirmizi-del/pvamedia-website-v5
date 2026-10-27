@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-
-const KEY = "pva-cookie-choice";
+import { CONSENT_EVENT, CONSENT_KEY as KEY } from "../../lib/tracking";
 
 export default function CookieBanner() {
   const [show, setShow] = useState(false);
@@ -29,6 +28,7 @@ export default function CookieBanner() {
     } catch {
       /* nothing to persist to, the banner still dismisses for this view */
     }
+    window.dispatchEvent(new CustomEvent(CONSENT_EVENT, { detail: value }));
     setLeaving(true);
     window.setTimeout(() => setShow(false), 380);
   }
@@ -57,7 +57,7 @@ export default function CookieBanner() {
         }}
       >
         <p className="text-[14px] leading-relaxed" style={{ color: "var(--ink-80)" }}>
-          We use cookies to measure how the site is used. Decline and only the essentials run.
+          We use cookies to measure how the site is used, including advertising cookies from Meta that show us which ads work. Decline and only the essentials run.
         </p>
         <div className="mt-4 flex flex-wrap items-center gap-2.5">
           <button type="button" onClick={() => choose("accepted")} className="btn btn-primary !px-5 !py-2.5 !text-[13px]">

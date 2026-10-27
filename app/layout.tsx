@@ -8,6 +8,7 @@ import Footer from "./components/site/Footer";
 import Grain from "./components/site/Grain";
 import SmoothScroll from "./components/site/SmoothScroll";
 import CookieBanner from "./components/site/CookieBanner";
+import MetaPixel from "./components/site/MetaPixel";
 import Atmosphere from "./components/site/Atmosphere";
 import Cursor from "./components/site/Cursor";
 import GlowCursor from "./components/fx/GlowCursor";
@@ -71,6 +72,7 @@ export const metadata: Metadata = {
       "We take trades and home service companies from 3 booked jobs a month to 12, without lifting a finger.",
   },
   robots: { index: true, follow: true },
+  verification: { other: { "facebook-domain-verification": "4i5j5h8bgn3y19wydgvcgus33lvbbh" } },
 };
 
 export const viewport: Viewport = {
@@ -98,6 +100,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Footer />
 
         <CookieBanner />
+        <MetaPixel />
         <Cursor />
         <GlowCursor />
         <Analytics />

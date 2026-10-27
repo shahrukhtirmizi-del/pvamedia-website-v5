@@ -1,266 +1,119 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import type { FormEvent } from "react";
-import { AlertCircle, Loader2 } from "lucide-react";
-import { SITE, SERVICES } from "../lib/site";
+import type { FocusEvent, FormEvent, HTMLAttributes } from "react";
+import { isPhone, type Lead } from "../lib/leads";
 
-type Errors = Partial<Record<"name" | "email" | "phone" | "message", string>>;
+export type LeadDetails = Pick<Lead, "firstName" | "business" | "phone" | "email">;
+type Key = keyof LeadDetails;
+type Errors = Partial<Record<Key, string>>;
 
-/** The four services, in the order the site presents them, plus two catch-alls. */
-const NEEDS = [...SERVICES.map((service) => service.name), "The full package", "Not sure yet"];
+const FIELDS: {
+  key: Key;
+  name: string;
+  label: string;
+  type: string;
+  autoComplete: string;
+  inputMode?: HTMLAttributes<HTMLInputElement>["inputMode"];
+}[] = [
+  { key: "firstName", name: "first_name", label: "First name", type: "text", autoComplete: "given-name" },
+  { key: "business", name: "business_name", label: "Business name", type: "text", autoComplete: "organization" },
+  { key: "phone", name: "phone", label: "Mobile number", type: "tel", autoComplete: "tel", inputMode: "tel" },
+  { key: "email", name: "email", label: "Email", type: "email", autoComplete: "email", inputMode: "email" },
+];
 
-function validate(data: FormData): Errors {
-  const errors: Errors = {};
-
-  const name = String(data.get("name") ?? "").trim();
-  const email = String(data.get("email") ?? "").trim();
-  const phone = String(data.get("phone") ?? "").trim();
-  const message = String(data.get("message") ?? "").trim();
-
-  if (name.length < 2) errors.name = "Please tell us your name.";
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email))
-    errors.email = "That email address does not look right.";
-  if (phone.replace(/[^\d]/g, "").length < 7)
-    errors.phone = "Please add a phone number we can reach you on.";
-  if (message.length > 0 && message.length < 10)
-    errors.message = "A little more detail would help, or leave this empty.";
-
-  return errors;
+function check(key: Key, raw: string): string | undefined {
+  const value = raw.trim();
+  if (key === "firstName") return value ? undefined : "Please add your first name.";
+  if (key === "business") return value ? undefined : "Please add your business name.";
+  if (key === "phone") return isPhone(value) ? undefined : "Please add a 10-digit mobile number.";
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value) ? undefined : "That email address does not look right.";
 }
 
-export default function BookingForm() {
-  const router = useRouter();
+/** Step 1 of the booking flow: four fields, checked as you go. */
+export default function BookingForm({ onDone }: { onDone: (details: LeadDetails) => void }) {
   const [errors, setErrors] = useState<Errors>({});
-  const [status, setStatus] = useState<"idle" | "sending" | "failed">("idle");
 
-  async function onSubmit(e: FormEvent<HTMLFormElement>) {
+  function recheck(key: Key, value: string, onlyIfShown: boolean) {
+    setErrors((prev) => (onlyIfShown && !prev[key] ? prev : { ...prev, [key]: check(key, value) }));
+  }
+
+  function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
     const data = new FormData(form);
+    const details = Object.fromEntries(
+      FIELDS.map((f) => [f.key, String(data.get(f.name) ?? "").trim()]),
+    ) as LeadDetails;
 
-    const found = validate(data);
+    const found: Errors = {};
+    for (const f of FIELDS) {
+      const error = check(f.key, details[f.key]);
+      if (error) found[f.key] = error;
+    }
     setErrors(found);
-    if (Object.keys(found).length > 0) {
-      // send focus to the first field that needs fixing
-      const firstKey = Object.keys(found)[0];
-      form.querySelector<HTMLElement>(`[name="${firstKey}"]`)?.focus();
+
+    const first = FIELDS.find((f) => found[f.key]);
+    if (first) {
+      form.querySelector<HTMLElement>(`[name="${first.name}"]`)?.focus();
       return;
     }
-
-    setStatus("sending");
-    try {
-      const res = await fetch(SITE.formEndpoint, {
-        method: "POST",
-        body: data,
-        headers: { Accept: "application/json" },
-      });
-      if (!res.ok) throw new Error(String(res.status));
-      form.reset();
-      router.push("/thank-you");
-    } catch {
-      setStatus("failed");
-    }
+    onDone(details);
   }
 
-  const sending = status === "sending";
-
   return (
-    <form onSubmit={onSubmit} noValidate className="mt-12">
-      {status === "failed" && (
-        <div
-          role="alert"
-          className="mb-8 flex items-start gap-3 p-5"
-          style={{
-            borderRadius: "var(--radius-tile)",
-            background: "rgba(10, 10, 10, 0.06)",
-            border: "1px solid var(--line-strong)",
-          }}
-        >
-          <AlertCircle size={18} strokeWidth={1.7} className="mt-0.5 shrink-0" style={{ color: "var(--accent)" }} />
-          <p className="text-[14.5px] leading-relaxed" style={{ color: "var(--ink-80)" }}>
-            That did not send. Please try once more, or email us directly at{" "}
-            <a
-              href={`mailto:${SITE.email}`}
-              className="underline underline-offset-4"
-              style={{ color: "var(--ink)" }}
-            >
-              {SITE.email}
-            </a>
-            .
-          </p>
-        </div>
-      )}
-
-      <div className="grid gap-6 sm:grid-cols-2">
-        <Field label="Your name" name="name" error={errors.name} required autoComplete="name" />
-        <Field label="Company name" name="company" autoComplete="organization" />
-        <Field
-          label="Email"
-          name="email"
-          type="email"
-          error={errors.email}
-          required
-          autoComplete="email"
-        />
-        <Field
-          label="Phone"
-          name="phone"
-          type="tel"
-          error={errors.phone}
-          required
-          autoComplete="tel"
-        />
-        <Field
-          label="Current website"
-          name="website"
-          helper="Leave empty if you do not have one yet."
-          autoComplete="url"
-          className="sm:col-span-2"
-        />
-
-        <div className="sm:col-span-2">
-          <label htmlFor="need" className="font-mono block text-[11px] uppercase tracking-[0.16em]" style={{ color: "var(--ink-60)" }}>
-            What you need
-          </label>
-          <select
-            id="need"
-            name="need"
-            defaultValue={NEEDS[0]}
-            className="mt-2.5 w-full px-4 py-3.5 text-[15px] outline-none transition-colors"
-            style={{
-              borderRadius: "var(--radius-tile)",
-              background: "rgba(10, 10, 10, 0.05)",
-              border: "1px solid var(--line-strong)",
-              color: "var(--ink)",
-            }}
-          >
-            {NEEDS.map((option) => (
-              <option key={option} value={option} style={{ background: "#FAFAF9", color: "#0A0A0A" }}>
-                {option}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="sm:col-span-2">
-          <label
-            htmlFor="message"
-            className="font-mono block text-[11px] uppercase tracking-[0.16em]"
-            style={{ color: "var(--ink-60)" }}
-          >
-            Anything else
-          </label>
-          <p className="mt-1.5 text-[13px]" style={{ color: "var(--ink-45)" }}>
-            Optional. What is not working right now is the most useful thing to know.
-          </p>
-          <textarea
-            id="message"
-            name="message"
-            rows={4}
-            aria-invalid={errors.message ? true : undefined}
-            aria-describedby={errors.message ? "message-error" : undefined}
-            className="mt-2.5 w-full resize-y px-4 py-3.5 text-[15px] outline-none transition-colors"
-            style={{
-              borderRadius: "var(--radius-tile)",
-              background: "rgba(10, 10, 10, 0.05)",
-              border: `1px solid ${errors.message ? "var(--accent)" : "var(--line-strong)"}`,
-              color: "var(--ink)",
-            }}
-          />
-          {errors.message && (
-            <p id="message-error" className="mt-2 text-[13px]" style={{ color: "var(--accent)" }}>
-              {errors.message}
-            </p>
-          )}
-        </div>
+    <form onSubmit={onSubmit} noValidate>
+      <div className="grid gap-4">
+        {FIELDS.map((f) => {
+          const error = errors[f.key];
+          const errorId = `${f.name}-error`;
+          return (
+            <div key={f.key}>
+              <label
+                htmlFor={f.name}
+                className="font-mono block text-[12px] uppercase tracking-[0.14em]"
+                style={{ color: "var(--ink-60)" }}
+              >
+                {f.label}
+              </label>
+              <input
+                id={f.name}
+                name={f.name}
+                type={f.type}
+                inputMode={f.inputMode}
+                autoComplete={f.autoComplete}
+                required
+                aria-invalid={error ? true : undefined}
+                aria-describedby={error ? errorId : undefined}
+                onBlur={(e: FocusEvent<HTMLInputElement>) => {
+                  if (e.currentTarget.value.trim()) recheck(f.key, e.currentTarget.value, false);
+                }}
+                onInput={(e) => recheck(f.key, e.currentTarget.value, true)}
+                // 16px stops iOS zooming in on focus
+                className="mt-2 w-full px-4 py-3.5 text-[16px] outline-none transition-colors"
+                style={{
+                  borderRadius: "var(--radius-tile)",
+                  background: "rgba(10, 10, 10, 0.05)",
+                  border: `1px solid ${error ? "var(--accent)" : "var(--line-strong)"}`,
+                  color: "var(--ink)",
+                }}
+              />
+              {error && (
+                <p id={errorId} className="mt-2 text-[14px]" style={{ color: "var(--accent)" }}>
+                  {error}
+                </p>
+              )}
+            </div>
+          );
+        })}
       </div>
 
-      <button type="submit" disabled={sending} className="btn btn-primary mt-10 w-full sm:w-auto">
-        {sending && <Loader2 size={16} strokeWidth={2} className="animate-spin" />}
-        {sending ? "Sending" : "Book a free call"}
+      <button type="submit" className="btn btn-primary mt-6 min-h-[56px] w-full !text-[16px]">
+        Pick a time <span aria-hidden="true">→</span>
       </button>
-
-      <p className="mt-5 text-[13px]" style={{ color: "var(--ink-45)" }}>
-        You pick a time on the next page. Or{" "}
-        <a
-          href={SITE.calendly}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline underline-offset-4"
-          style={{ color: "var(--ink-80)" }}
-        >
-          go straight to the calendar
-        </a>
-        .
+      <p className="mt-4 text-center text-[13.5px]" style={{ color: "var(--ink-45)" }}>
+        Takes 20 seconds. Next you{"’"}ll pick a time for your call.
       </p>
     </form>
-  );
-}
-
-function Field({
-  label,
-  name,
-  type = "text",
-  error,
-  helper,
-  required,
-  autoComplete,
-  className = "",
-}: {
-  label: string;
-  name: string;
-  type?: string;
-  error?: string;
-  helper?: string;
-  required?: boolean;
-  autoComplete?: string;
-  className?: string;
-}) {
-  const errorId = `${name}-error`;
-  const helperId = `${name}-helper`;
-
-  return (
-    <div className={className}>
-      <label
-        htmlFor={name}
-        className="font-mono block text-[11px] uppercase tracking-[0.16em]"
-        style={{ color: "var(--ink-60)" }}
-      >
-        {label}
-        {!required && (
-          <span style={{ color: "var(--ink-30)" }}> (optional)</span>
-        )}
-      </label>
-
-      {helper && (
-        <p id={helperId} className="mt-1.5 text-[13px]" style={{ color: "var(--ink-45)" }}>
-          {helper}
-        </p>
-      )}
-
-      <input
-        id={name}
-        name={name}
-        type={type}
-        autoComplete={autoComplete}
-        aria-invalid={error ? true : undefined}
-        aria-describedby={error ? errorId : helper ? helperId : undefined}
-        className="mt-2.5 w-full px-4 py-3.5 text-[15px] outline-none transition-colors"
-        style={{
-          borderRadius: "var(--radius-tile)",
-          background: "rgba(10, 10, 10, 0.05)",
-          border: `1px solid ${error ? "var(--accent)" : "var(--line-strong)"}`,
-          color: "var(--ink)",
-        }}
-      />
-
-      {error && (
-        <p id={errorId} className="mt-2 text-[13px]" style={{ color: "var(--accent)" }}>
-          {error}
-        </p>
-      )}
-    </div>
   );
 }
