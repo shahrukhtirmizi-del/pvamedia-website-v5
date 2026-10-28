@@ -58,8 +58,8 @@ export default function BookingsPage() {
           >
             <h2 className="font-display text-[19px] font-semibold">Our 60-day money-back guarantee</h2>
             <p className="mt-3 text-[15px] leading-relaxed" style={{ color: "var(--ink-60)" }}>
-              If we don{"’"}t deliver the results we agree with you upfront within 60 days of your ads
-              going live, you get every dollar of our fees back.
+              If we don{"’"}t deliver the results within 60 days of your ads going
+              live, you get every dollar of our fees back.
             </p>
           </div>
 
