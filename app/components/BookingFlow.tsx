@@ -2,9 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Check } from "lucide-react";
-import BookingForm, { type LeadDetails } from "./BookingForm";
+import BookingForm from "./BookingForm";
 import CalendlyEmbed from "./CalendlyEmbed";
-import { readUtm, submitLead, type Utm } from "../lib/leads";
+import { readUtm, submitLead, type Lead, type Utm } from "../lib/leads";
 import { trackMeta } from "../lib/tracking";
 
 function StepLabel({ children }: { children: React.ReactNode }) {
@@ -17,10 +17,11 @@ function StepLabel({ children }: { children: React.ReactNode }) {
 
 /**
  * The /bookings flow: details first, then the calendar opens beneath them,
- * prefilled. The lead is sent in the background, so booking never waits on it.
+ * prefilled. If Formspree fails the calendar still opens, so booking is never
+ * lost, but the Meta Lead only counts submissions Formspree accepted.
  */
 export default function BookingFlow() {
-  const [details, setDetails] = useState<LeadDetails | null>(null);
+  const [details, setDetails] = useState<Lead | null>(null);
   const [utm, setUtm] = useState<Utm>({});
   const [editing, setEditing] = useState(false);
   const leadTracked = useRef(false);
@@ -39,14 +40,13 @@ export default function BookingFlow() {
     else target.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [showCalendar, details]);
 
-  function onDone(next: LeadDetails) {
-    const fromAd = readUtm(window.location.search);
-    submitLead({ ...next, utm: fromAd, pageUrl: window.location.href });
-    if (!leadTracked.current) {
+  async function onDone(next: Lead) {
+    const delivered = await submitLead(next);
+    if (delivered && !leadTracked.current) {
       leadTracked.current = true;
       trackMeta("Lead");
     }
-    setUtm(fromAd);
+    setUtm(readUtm(window.location.search));
     setDetails(next);
     setEditing(false);
   }
@@ -80,7 +80,7 @@ export default function BookingFlow() {
             <div className="min-w-0 flex-1">
               <StepLabel>Step 1 of 2 done</StepLabel>
               <p className="mt-1 truncate text-[15px]" style={{ color: "var(--ink-80)" }}>
-                {details.firstName}, {details.business}
+                {details.name}, {details.company}
               </p>
             </div>
             <button
@@ -100,7 +100,7 @@ export default function BookingFlow() {
           <h2 ref={stepTwo} tabIndex={-1} className="mb-5 outline-none">
             <StepLabel>Step 2 of 2: pick a time</StepLabel>
           </h2>
-          <CalendlyEmbed prefill={{ name: details.firstName, email: details.email }} utm={utm} />
+          <CalendlyEmbed prefill={{ name: details.name, email: details.email }} utm={utm} />
         </div>
       )}
     </div>

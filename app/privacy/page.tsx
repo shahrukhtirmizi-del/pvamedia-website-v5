@@ -28,7 +28,7 @@ export default function PrivacyPage() {
         {
           heading: "What we collect",
           body: [
-            "When you submit the booking form we collect the details you enter: your first name, business name, mobile number and email address, along with the page you sent it from and, if you arrived from one of our ads, which ad it was. When you book a call we also receive the time you chose and anything you add in the calendar.",
+            "When you submit the booking form we collect the details you enter: your name, business name, email address and phone number. When you book a call we also receive the time you chose, anything you add in the calendar and, if you arrived from one of our ads, which ad it was.",
             "We also collect limited technical and usage information when you browse the site, such as which pages were viewed, approximate region, referring site, and general device and browser type. This is aggregated and is not used to identify you personally.",
             "We do not collect payment card details through this website, and we never ask for them by email.",
           ],

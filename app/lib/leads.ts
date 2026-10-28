@@ -8,13 +8,12 @@ import { SITE } from "./site";
 export const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content"] as const;
 export type Utm = Partial<Record<(typeof UTM_KEYS)[number], string>>;
 
+/** Keys match the form's field names, which Formspree receives as-is. */
 export type Lead = {
-  firstName: string;
-  business: string;
-  phone: string;
+  name: string;
+  company: string;
   email: string;
-  utm: Utm;
-  pageUrl: string;
+  phone: string;
 };
 
 export function readUtm(search: string): Utm {
@@ -34,28 +33,28 @@ export function isPhone(raw: string): boolean {
 }
 
 /**
- * Sends the lead in the background. It never throws and nothing waits on
- * it, so a slow or failing Formspree never holds up the booking.
+ * Sends the lead and reports whether Formspree accepted it. Never throws,
+ * and gives up after a few seconds so a slow Formspree cannot hold up booking.
  */
-export function submitLead(lead: Lead): void {
+export async function submitLead(lead: Lead): Promise<boolean> {
   const body = new FormData();
-  body.set("first_name", lead.firstName);
-  body.set("business_name", lead.business);
-  body.set("phone", lead.phone);
+  body.set("name", lead.name);
+  body.set("company", lead.company);
   // Formspree uses a field called "email" as the reply-to address
   body.set("email", lead.email);
-  for (const key of UTM_KEYS) body.set(key, lead.utm[key] ?? "");
-  body.set("page_url", lead.pageUrl);
-  body.set("_subject", `New booking lead: ${lead.business}`);
+  body.set("phone", lead.phone);
 
-  fetch(SITE.formEndpoint, {
-    method: "POST",
-    body,
-    headers: { Accept: "application/json" },
-    keepalive: true,
-  })
-    .then((res) => {
-      if (!res.ok) throw new Error(`Formspree responded ${res.status}`);
-    })
-    .catch((err) => console.warn("Lead was not delivered to Formspree", err));
+  try {
+    const res = await fetch(SITE.formEndpoint, {
+      method: "POST",
+      body,
+      headers: { Accept: "application/json" },
+      signal: AbortSignal.timeout(8000),
+    });
+    if (!res.ok) throw new Error(`Formspree responded ${res.status}`);
+    return true;
+  } catch (err) {
+    console.warn("Lead was not delivered to Formspree", err);
+    return false;
+  }
 }

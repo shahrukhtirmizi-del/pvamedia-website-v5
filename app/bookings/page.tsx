@@ -6,7 +6,7 @@ import Reveal from "../components/ui/Reveal";
 
 const TITLE = "Book a free call";
 const DESCRIPTION =
-  "Book a free 30-minute call with our Lead Advisor. We’ll look at where your leads come from now and agree a lead target with you, backed by a 60-day money-back guarantee.";
+  "Book a free call with PVA Media. Tell us where your business is now and we’ll show you exactly how we’d bring you more customers, and put it in writing.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -18,9 +18,9 @@ export const metadata: Metadata = {
 };
 
 const TICKS = [
-  "Your ad accounts and data are yours from day one",
-  "Month to month, 30 days’ notice",
-  "Free 30-minute call",
+  "Thirty minutes with a specialist",
+  "We look at your current ads and online presence live",
+  "You leave with the plan whether you hire us or not",
 ];
 
 export default function BookingsPage() {
@@ -36,14 +36,14 @@ export default function BookingsPage() {
             className="font-display max-w-[14ch] font-semibold"
             style={{ fontSize: "clamp(34px, 5.6vw, 64px)", lineHeight: 1.05 }}
           >
-            More customers for your business.
+            Let{"’"}s fill next month
           </h1>
           <p
             className="mt-3 max-w-[42ch] text-[16px] leading-relaxed md:mt-7 md:text-[18px]"
             style={{ color: "var(--ink-60)" }}
           >
-            Book a free 30-minute call with our Lead Advisor. We{"’"}ll look at where your leads come
-            from now and agree a lead target with you.
+            Tell us where your business is now. We{"’"}ll show you exactly how we{"’"}d bring you more
+            customers, and put it in writing.
           </p>
         </Reveal>
 
@@ -56,13 +56,10 @@ export default function BookingsPage() {
             className="max-w-[46ch] p-6 lg:mt-11"
             style={{ borderRadius: "var(--radius-tile)", border: "1px solid var(--line-strong)" }}
           >
-            <h2 className="font-display text-[19px] font-semibold">60-day money-back guarantee</h2>
+            <h2 className="font-display text-[19px] font-semibold">Our 60-day money-back guarantee</h2>
             <p className="mt-3 text-[15px] leading-relaxed" style={{ color: "var(--ink-60)" }}>
-              On the call we agree a lead target with you and write it into your contract. A lead is a
-              call, form or text from a potential customer. Miss it within 60 days of your ads going
-              live and we refund every agency fee you{"’"}ve paid. Your ad spend goes from your card
-              straight to Google and Meta, so it isn{"’"}t part of the refund. It applies to every
-              package, and there{"’"}s nothing extra you need to do to qualify.
+              If we don{"’"}t deliver the results we agree with you upfront within 60 days of your ads
+              going live, you get every dollar of our fees back.
             </p>
           </div>
 
