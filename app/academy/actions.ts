@@ -278,13 +278,13 @@ export async function getScoreSetup(): Promise<Result<ScoreSetup>> {
 
 export async function saveScoreSettings(input: ScoreSettings): Promise<Result<ScoreSettings>> {
   if (!(await requireAdmin())) return fail("Only admins can change the scoreboard.");
-  const target = Number(input.targetPerDay);
+  const target = Number(input.targetPerWeek);
   const seconds = Number(input.conversationSeconds);
   const days = Array.isArray(input.workingDays) ? [...new Set(input.workingDays.map(Number))].filter((d) => d >= 0 && d <= 6) : [];
   const words = Array.isArray(input.bookingWords)
     ? input.bookingWords.map((w) => String(w).trim().slice(0, 60)).filter(Boolean).slice(0, 20)
     : [];
-  if (!(target >= 0 && target <= 100)) return fail("The daily target has to be between 0 and 100.");
+  if (!(target >= 0 && target <= 500)) return fail("The weekly target has to be between 0 and 500.");
   if (!(seconds >= 0 && seconds <= 3600)) return fail("The conversation length has to be between 0 and 3600 seconds.");
   if (days.length === 0) return fail("Pick at least one working day.");
   if (words.length === 0) return fail("Add at least one word that marks a booking.");
@@ -294,7 +294,7 @@ export async function saveScoreSettings(input: ScoreSettings): Promise<Result<Sc
     const ids = input.links?.[u.id];
     if (Array.isArray(ids)) links[u.id] = ids.map((x) => String(x).slice(0, 40)).filter(Boolean).slice(0, 10);
   }
-  const clean: ScoreSettings = { targetPerDay: target, conversationSeconds: Math.round(seconds), workingDays: days.sort(), bookingWords: words, links };
+  const clean: ScoreSettings = { targetPerWeek: Math.round(target), conversationSeconds: Math.round(seconds), workingDays: days.sort(), bookingWords: words, links };
   try {
     await writeSettings(clean);
     return { ok: true, data: clean };

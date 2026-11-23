@@ -18,7 +18,7 @@ const SETTINGS = "academy/scoreboard-settings.json";
 const weekKey = (monday: string) => `academy/scoreboard/week-${monday}.json`;
 
 export const DEFAULT_SETTINGS: ScoreSettings = {
-  targetPerDay: 3,
+  targetPerWeek: 7,
   workingDays: [1, 2, 3, 4, 5],
   conversationSeconds: 30,
   bookingWords: ["booked", "appointment set"],
@@ -53,8 +53,10 @@ export function mondayOf(day: string) {
 /* --------------------------------------------------------------- settings */
 
 export async function readSettings(): Promise<ScoreSettings> {
-  const found = await readJsonFile<ScoreSettings>(SETTINGS);
-  return { ...DEFAULT_SETTINGS, ...(found ?? {}) };
+  const found = await readJsonFile<Partial<ScoreSettings> & { targetPerDay?: number }>(SETTINGS);
+  const { targetPerDay: _old, ...rest } = found ?? {};
+  void _old; // replaced by the weekly target
+  return { ...DEFAULT_SETTINGS, ...rest };
 }
 
 export async function writeSettings(s: ScoreSettings) {
@@ -101,7 +103,7 @@ async function syncWeek(monday: string, today: string): Promise<{ cache: WeekCac
   const from = addDays(stale[0], -1);
   const to = addDays(stale[stale.length - 1], 1);
   try {
-    const calls = await fetchCalls(from, to);
+    const calls = await fetchCalls(from, to, today);
     const fresh = new Set(stale);
     // replace what we had for the refetched days, keep the rest
     for (const [id, c] of Object.entries(cache.calls)) if (fresh.has(ukDate(c.at))) delete cache.calls[id];
@@ -210,9 +212,8 @@ export async function buildScoreboard(
     updatedAt: fetchedTimes.length ? fetchedTimes[fetchedTimes.length - 1] : null,
     error: synced.error,
     connected: justCallConfigured(),
-    targetPerDay: settings.targetPerDay,
-    weeklyTarget: settings.targetPerDay * workingDays.length,
-    targetSoFar: settings.targetPerDay * elapsed,
+    weeklyTarget: settings.targetPerWeek,
+    targetSoFar: workingDays.length ? (settings.targetPerWeek * elapsed) / workingDays.length : 0,
     workingDays: settings.workingDays,
     setters,
     others: forAdmin ? rows.filter((r) => r.role !== "setter") : [],

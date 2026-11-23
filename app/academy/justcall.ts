@@ -191,8 +191,13 @@ function fromDialer(r: Record<string, unknown>): JcCall | null {
  * Every call between two dates (inclusive, "yyyy-mm-dd"), from both logs,
  * with any call that appears in both counted once.
  */
-export async function fetchCalls(from: string, to: string): Promise<JcCall[]> {
-  const params = { from_datetime: `${from} 00:00:00`, to_datetime: `${to} 23:59:59`, sort: "datetime", order: "asc" };
+export async function fetchCalls(from: string, to: string, today: string): Promise<JcCall[]> {
+  // JustCall refuses a to_datetime in the future, and reads dates in the
+  // account's own time zone, so anything ending yesterday or later is sent
+  // open-ended ("from this date until now")
+  const yesterday = new Date(Date.parse(`${today}T12:00:00Z`) - 86400000).toISOString().slice(0, 10);
+  const params: Record<string, string> = { from_datetime: `${from} 00:00:00`, sort: "datetime", order: "asc" };
+  if (to < yesterday) params.to_datetime = `${to} 23:59:59`;
   const [calls, dialer] = await Promise.all([
     listAll("/v2.1/calls", params, (r) => str(r.id)),
     listAll("/v2.1/sales_dialer/calls", params, (r) => str(r.call_id ?? r.id)).catch((err) => {

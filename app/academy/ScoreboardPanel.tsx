@@ -58,7 +58,8 @@ function Progress({ value, target, soFar }: { value: number; target: number; soF
 }
 
 function LeaderRow({ row, rank, sb, me }: { row: ScoreRow; rank: number; sb: Scoreboard; me: boolean }) {
-  const onPace = sb.targetSoFar > 0 ? row.bookings >= sb.targetSoFar : null;
+  const behind = Math.round(sb.targetSoFar - row.bookings);
+  const onPace = sb.targetSoFar > 0 ? behind <= 0 : null;
   return (
     <li className="rounded-[14px] p-5 md:px-7" style={{ background: "var(--bg)", border: `1px solid ${me ? "var(--line-strong)" : "var(--line)"}` }}>
       <div className="flex items-center gap-4 md:gap-6">
@@ -93,7 +94,7 @@ function LeaderRow({ row, rank, sb, me }: { row: ScoreRow; rank: number; sb: Sco
           </span>
           {onPace !== null && sb.weekOffset === 0 && (
             <span style={{ color: onPace ? "var(--ink)" : "var(--ink-60)", fontWeight: onPace ? 600 : 400 }}>
-              {onPace ? "On pace" : `${sb.targetSoFar - row.bookings} behind pace`}
+              {onPace ? "On pace" : `${behind} behind pace`}
             </span>
           )}
         </div>
@@ -270,10 +271,10 @@ function SetupPanel({ members, onSaved }: { members: Member[]; onSaved: () => vo
 
       <div className="grid gap-4 sm:grid-cols-2">
         <TextField
-          label="Bookings per day, per setter"
+          label="Bookings per week, per setter"
           type="number"
-          value={String(form.targetPerDay)}
-          onChange={(v) => setForm({ ...form, targetPerDay: Number(v) })}
+          value={String(form.targetPerWeek)}
+          onChange={(v) => setForm({ ...form, targetPerWeek: Number(v) })}
         />
         <TextField
           label="A conversation is a call of at least (seconds)"
@@ -450,7 +451,7 @@ export default function ScoreboardPanel({ viewer, members }: { viewer: Viewer; m
             <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
               <h2 className="font-display text-[26px] font-semibold">Leaderboard</h2>
               <p className="text-[13px]" style={{ color: "var(--ink-60)" }}>
-                Target {sb.targetPerDay} a day, {sb.weeklyTarget} this week. The tick shows where you should be by today.
+                Target {sb.weeklyTarget} bookings a week. The tick shows where you should be by today.
               </p>
             </div>
             {setters.length === 0 ? (

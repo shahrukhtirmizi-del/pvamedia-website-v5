@@ -68,8 +68,8 @@ export type Result<T = undefined> = { ok: true; data: T } | { ok: false; error: 
 /* -------------------------------------------------------------- scoreboard */
 
 export type ScoreSettings = {
-  /** Qualified bookings expected per working day, per setter. */
-  targetPerDay: number;
+  /** Qualified bookings expected per week, per setter. */
+  targetPerWeek: number;
   /** 0 = Sunday ... 6 = Saturday. */
   workingDays: number[];
   /** A connected call at least this long counts as a conversation. */
@@ -102,8 +102,8 @@ export type Scoreboard = {
   updatedAt: string | null;
   error: string | null;
   connected: boolean;
-  targetPerDay: number;
   weeklyTarget: number;
+  /** Where a setter should be by today: the weekly target spread over the working days so far. */
   targetSoFar: number;
   workingDays: number[];
   setters: ScoreRow[];
