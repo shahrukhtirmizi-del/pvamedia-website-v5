@@ -1,18 +1,20 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { BookOpen, Check, History, KeyRound, Loader2, LogOut, Pencil, Settings2, Users } from "lucide-react";
+import { BarChart3, BookOpen, Check, History, KeyRound, Loader2, LogOut, Pencil, Settings2, Users } from "lucide-react";
 import { logout, reloadContent, saveContent } from "./actions";
 import TrainingView from "./TrainingView";
+import ScoreboardPanel from "./ScoreboardPanel";
 import { AccountPanel, HistoryPanel, SettingsPanel, TeamPanel } from "./panels";
 import type { Content, Member, Viewer } from "./types";
 import { Eyebrow } from "./ui";
 
-type Tab = "training" | "settings" | "team" | "history" | "account";
+type Tab = "training" | "scoreboard" | "settings" | "team" | "history" | "account";
 type Status = { kind: "idle" } | { kind: "saving" } | { kind: "saved" } | { kind: "error"; text: string; conflict: boolean };
 
 const TABS: { id: Tab; label: string; icon: typeof BookOpen; admin: boolean }[] = [
   { id: "training", label: "Training", icon: BookOpen, admin: false },
+  { id: "scoreboard", label: "Scoreboard", icon: BarChart3, admin: false },
   { id: "settings", label: "Settings", icon: Settings2, admin: true },
   { id: "team", label: "Team", icon: Users, admin: true },
   { id: "history", label: "History", icon: History, admin: true },
@@ -141,6 +143,7 @@ export default function Academy({
         )}
 
         {tab === "training" && <TrainingView content={content} editing={admin && editing} saving={status.kind === "saving"} onCommit={commit} />}
+        {tab === "scoreboard" && <ScoreboardPanel viewer={viewer} members={members} />}
         {tab === "settings" && admin && <SettingsPanel key={content.revision} content={content} saving={status.kind === "saving"} onCommit={commit} />}
         {tab === "team" && admin && <TeamPanel viewer={viewer} members={members} setMembers={setMembers} />}
         {tab === "history" && admin && (

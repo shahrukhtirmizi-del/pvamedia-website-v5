@@ -193,3 +193,31 @@ export async function readVersion(id: string): Promise<Content | null> {
   const found = await readJson<{ content: Content }>(`${HISTORY}${id}.json`);
   return found ? found.value.content : null;
 }
+
+/* ---------------------------------------------------------- plain files */
+
+/** Reads a JSON file that isn't concurrency-sensitive (caches, settings). */
+export async function readJsonFile<T>(key: string): Promise<T | null> {
+  try {
+    return (await readJson<T>(key))?.value ?? null;
+  } catch (err) {
+    console.error("academy readJsonFile", key, err);
+    return null;
+  }
+}
+
+/** Overwrites a JSON file, last write wins. */
+export async function writeJsonFile(key: string, value: unknown) {
+  if (!blobEnabled()) {
+    await mkdir(LOCAL_DIR, { recursive: true });
+    await writeFile(localPath(key), JSON.stringify(value));
+    return;
+  }
+  await put(key, JSON.stringify(value), {
+    access: "private",
+    contentType: "application/json",
+    addRandomSuffix: false,
+    allowOverwrite: true,
+    cacheControlMaxAge: 60,
+  });
+}

@@ -19,6 +19,8 @@ export const metadata: Metadata = {
 };
 
 export const dynamic = "force-dynamic";
+// the first look at a past week pages through JustCall, which can take a while
+export const maxDuration = 120;
 
 export default async function AcademyPage() {
   const user = await currentUser();

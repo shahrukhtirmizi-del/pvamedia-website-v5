@@ -44,3 +44,4 @@ Internal training for setters, editable by admins from the page itself. Not link
 - **Storage:** private Vercel Blob store `pva-setter-academy` (`BLOB_READ_WRITE_TOKEN`). `academy/content.json`, `academy/users.json`, and `academy/history/` with the last 100 saves. Locally, without the token, it uses `.academy-data/`.
 - **Env:** `ACADEMY_SECRET` (32+ random characters) signs the login cookie. Changing it logs everyone out.
 - `app/academy/content.ts` is only the starting content; once an admin saves, the stored copy is what everyone sees.
+- **Scoreboard:** weekly numbers from JustCall (`JUSTCALL_API_KEY`, `JUSTCALL_API_SECRET`), both normal calls and Sales Dialer. Cached per week in Blob; today and yesterday refresh at most every 3 minutes while someone is looking. A call counts as booked when its JustCall result contains a booking word (admin setting, default "booked"). Admins link team members to JustCall users under Scoreboard → Settings.

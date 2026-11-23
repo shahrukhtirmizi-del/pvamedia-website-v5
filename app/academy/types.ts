@@ -64,3 +64,52 @@ export type Version = {
 export type Viewer = { id: string; name: string; username: string; role: Role; starter: boolean };
 
 export type Result<T = undefined> = { ok: true; data: T } | { ok: false; error: string };
+
+/* -------------------------------------------------------------- scoreboard */
+
+export type ScoreSettings = {
+  /** Qualified bookings expected per working day, per setter. */
+  targetPerDay: number;
+  /** 0 = Sunday ... 6 = Saturday. */
+  workingDays: number[];
+  /** A connected call at least this long counts as a conversation. */
+  conversationSeconds: number;
+  /** A call whose JustCall result contains any of these counts as a booking. */
+  bookingWords: string[];
+  /** Team member id → the JustCall user ids whose calls are theirs. */
+  links: Record<string, string[]>;
+};
+
+export type ScoreDay = { date: string; dials: number; conversations: number; talk: number; bookings: number };
+
+export type ScoreRow = {
+  memberId: string;
+  name: string;
+  role: Role;
+  dials: number;
+  conversations: number;
+  /** Seconds. */
+  talk: number;
+  bookings: number;
+  days: ScoreDay[];
+};
+
+export type Scoreboard = {
+  weekStart: string;
+  weekOffset: number;
+  days: string[];
+  today: string | null;
+  updatedAt: string | null;
+  error: string | null;
+  connected: boolean;
+  targetPerDay: number;
+  weeklyTarget: number;
+  targetSoFar: number;
+  workingDays: number[];
+  setters: ScoreRow[];
+  /** Admins only: non-setters' numbers, JustCall users not linked to anyone, results seen this week. */
+  others: ScoreRow[];
+  unmatched: { agentId: string; name: string; calls: number }[];
+  dispositions: { name: string; count: number }[];
+  bookingWords: string[];
+};

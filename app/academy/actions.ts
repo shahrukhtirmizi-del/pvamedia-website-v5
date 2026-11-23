@@ -17,7 +17,9 @@ import {
 } from "./auth";
 import { sanitizeContent } from "./sanitize";
 import { ConflictError, listVersions, readContent, readUsers, readVersion, updateUsers, writeContent, type StoredUser } from "./store";
-import type { Content, Member, Result, Role, Version } from "./types";
+import { JustCallError, fetchAgents, justCallConfigured, type JcAgent } from "./justcall";
+import { buildScoreboard, readSettings, writeSettings } from "./scoreboard";
+import type { Content, Member, Result, Role, Scoreboard, ScoreSettings, Version } from "./types";
 
 /* Every action checks who is calling. Rendering a button only for admins is
    not a security boundary: anyone can post to an action directly. */
@@ -243,4 +245,61 @@ export async function removeMember(id: string): Promise<Result<Member[]>> {
 export async function reloadContent(): Promise<Result<Content>> {
   if (!(await currentUser())) return fail("You’ve been logged out. Log in again.");
   return { ok: true, data: await readContent() };
+}
+
+/* ------------------------------------------------------------- scoreboard */
+
+export async function getScoreboard(weekOffset: number): Promise<Result<Scoreboard>> {
+  const user = await currentUser();
+  if (!user) return fail("You’ve been logged out. Log in again.");
+  try {
+    const { value: users } = await readUsers();
+    const offset = Number.isInteger(weekOffset) ? weekOffset : 0;
+    return { ok: true, data: await buildScoreboard(users, offset, user.role === "admin") };
+  } catch (err) {
+    console.error("academy getScoreboard", err);
+    return fail("The scoreboard couldn’t be loaded. Try again in a moment.");
+  }
+}
+
+export type ScoreSetup = { settings: ScoreSettings; agents: JcAgent[]; agentsError: string | null; connected: boolean };
+
+export async function getScoreSetup(): Promise<Result<ScoreSetup>> {
+  if (!(await requireAdmin())) return fail("Only admins can change the scoreboard.");
+  const settings = await readSettings();
+  if (!justCallConfigured()) return { ok: true, data: { settings, agents: [], agentsError: "JustCall isn’t connected yet.", connected: false } };
+  try {
+    return { ok: true, data: { settings, agents: await fetchAgents(), agentsError: null, connected: true } };
+  } catch (err) {
+    const message = err instanceof JustCallError ? err.message : "JustCall couldn’t be reached.";
+    return { ok: true, data: { settings, agents: [], agentsError: message, connected: true } };
+  }
+}
+
+export async function saveScoreSettings(input: ScoreSettings): Promise<Result<ScoreSettings>> {
+  if (!(await requireAdmin())) return fail("Only admins can change the scoreboard.");
+  const target = Number(input.targetPerDay);
+  const seconds = Number(input.conversationSeconds);
+  const days = Array.isArray(input.workingDays) ? [...new Set(input.workingDays.map(Number))].filter((d) => d >= 0 && d <= 6) : [];
+  const words = Array.isArray(input.bookingWords)
+    ? input.bookingWords.map((w) => String(w).trim().slice(0, 60)).filter(Boolean).slice(0, 20)
+    : [];
+  if (!(target >= 0 && target <= 100)) return fail("The daily target has to be between 0 and 100.");
+  if (!(seconds >= 0 && seconds <= 3600)) return fail("The conversation length has to be between 0 and 3600 seconds.");
+  if (days.length === 0) return fail("Pick at least one working day.");
+  if (words.length === 0) return fail("Add at least one word that marks a booking.");
+  const links: Record<string, string[]> = {};
+  const { value: users } = await readUsers();
+  for (const u of users) {
+    const ids = input.links?.[u.id];
+    if (Array.isArray(ids)) links[u.id] = ids.map((x) => String(x).slice(0, 40)).filter(Boolean).slice(0, 10);
+  }
+  const clean: ScoreSettings = { targetPerDay: target, conversationSeconds: Math.round(seconds), workingDays: days.sort(), bookingWords: words, links };
+  try {
+    await writeSettings(clean);
+    return { ok: true, data: clean };
+  } catch (err) {
+    console.error("academy saveScoreSettings", err);
+    return fail("The settings didn’t save. Try again in a moment.");
+  }
 }
