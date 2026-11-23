@@ -37,13 +37,10 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ## Setter Academy (`/academy`)
 
-Internal training for setters. Not linked anywhere, blocked in robots.txt and marked noindex. The content in `app/academy/content.ts` is only sent to the browser after login.
+Internal training for setters, editable by admins from the page itself. Not linked anywhere, blocked in robots.txt and marked noindex. Nothing is sent to the browser until someone logs in.
 
-Each person has their own password. Two env vars on Vercel (Production and Preview):
-
-- `ACADEMY_USERS`: JSON map of `sha256(password)` to display name.
-- `ACADEMY_SECRET`: random string, 32+ characters, that signs the login cookie.
-
-Add someone: `node scripts/academy-password.mjs "Name" "password"`, paste the printed line into `ACADEMY_USERS`, redeploy. Remove someone: delete their line and redeploy.
-
-To edit the training, change `app/academy/content.ts`.
+- **Logins:** username plus password. Starter accounts are in `app/academy/content.ts` (`SEED_USERS`, stored as hashes); after that the team lives in Blob storage and is managed from the Team tab.
+- **Admins** can edit every stage and topic, the page settings, the team (add, remove, roles, password resets) and restore any earlier version from History. Setters can read and change their own password.
+- **Storage:** private Vercel Blob store `pva-setter-academy` (`BLOB_READ_WRITE_TOKEN`). `academy/content.json`, `academy/users.json`, and `academy/history/` with the last 100 saves. Locally, without the token, it uses `.academy-data/`.
+- **Env:** `ACADEMY_SECRET` (32+ random characters) signs the login cookie. Changing it logs everyone out.
+- `app/academy/content.ts` is only the starting content; once an admin saves, the stored copy is what everyone sees.

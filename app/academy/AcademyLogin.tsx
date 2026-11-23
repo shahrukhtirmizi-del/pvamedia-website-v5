@@ -4,7 +4,7 @@ import { useActionState } from "react";
 import { Loader2, Lock } from "lucide-react";
 import { login, type LoginState } from "./actions";
 
-const initial: LoginState = { error: null };
+const initial: LoginState = { error: null, username: "" };
 
 export default function AcademyLogin() {
   const [state, action, pending] = useActionState(login, initial);
@@ -28,12 +28,34 @@ export default function AcademyLogin() {
             Setter Academy
           </h1>
           <p className="mt-4 text-[15.5px] leading-relaxed" style={{ color: "var(--ink-60)" }}>
-            Scripts, objection handling and call standards, all in one place. Log in with your personal password.
+            Scripts, objection handling and call standards, all in one place. Log in with your username and password.
           </p>
 
           <label
-            htmlFor="academy-password"
+            htmlFor="academy-username"
             className="font-mono mt-8 block text-[11px] uppercase tracking-[0.16em]"
+            style={{ color: "var(--ink-60)" }}
+          >
+            Username
+          </label>
+          <input
+            id="academy-username"
+            name="username"
+            type="text"
+            required
+            autoFocus
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
+            autoComplete="username"
+            defaultValue={state.username}
+            className="mt-2.5 w-full rounded-[14px] px-4 py-3.5 text-[15px] outline-none transition-colors focus:border-[color:var(--ink)]"
+            style={{ background: "var(--bg)", border: "1px solid var(--line-strong)", color: "var(--ink)" }}
+          />
+
+          <label
+            htmlFor="academy-password"
+            className="font-mono mt-5 block text-[11px] uppercase tracking-[0.16em]"
             style={{ color: "var(--ink-60)" }}
           >
             Password
@@ -43,7 +65,6 @@ export default function AcademyLogin() {
             name="password"
             type="password"
             required
-            autoFocus
             autoComplete="current-password"
             aria-invalid={state.error ? true : undefined}
             aria-describedby={state.error ? "academy-error" : undefined}

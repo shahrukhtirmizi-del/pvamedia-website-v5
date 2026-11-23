@@ -1,9 +1,9 @@
 /**
  * Setter Academy training content.
  *
- * Server-only in practice: page.tsx imports this and hands it to the client
- * component only once a setter has logged in, so none of it ships to a
- * visitor who hasn't. Never import it from a "use client" file.
+ * The starting point for the academy. Once an admin saves a change, the live
+ * copy lives in Blob storage (see store.ts) and this file is only the seed.
+ * Server-only: never import it from a "use client" file.
  *
  * Built from Dano's original academy, checked against how PVA sells today
  * (US prospects, prices in dollars, 30-minute calls on Dano's calendar).
@@ -12,44 +12,13 @@
  * "You:", "Then:"); the page sets the speaker in bold.
  */
 
-export type Method = { label: string; say: string[] };
+import type { Content, Item, Stage } from "./types";
+import type { StoredUser } from "./store";
 
-export type Item = {
-  title: string;
-  /** Short category shown on the card: SOP, Mindset, Objections... */
-  tag: string;
-  when?: string;
-  say?: string[];
-  methods?: Method[];
-  points?: string[];
-  deeper?: string;
-  note?: string;
-};
+type DraftItem = Omit<Item, "id">;
+type DraftStage = Omit<Stage, "items"> & { items: DraftItem[] };
 
-export type Stage = {
-  id: string;
-  title: string;
-  /** When in the call this stage applies. */
-  when: string;
-  items: Item[];
-};
-
-export const DAILY_STANDARD = {
-  value: 3,
-  text: "qualified bookings per working day is the minimum. Quality counts: decision-maker, real need, confirmed time.",
-};
-
-/** The 2 to 4 minute call at a glance. */
-export const CALL_FLOW = [
-  { time: "0:00", label: "Open", detail: "Who you are, why you called, permission for one question" },
-  { time: "0:50", label: "Diagnose", detail: "Two or three questions, then reflect what you heard" },
-  { time: "1:45", label: "Qualify", detail: "Need, decision-maker, capacity, timing" },
-  { time: "2:15", label: "Book", detail: "Two real times, confirm details, send the invite" },
-];
-
-export const BOOKING_LINK = "https://calendly.com/dano-clarke-white-pvamedia/30min";
-
-export const STAGES: Stage[] = [
+const STAGES: DraftStage[] = [
   {
     id: "know-pva",
     title: "Know PVA",
@@ -91,7 +60,7 @@ export const STAGES: Stage[] = [
         title: "Who to call",
         tag: "SOP",
         points: [
-          "Home care and senior care agencies (owners and directors). Our strongest niche so far.",
+          "Home care agencies, home health agencies (including Medicare-certified), care homes and residential senior living. Owners and directors. Our strongest niches so far.",
           "Private dental clinics, cosmetic surgery and medical aesthetics clinics, and other high-value service businesses.",
           "Not roofing, plumbing, HVAC, landscaping or irrigation unless management says so.",
           "Good signs: wants more clients or patients, already spends on marketing, has capacity, the decision-maker is reachable, understands what one new client is worth.",
@@ -101,11 +70,11 @@ export const STAGES: Stage[] = [
       {
         title: "Guarantees and territory",
         tag: "SOP",
-        when: "Only if they ask.",
-        say: [
-          "We do have guarantee options under our standard terms. Dano will walk you through exactly how they work on the call.",
+        points: [
+          "PVA backs the service with a 60-day money-back guarantee under our standard terms. Keep it in your back pocket: it's a last resort, not part of the pitch. See “The 60-day guarantee” in Handle objections.",
+          "Never claim a territory is reserved unless management has confirmed it.",
         ],
-        note: "Never bring up a guarantee yourself, describe its terms, promise results, or claim a territory is reserved unless management has confirmed it.",
+        note: "Never describe the guarantee's terms or promise results. Dano explains exactly how it works on the call.",
       },
     ],
   },
@@ -835,6 +804,15 @@ export const STAGES: Stage[] = [
         say: ["That’s fair. What were you promised before, and what actually happened?", "If we can’t show you something different, there’s no reason to meet."],
       },
       {
+        title: "The 60-day guarantee (only if needed)",
+        tag: "Last resort",
+        when: "Only when it's the one thing between you and the booking: they're interested but hesitant, burned by an agency before, or worried about wasting money. Never open with it.",
+        say: [
+          "I get it, and that's fair. For what it's worth, we back the service with a 60-day money-back guarantee under our standard terms. Dano will walk you through exactly how it works on the call. Does Tuesday or Thursday work better?",
+        ],
+        note: "Use it once, then go straight to booking. Don't explain the terms, don't say what's refunded, and don't use it on someone who isn't a fit just to get a booking.",
+      },
+      {
         title: "“Our marketing is already working”",
         tag: "Rapport & frame",
         say: ["Good, I’m not suggesting you replace it. Are you measuring how many of those enquiries turn into booked clients?"],
@@ -1132,4 +1110,52 @@ export const STAGES: Stage[] = [
       },
     ],
   },
+];
+
+const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40);
+
+export const DEFAULT_CONTENT: Content = {
+  revision: 0,
+  updatedAt: null,
+  updatedBy: null,
+  page: {
+    eyebrow: "Setter Academy",
+    title: "Everything you need on a call.",
+    intro:
+      "Pick where you are in the call, from the first ten seconds to the handoff. Every topic opens with what to say, how to go deeper and what to watch out for.",
+    footer: "PVA Media internal training. Please don’t share it outside the team.",
+  },
+  standard: {
+    value: "3",
+    text: "qualified bookings per working day is the minimum. Quality counts: decision-maker, real need, confirmed time.",
+  },
+  flowTitle: "The call at a glance",
+  flow: [
+    { time: "0:00", label: "Open", detail: "Who you are, why you called, permission for one question" },
+    { time: "0:50", label: "Diagnose", detail: "Two or three questions, then reflect what you heard" },
+    { time: "1:45", label: "Qualify", detail: "Need, decision-maker, capacity, timing" },
+    { time: "2:15", label: "Book", detail: "Two real times, confirm details, send the invite" },
+  ],
+  bookingLabel: "Dano’s calendar",
+  bookingLink: "https://calendly.com/dano-clarke-white-pvamedia/30min",
+  stages: STAGES.map((stage) => ({
+    ...stage,
+    items: stage.items.map((item, i) => ({ id: `${stage.id}-${i + 1}-${slug(item.title)}`, ...item })),
+  })),
+};
+
+/**
+ * The first team. Starter passwords are each person's name followed by 123
+ * (stored only as hashes); everyone can change theirs under Account, and
+ * admins can add people, reset passwords and change roles under Team.
+ */
+const created = "2026-11-23T00:00:00.000Z";
+const seed = (id: string, name: string, role: StoredUser["role"], password: string): StoredUser => ({
+  id, username: id, name, role, password, starter: true, sessionVersion: 1, createdAt: created, lastLoginAt: null,
+});
+export const SEED_USERS: StoredUser[] = [
+  seed("dano", "Dano", "admin", "scrypt$Qq9Ythlb7eSdG1hVDIpcRw$DIAljYKC__iLI7R1fKa272kp_KBLGmfcsXgByQ5OErw"),
+  seed("shahrukh", "Shahrukh", "admin", "scrypt$2DsF5n0kyVGLg5xuToF_aw$nwNj1JzXrKA5qgXyXd1XVMZU7cWkKw-B9hqi3xUR3JA"),
+  seed("ollie", "Ollie", "setter", "scrypt$IZfXXoK8Gcv1JSmFYVHDtA$tZ-81Do24gaBuq5ecvDkbDwsUjRFRiUvqua0fHdeecQ"),
+  seed("blake", "Blake", "setter", "scrypt$ihxLqmHAMRDBbkDfKh1AHw$LMuVEEUjfFFoSqf3ctroJiclBwhYFgKGEOdIDLp3PW8"),
 ];
