@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import { introPlaying } from "../../lib/intro";
 
 /**
@@ -146,7 +147,7 @@ const CONFIG = {
   fadeDuration: 900,
 };
 
-export default function GlowCursor() {
+function GlowCursorInner() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -347,4 +348,10 @@ export default function GlowCursor() {
       style={{ width: "100%", height: "100%" }}
     />
   );
+}
+
+/** The Setter Academy is a working tool, so it keeps the normal system cursor. */
+export default function GlowCursor() {
+  const pathname = usePathname();
+  return pathname?.startsWith("/academy") ? null : <GlowCursorInner />;
 }

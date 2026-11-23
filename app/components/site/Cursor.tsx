@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 
 /**
  * Dot on the pointer, ring lagging behind it, ring swelling over anything
@@ -10,7 +11,7 @@ import { useEffect, useRef } from "react";
  */
 const INTERACTIVE = 'a, button, [role="button"], input, textarea, select, label, [data-cursor]';
 
-export default function Cursor() {
+function CursorInner() {
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
 
@@ -105,4 +106,10 @@ export default function Cursor() {
       <div ref={ringRef} aria-hidden className="cursor-ring is-hidden" />
     </>
   );
+}
+
+/** The Setter Academy is a working tool, so it keeps the normal system cursor. */
+export default function Cursor() {
+  const pathname = usePathname();
+  return pathname?.startsWith("/academy") ? null : <CursorInner />;
 }
