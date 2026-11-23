@@ -34,3 +34,16 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Setter Academy (`/academy`)
+
+Internal training for setters. Not linked anywhere, blocked in robots.txt and marked noindex. The content in `app/academy/content.ts` is only sent to the browser after login.
+
+Each person has their own password. Two env vars on Vercel (Production and Preview):
+
+- `ACADEMY_USERS`: JSON map of `sha256(password)` to display name.
+- `ACADEMY_SECRET`: random string, 32+ characters, that signs the login cookie.
+
+Add someone: `node scripts/academy-password.mjs "Name" "password"`, paste the printed line into `ACADEMY_USERS`, redeploy. Remove someone: delete their line and redeploy.
+
+To edit the training, change `app/academy/content.ts`.
