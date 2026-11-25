@@ -9,7 +9,7 @@ import HomePage from "../components/HomePage";
 export const metadata: Metadata = {
   title: "Results",
   description:
-    "Client results from PVA Media: more qualified leads, more booked jobs and hours of admin saved for trades and home service companies.",
+    "What clients say about working with PVA Media as their growth partner, and the industry benchmarks behind the PVA Growth System.",
   alternates: { canonical: "/" },
 };
 

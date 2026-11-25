@@ -22,8 +22,8 @@ export default function FinalCTA() {
             className="mx-auto mt-7 max-w-[44ch] text-[16px] leading-relaxed md:text-[18px]"
             style={{ color: "var(--ink-60)" }}
           >
-            Thirty minutes with a trades marketing specialist, no pitch. We look at where your
-            enquiries come from now, and what it would take to fill next month.
+            Book a free 30-minute call. We{"’"}ll look at where your customers come from today and
+            what it would take to bring in more.
           </p>
         </Reveal>
 

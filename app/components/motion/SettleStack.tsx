@@ -339,11 +339,13 @@ const css = `
     font-weight:450;opacity:.78;white-space:normal;}
   .st-card p.st-listlabel{margin:0 0 .35rem;font-size:.66rem;font-weight:700;
     letter-spacing:.14em;text-transform:uppercase;opacity:.6;}
-  .st-list{list-style:none;margin:0;padding:0;}
-  .st-list li{position:relative;padding:.44rem 0 .44rem 1.35rem;
+  /* row padding follows the screen height, so the longest list still fits */
+  .st-list{--row:clamp(.15rem,calc((100svh - 600px) * .018),.44rem);
+    list-style:none;margin:0;padding:0;}
+  .st-list li{position:relative;padding:var(--row) 0 var(--row) 1.35rem;
     border-top:1px solid color-mix(in srgb,currentColor 16%,transparent);
-    font-size:.86rem;font-weight:450;line-height:1.28;letter-spacing:-.005em;}
-  .st-list li::before{content:"";position:absolute;left:0;top:.98rem;
+    font-size:.82rem;font-weight:450;line-height:1.28;letter-spacing:-.005em;}
+  .st-list li::before{content:"";position:absolute;left:0;top:calc(var(--row) + .52rem);
     width:.55rem;height:1px;background:currentColor;opacity:.6;}
 
   .st-chrome{position:absolute;left:0;right:0;z-index:6;display:flex;
@@ -363,7 +365,7 @@ const css = `
     .st-card{width:70%;min-width:0;}
   }
   .st-card{overflow:hidden;}
-  /* phones: a taller, wider card and tighter rows so a six-item list fits */
+  /* phones: a taller, wider card and tighter rows so the longest list fits */
   @media (max-width:640px){
     /* a finger covers ground faster than a wheel: less track per card */
     .st-track{height:620vh;height:620svh;}
@@ -371,7 +373,8 @@ const css = `
     .st-back:has(.st-listcard){padding:1.25rem 1.15rem 1rem;}
     .st-listcard h3{font-size:1.3rem;margin-bottom:.5rem;}
     .st-card p.st-lead{font-size:.78rem;margin-bottom:.6rem;}
-    .st-list li{font-size:.76rem;padding:.34rem 0 .34rem 1.05rem;}
-    .st-list li::before{top:.8rem;width:.45rem;}
+    .st-list{--row:clamp(.12rem,calc((100svh - 600px) * .02),.34rem);}
+    .st-list li{font-size:.76rem;padding-left:1.05rem;}
+    .st-list li::before{top:calc(var(--row) + .48rem);width:.45rem;}
   }
 `;

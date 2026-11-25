@@ -10,11 +10,18 @@ export const SITE = {
    * tags and the sitemap have to point at www or every canonical is a redirect.
    */
   domain: "https://www.pvamedia.co.uk",
-  tagline:
-    "We take trades and home service companies from 3 booked jobs a month to 12, without lifting a finger.",
+  title: "PVA Media | Your Growth Partner",
+  tagline: "Your growth partner",
+  description:
+    "PVA Media is a growth partner for service businesses. We bring in new customers with advertising and high-converting websites, then make sure every inquiry is answered, followed up and booked.",
   email: "admin@pvamedia.co.uk",
-  phone: "+44 7782 985932",
-  phoneHref: "+447782985932",
+  phone: "(213) 340-3214",
+  phoneHref: "+12133403214",
+  company: {
+    legalName: "PVA MEDIA LTD",
+    number: "16786144",
+    address: "163 Argyle Avenue, Whitton, London TW3 2LP",
+  },
   /** Live Formspree endpoint carried over from the previous site. */
   formEndpoint: "https://formspree.io/f/mljrldao",
   /** The 30 minute call. */
@@ -29,63 +36,44 @@ export const NAV = [
 
 /* -------------------------------------------------------------------------- */
 
-export const HERO_STATS = [
-  { value: 60, prefix: "", suffix: "%", label: "More enquiries in 90 days", note: "Guaranteed, or you don't pay." },
-  { value: 60, prefix: "<", suffix: "s", label: "Lead response time", note: "" },
-  { value: 200, prefix: "", suffix: "+", label: "Websites built", note: "" },
-];
-
-export const TICKER = [
-  "60% more enquiries in 90 days, or you don't pay",
-  "Local SEO and paid ads that book jobs",
-  "Built only for trades and home service companies",
-  "Under 60 second lead response",
-  "AI agents that follow up every lead",
-  "Zero missed calls",
-  "Reporting on booked jobs, not clicks",
-  "200+ websites built",
-];
-
-/* -------------------------------------------------------------------------- */
-
 /**
  * titleLines splits each title across the stacked card's two lines (the
  * second set in a muted tone); tags are the short labels along its foot.
  */
 export const PAIN_POINTS = [
   {
-    title: "Homeowners can't find you",
-    titleLines: ["Homeowners", "can't find you"],
+    title: "People can't find you online",
+    titleLines: ["People can't", "find you online"],
     tags: ["Google Maps", "Local search", "Reviews", "Business Profile"],
-    body: "Someone nearby searches for exactly what you do, and three competitors show up on the map before you.",
+    body: "Someone nearby searches for exactly what you do, and three competitors show up before you.",
   },
   {
     title: "Referrals are drying up",
     titleLines: ["Referrals are", "drying up"],
-    tags: ["Word of mouth", "Repeat work", "New lead sources"],
-    body: "Word of mouth carried the business for years. When it slows down, there is no steady source of new enquiries underneath it.",
+    tags: ["Word of mouth", "Repeat business", "New customer sources"],
+    body: "Word of mouth carried the business for years. When it slows down, there is no steady source of new inquiries underneath it.",
   },
   {
-    title: "Lead flow is feast or famine",
-    titleLines: ["Lead flow is", "feast or famine"],
-    tags: ["Seasonality", "Crew planning", "Pipeline", "Forecasting"],
-    body: "Slammed one month, quiet the next. Without a predictable flow of enquiries you cannot plan crews, hiring or growth.",
+    title: "Inquiries come in waves, then go quiet",
+    titleLines: ["Inquiries come in waves,", "then go quiet"],
+    tags: ["Seasonality", "Planning", "Pipeline", "Forecasting"],
+    body: "Slammed one month, quiet the next. Without a predictable flow of inquiries you cannot plan hiring, capacity or growth.",
   },
   {
-    title: "Ad spend disappears",
-    titleLines: ["Ad spend", "disappears"],
-    tags: ["Google Ads", "Meta Ads", "Call tracking", "Cost per lead"],
-    body: "You pay for clicks, but nobody can tell you which ones became booked jobs, or why the rest did not.",
+    title: "Ad spend disappears with nothing to show for it",
+    titleLines: ["Ad spend disappears", "with nothing to show for it"],
+    tags: ["Google Ads", "Meta Ads", "Call tracking", "Cost per inquiry"],
+    body: "You pay for clicks, but nobody can tell you which ones became customers, or why the rest did not.",
   },
   {
-    title: "Enquiries go cold before you reply",
-    titleLines: ["Enquiries go cold", "before you reply"],
+    title: "Inquiries go cold before anyone replies",
+    titleLines: ["Inquiries go cold", "before anyone replies"],
     tags: ["Missed calls", "Response time", "Follow-up"],
-    body: "The phone rings while you are on a job. By the time you call back, they have already booked someone else.",
+    body: "The phone rings while you are with a customer. By the time you call back, they have already booked someone else.",
   },
   {
-    title: "Visitors leave without calling",
-    titleLines: ["Visitors leave", "without calling"],
+    title: "Visitors leave without calling or booking",
+    titleLines: ["Visitors leave", "without calling or booking"],
     tags: ["Conversion", "Trust", "Calls to action"],
     body: "People land on your site, look around and go, because nothing gives them a clear reason to get in touch today.",
   },
@@ -97,122 +85,66 @@ export const PAIN_POINTS = [
 }[];
 
 export const PAIN_CLOSER =
-  "We fix that with one marketing system that keeps working while you work.";
+  "We fix that with one growth system that keeps working while you work.";
 
 /* -------------------------------------------------------------------------- */
 
 export type Service = {
-  slug: string;
   name: string;
-  short: string;
-  /** Same claim as `short`, split into two scannable lines instead of one
-   *  dense sentence — what CardStoryScroll renders. */
-  shortLines: [string, string];
-  /** The line over the service's card: what we specialise in. */
-  specialism: string;
-  detail: string[];
-  includes: string[];
+  /** The line over the service's card: what this part of the system is for. */
+  kicker: string;
+  /** Two scannable lines instead of one dense sentence. */
+  lines: [string, string];
 };
 
-/**
- * Marketing leads: it is what the business sells first. Websites, the AI
- * receptionist and the automation agents all support it.
- */
+/** The parts of The PVA Growth System, in the order a customer meets them. */
 export const SERVICES: Service[] = [
   {
-    slug: "marketing",
-    name: "Marketing",
-    specialism: "Local search and ads specialists",
-    short:
-      "Google and Meta ads, your Google Business Profile and local SEO, bringing in homeowners ready to book.",
-    shortLines: [
-      "Google and Meta ads, your Google Business Profile and local SEO,",
-      "bringing in homeowners ready to book.",
-    ],
-    detail: [
-      "Local SEO puts you in front of homeowners in the areas you want to work, at the moment they start looking. We build out service-area pages, keep your Google Business Profile active and clean up your citations so the map results start trusting you.",
-      "Paid ads fill the gaps search cannot cover yet. Every Google and Meta campaign points at a landing page built for that service, with call and form tracking, so you can see which spend becomes booked work.",
-    ],
-    includes: [
-      "Google Business Profile management",
-      "Service-area pages and citation clean-up",
-      "Review generation",
-      "Google and Meta ad campaigns",
-      "A landing page for every advertised service",
-      "Reporting on leads and booked jobs, not clicks",
+    name: "Advertising",
+    kicker: "Brings people in",
+    lines: [
+      "Google search, Google Verified where eligible, and Facebook & Instagram.",
+      "YouTube and video, retargeting and Microsoft (Bing) ads on larger plans. Google Business Profile and local SEO on higher plans.",
     ],
   },
   {
-    slug: "websites",
-    name: "Websites",
-    specialism: "Trade website specialists",
-    short:
-      "Fast, mobile-first websites and landing pages built to turn visitors into calls and booked jobs.",
-    shortLines: [
-      "Fast, mobile-first websites and landing pages",
-      "built to turn visitors into calls and booked jobs.",
-    ],
-    detail: [
-      "Your website is where the marketing pays off, so we build it to convert: clear services, your own project photos and a quote path on every page. No templates, and live in five days.",
-      "Hosting, security, backups and edits are handled for you, and new project photos go up whenever you send them.",
-    ],
-    includes: [
-      "Custom design, no templates",
-      "Built mobile-first, live in 5 days",
-      "Quote form on every page",
-      "Fast managed hosting",
-      "SSL and daily backups",
-      "Content edits and new project photos",
+    name: "Websites and landing pages",
+    kicker: "Turns visits into inquiries",
+    lines: ["Fast, mobile-first,", "built to turn visitors into inquiries and bookings."],
+  },
+  {
+    name: "24/7 virtual receptionist",
+    kicker: "Answers day and night",
+    lines: [
+      "Answers calls and web inquiries day and night,",
+      "qualifies them and books them in.",
     ],
   },
   {
-    slug: "ai-receptionist",
-    name: "AI Receptionist",
-    specialism: "Specialist call handling",
-    short:
-      "Answers every call and web enquiry 24/7, qualifies the job and books it into your calendar.",
-    shortLines: [
-      "Answers every call and web enquiry 24/7,",
-      "qualifies the job and books it into your calendar.",
-    ],
-    detail: [
-      "One of the automations we run for clients. It picks up when you cannot, which on a working day is most of the time.",
-      "It knows your service area, your pricing bands and the work you turn down, so it qualifies each enquiry, books it into your calendar and sends you the summary before you are off the site.",
-    ],
-    includes: [
-      "24/7 call answering",
-      "Web enquiry replies in under a minute",
-      "Job qualification",
-      "Calendar booking",
-      "Full call transcripts",
+    name: "Instant replies and follow-up",
+    kicker: "Keeps every inquiry moving",
+    lines: [
+      "Chat and text replies within 60 seconds, 24/7, with missed-call text-back.",
+      "Follow-up until people book, appointment reminders, review requests, and follow-up of past customers and previous inquiries.",
     ],
   },
   {
-    slug: "ai-automation",
-    name: "AI Automation Agents",
-    specialism: "Specialist lead follow-up",
-    short:
-      "Confirm bookings, send reminders, follow up quotes and unbooked leads, reply instantly and hand off to your team when it matters.",
-    shortLines: [
-      "Confirm bookings, send reminders, follow up quotes and unbooked leads,",
-      "reply instantly and hand off to your team when it matters.",
+    name: "Tracking and reporting",
+    kicker: "Shows what is working",
+    lines: [
+      "Call tracking, with every inquiry traced to where it came from.",
+      "Won customers fed back to Google and Meta so the ads learn, plus regular reports and strategy calls.",
     ],
-    detail: [
-      "Most of the work between an enquiry and a booked job is repetitive admin. Our AI agents take it off your plate, so every lead hears back in minutes, not hours.",
-      "They confirm bookings, follow up with leads that have not booked yet, reply to email and text enquiries, and hand the conversation to your team when a person is needed.",
-    ],
-    includes: [
-      "Automatic booking confirmations and reminders",
-      "Follow-up emails and texts on unbooked leads",
-      "Instant replies to email and text enquiries",
-      "Routine query handling",
-      "Hand-off to your team when a person is needed",
-    ],
+  },
+  {
+    name: "Recruiting campaigns",
+    kicker: "Helps you hire",
+    lines: ["Job ads for businesses that need to hire,", "available as an add-on."],
   },
 ];
 
 export const SERVICES_INTRO =
-  "Four services that work as one system. Our packages bring them together, adding more of each as you move up.";
+  "Six parts that work as one system. Our packages bring them together, adding more of each as you move up.";
 
 /* -------------------------------------------------------------------------- */
 
@@ -228,318 +160,160 @@ export type Package = {
 export const PACKAGES: Package[] = [
   {
     name: "Starter",
-    forLine:
-      "Smaller or newer businesses that want every lead answered fast and followed up, while testing ads on one channel.",
+    forLine: "For businesses getting started",
     items: [
-      "A high-converting landing page (full website available as an add-on)",
-      "Ads on one channel: Google search or Facebook & Instagram",
-      "24/7 AI chat & text that replies in 60 seconds, qualifies and books",
+      "A high-converting landing page with live chat",
+      "One advertising channel: Google search or Facebook & Instagram",
+      "Chat and text replies within 60 seconds, 24/7, that qualify and book inquiries",
       "Missed-call text-back",
-      "Follow-up until booked, plus appointment reminders",
-      "A review request after every job",
-      "Your pipeline on your phone, a monthly report and a quarterly check-in",
+      "Follow-up until people book",
+      "Two appointment reminders",
+      "A review request after every customer",
+      "Inquiry pipeline",
+      "Monthly report",
+      "Quarterly check-in call",
+      "A full website is available as an add-on",
     ],
   },
   {
     name: "Lead Engine",
-    forLine:
-      "Growing businesses that want a steady flow of booked jobs from Google and Facebook, tracked from first click to sold job.",
+    forLine: "For growing businesses",
     builds: "Starter",
     items: [
-      "A full website built for you",
+      "A full website, replacing the landing page",
       "Google search, Google Verified (where eligible) and Facebook & Instagram ads",
-      "Follow-up on every unsigned quote, with your financing options",
+      "24/7 virtual receptionist for after-hours and overflow calls",
+      "Quote and consultation follow-up",
       "Call tracking",
-      "Sold jobs fed back to Google & Meta, so your ads find more people like them",
-      "A monthly strategy call",
+      "Won customers fed back to Google and Meta",
+      "Monthly strategy call, replacing the quarterly check-in",
     ],
   },
   {
     name: "Market Leader",
-    forLine: "Established businesses competing with the top names in their area.",
+    forLine: "For established businesses",
     builds: "Lead Engine",
     items: [
-      "An AI receptionist that answers every call, 24/7",
-      "An AI call to every new web lead within a minute",
-      "A page for every service and area you cover, plus monthly SEO",
-      "Your Google Business Profile managed for you",
-      "Fresh Facebook & Instagram ads every month",
-      "Old quotes, past customers and referrals followed up automatically",
-      "A strategy call every two weeks",
+      "A call to every new web inquiry within one minute",
+      "A page for every service and area you cover",
+      "Monthly SEO",
+      "Google Business Profile management",
+      "New Facebook & Instagram ads every month",
+      "Automatic follow-up of past customers, referrals and previous inquiries",
+      "Strategy call every two weeks",
     ],
   },
   {
     name: "Market Dominator",
-    forLine: "Bigger and multi-location businesses that want to own their market.",
+    forLine: "For larger and multi-location businesses",
     builds: "Market Leader",
     items: [
-      "A dedicated account manager, weekly report & call, and a quarterly review",
-      "Same-day priority changes",
-      "YouTube & video ads, retargeting and Microsoft (Bing) ads",
-      "Up to 3 locations, each with its own campaigns, Google profile and pages",
-      "A/B-tested landing pages for every campaign",
-      "Seasonal, storm and emergency campaigns",
-      "Longer follow-up for bigger jobs, plus maintenance & membership plan campaigns",
-      "AI call summaries & scorecards for your team, connected to your job software where possible",
+      "Up to three locations, with more available",
+      "YouTube and Google video advertising",
+      "Retargeting (where platforms allow)",
+      "Microsoft (Bing) advertising",
+      "An A/B-tested landing page for each campaign",
+      "Seasonal campaigns",
+      "Call summaries and scorecards",
+      "Extended follow-up for bigger decisions",
+      "Repeat-business campaigns",
+      "A dedicated account manager",
+      "Weekly report and call, replacing strategy calls",
+      "Quarterly business review",
+      "Priority same-day changes",
+      "Connection to your booking or scheduling software where possible",
     ],
   },
 ];
 
+export const AD_SPEND_NOTE =
+  "Ad spend is paid directly to Google and Meta from accounts in your name. We never hold it or mark it up.";
+
 /* -------------------------------------------------------------------------- */
 
-export const WHAT_YOU_GET = [
+export const STEPS = [
   {
-    title: "More people find you",
-    body: "Local SEO and ads that put you in front of homeowners searching in your area.",
+    title: "A free 30-minute call",
+    body: "We look at where your customers come from today and where they're slipping away.",
   },
   {
-    title: "A steady flow of enquiries",
-    body: "Campaigns built around booked jobs, so busy weeks stop being followed by quiet ones.",
+    title: "A plan and onboarding",
+    body: "We set up your accounts, pages, replies and follow-up, and send each piece for your approval.",
   },
   {
-    title: "Every lead answered",
-    body: "Calls and messages get a reply in under a minute, whether you are on site or asleep.",
+    title: "Live in about three weeks",
+    body: "Your ads launch and every inquiry starts getting answered.",
   },
   {
-    title: "Follow-up that never slips",
-    body: "AI agents chase unbooked leads and confirm bookings, so nothing falls through the cracks.",
-  },
-  {
-    title: "Reporting on jobs, not clicks",
-    body: "You see which spend turns into enquiries and booked work, every month.",
-  },
-  {
-    title: "A website that converts",
-    body: "Fast, custom and hosted for you, built to turn visits into calls. You never touch it.",
+    title: "Better every month",
+    body: "Reports, strategy calls and changes based on what's actually working.",
   },
 ];
 
-export const GUARANTEE = "60% more enquiries in 90 days, or you don't pay.";
+export const PROMISES = [
+  "Your ad accounts and data stay in your name, always.",
+  "Ad spend goes straight to the platforms. We never mark it up.",
+  "Nothing goes live without your approval.",
+];
 
 /* -------------------------------------------------------------------------- */
 
-/**
- * Real client testimonials and results, grouped by service line.
- * CLIENT_TESTIMONIALS feeds the CircularCardDeck 3D coverflow and
- * CLIENT_RESULTS feeds the Results section's conversion-metrics bento grid.
- */
-
-export type ClientCategory = "Website" | "Marketing" | "AI Automation";
-
+/** No client name is stored here: the deck blurs placeholder text instead. */
 export type ClientTestimonial = {
   quote: string;
-  /** Full name, kept for our own records — never render this publicly. */
-  name: string;
-  /** First name + surname initial, e.g. "Ravi S." — this is the one to render. */
-  displayName: string;
-  company: string;
-  category: ClientCategory;
+  package: "Market Dominator" | "Market Leader" | "Lead Engine";
 };
 
+/** Quotes are verbatim, grouped by package. Do not tidy the punctuation. */
 export const CLIENT_TESTIMONIALS: ClientTestimonial[] = [
   {
+    package: "Market Dominator",
     quote:
-      "We knew our old website was not really doing the business justice. The new one is a night and day difference. It looks clean, professional, and actually feels like it represents the level of work we do. The other big thing is that it was not built just to look nice. Customers can find what they need quickly, it is easy to contact us, and they put a lot of thought into how the site would perform on Google. I am really happy with how it turned out.",
-    name: "Eddie Matherwood",
-    displayName: "Eddie M.",
-    company: "TheGroundsGuys",
-    category: "Website",
+      "We've got three locations and before PVA each one was basically doing its own thing with marketing. Now it's all run in one place, I get a report every week and a call to go through it, and if I need something changed it's usually done the same day. Having one person who actually knows our business makes a big difference.",
   },
   {
+    package: "Market Dominator",
     quote:
-      "I wanted something simple, professional, and easy for customers to use, and that is pretty much exactly what we got. The site works great on phones, everything is laid out clearly, and people do not have to dig around to figure out what services we offer. They also explained the Google side of things and built the site around actually generating inquiries, which I liked. It has been a big step up from what we had before.",
-    name: "Bruno Knight",
-    displayName: "Bruno K.",
-    company: "Comprehensive Irrigation",
-    category: "Website",
+      "Honestly the weekly calls are what sold me. I always know what's working and what they're changing. They tested different landing pages against each other and the one that won is still bringing in more inquiries than our old site ever did.",
   },
   {
+    package: "Market Dominator",
     quote:
-      "The website came out really well. With remodeling, people are obviously judging your work visually, so I wanted the site to feel polished without looking too corporate or overdone. They got that balance right. Our projects are presented properly, the site is easy to move around, and there is a clear path for homeowners who want to contact us. It feels much more like our company now, which was important to me.",
-    name: "Joshua Anderson",
-    displayName: "Joshua A.",
-    company: "AP Remodeling",
-    category: "Website",
+      "We were spending a lot on ads and never really knew what we were getting back. Now we're on Google, Facebook, YouTube and Bing, and every inquiry is tracked back to where it came from. First time I've felt properly in control of our marketing spend.",
   },
   {
+    package: "Market Dominator",
     quote:
-      "The main thing I wanted was for someone to land on our website and immediately feel confident about the company. Before, I did not think we were getting that. The new site looks much more established and professional, and it is straightforward for customers to use. I also liked that they kept bringing the conversation back to how the website could actually help generate business, rather than just talking about colors and design. It came together really nicely.",
-    name: "Kamal Rana",
-    displayName: "Kamal R.",
-    company: "N & L Remodeling",
-    category: "Website",
+      "The follow up is the part I didn't expect. People who reached out months ago and went quiet are coming back and booking. Our account manager is on top of everything and we hear from him every week without having to chase.",
   },
   {
+    package: "Market Leader",
     quote:
-      "We had done marketing before and gotten plenty of inquiries that went nowhere, so I was more interested in lead quality than just seeing a big number on a report. That has been the biggest improvement. We are talking to more homeowners who actually have a project in mind and are serious about getting work done. It has made our sales conversations a lot more worthwhile and given us a more consistent flow of opportunities.",
-    name: "Matt Davison",
-    displayName: "Matt D.",
-    company: "Structura Remodeling",
-    category: "Marketing",
+      "Every new web inquiry gets a call within a minute now. Before, we'd get to them hours later and half of them had already gone somewhere else. That alone has been worth it for us.",
   },
   {
+    package: "Market Leader",
     quote:
-      "I have dealt with marketing companies that promise a lot and then send over leads that are barely worth calling. This has been different. We have been getting in front of people who are genuinely looking for roofing work, and that makes life a lot easier for our team. It has also helped us compete for jobs against some of the bigger names in the area. Overall, it has been money much better spent than some of the things we tried before.",
-    name: "Laughton Paperworth",
-    displayName: "Laughton P.",
-    company: "Texas Roofers USA",
-    category: "Marketing",
+      "They built out a page for every service and area we cover and look after our Google profile every month. We're showing up for searches we never used to, and the calls we get are from people who actually want what we do.",
   },
   {
+    package: "Market Leader",
     quote:
-      "For us, the biggest change has been consistency. We are not just relying on referrals or hoping the phone rings. There is a proper marketing system bringing new people into the business, and the inquiries have generally been much better matched to the work we want. Not every lead turns into a job, obviously, but we are having more conversations with the right type of customer, and that is what matters.",
-    name: "Alasdair Field",
-    displayName: "Alasdair F.",
-    company: "Texas Pro Roofing",
-    category: "Marketing",
+      "I like that they went back to our old customers and people who'd asked about us before. We got bookings out of a list we'd honestly forgotten about. The calls every two weeks keep us on track.",
   },
   {
+    package: "Lead Engine",
     quote:
-      "We wanted to get more predictable with our lead flow instead of having really busy weeks followed by nothing. The marketing has helped smooth that out quite a bit. We are getting more opportunities to quote jobs, and the leads have been more relevant than what we were used to. I also like that everything feels focused around actual business results rather than just clicks and impressions. That was a big thing for me.",
-    name: "James Mahoney",
-    displayName: "James M.",
-    company: "Ace Roofing Company",
-    category: "Marketing",
+      "We needed a proper website and ads on more than just Facebook. PVA did both and set up a receptionist that picks up after hours, so we're not losing calls at night or on weekends anymore.",
   },
   {
+    package: "Lead Engine",
     quote:
-      "When things get busy, answering every call, text, and email right away is just not realistic. That was the problem we were trying to solve. The automation now handles a lot of the initial back and forth for us, answers common questions, helps customers get scheduled, and keeps things moving until someone on our team needs to step in. It has taken a surprising amount of little day to day work off our plate. We are quicker with customers now without having someone constantly watching the phone.",
-    name: "Ravi Shah",
-    displayName: "Ravi S.",
-    company: "Central Texas HVAC LLC",
-    category: "AI Automation",
+      "The call tracking was eye opening. I can see which ads are bringing in calls and which ones aren't, and we go through it all on the monthly strategy call. Simple, and it actually makes sense.",
   },
   {
+    package: "Lead Engine",
     quote:
-      "I was a little unsure at first about how automated replies would come across to customers, but it has worked much better than I expected. A lot of the basic questions, follow ups, lead qualification, and booking can happen without us manually going through every conversation. If somebody needs a real person, we can jump in, but we are not wasting time on all the repetitive parts anymore. It has definitely made the office side of the business easier to manage.",
-    name: "Michee Wonga",
-    displayName: "Michee W.",
-    company: "Texas Air Tech",
-    category: "AI Automation",
-  },
-];
-
-export type ClientResult = {
-  /** Full name, kept for our own records — never render this publicly. */
-  name: string;
-  /** First name + surname initial, e.g. "Ravi S." — this is the one to render. */
-  displayName: string;
-  company: string;
-  category: ClientCategory;
-  stats: string[];
-};
-
-export const CLIENT_RESULTS: ClientResult[] = [
-  {
-    name: "Eddie Matherwood",
-    displayName: "Eddie M.",
-    company: "TheGroundsGuys",
-    category: "Website",
-    stats: [
-      "+58% website conversion rate",
-      "+43% organic traffic",
-      "+71% Google search impressions",
-    ],
-  },
-  {
-    name: "Bruno Knight",
-    displayName: "Bruno K.",
-    company: "Comprehensive Irrigation",
-    category: "Website",
-    stats: [
-      "+46% website inquiries",
-      "+37% organic traffic",
-      "+64% Google search impressions",
-    ],
-  },
-  {
-    name: "Joshua Anderson",
-    displayName: "Joshua A.",
-    company: "AP Remodeling",
-    category: "Website",
-    stats: [
-      "+67% website conversion rate",
-      "+52% qualified website inquiries",
-      "+41% organic traffic",
-    ],
-  },
-  {
-    name: "Kamal Rana",
-    displayName: "Kamal R.",
-    company: "N & L Remodeling",
-    category: "Website",
-    stats: [
-      "+49% website conversion rate",
-      "+44% contact form submissions",
-      "+36% organic traffic",
-    ],
-  },
-  {
-    name: "Matt Davison",
-    displayName: "Matt D.",
-    company: "Structura Remodeling",
-    category: "Marketing",
-    stats: [
-      "+41% qualified leads",
-      "+34% booked consultations",
-      "23% lower cost per qualified lead",
-    ],
-  },
-  {
-    name: "Laughton Paperworth",
-    displayName: "Laughton P.",
-    company: "Texas Roofers USA",
-    category: "Marketing",
-    stats: [
-      "+63% qualified leads",
-      "+39% booked inspections",
-      "27% lower cost per lead",
-    ],
-  },
-  {
-    name: "Alasdair Field",
-    displayName: "Alasdair F.",
-    company: "Texas Pro Roofing",
-    category: "Marketing",
-    stats: [
-      "+44% qualified leads",
-      "+35% booked appointments",
-      "28% lower cost per qualified lead",
-    ],
-  },
-  {
-    name: "James Mahoney",
-    displayName: "James M.",
-    company: "Ace Roofing Company",
-    category: "Marketing",
-    stats: [
-      "+36% qualified inquiries",
-      "+29% booked estimates",
-      "21% lower acquisition cost",
-    ],
-  },
-  {
-    name: "Ravi Shah",
-    displayName: "Ravi S.",
-    company: "Central Texas HVAC LLC",
-    category: "AI Automation",
-    stats: [
-      "84% of routine inquiries handled automatically",
-      "Average response time reduced from 18 minutes to under 2 minutes",
-      "Approximately 21 hours of admin work saved per month",
-      "32% increase in booked appointments",
-    ],
-  },
-  {
-    name: "Michee Wonga",
-    displayName: "Michee W.",
-    company: "Texas Air Tech",
-    category: "AI Automation",
-    stats: [
-      "76% of new leads automatically qualified",
-      "91% of inquiries receiving an immediate response",
-      "54% fewer leads left without follow-up",
-      "Approximately 17 hours of manual work saved per month",
-    ],
+      "Quick to get going and easy to work with. The new site looks great, inquiries get a reply straight away even when we're busy, and anyone who doesn't book gets followed up. We're booking more without adding more work for the office.",
   },
 ];

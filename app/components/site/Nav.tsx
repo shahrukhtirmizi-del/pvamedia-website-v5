@@ -266,7 +266,7 @@ export default function Nav() {
               <a href={`tel:${SITE.phoneHref}`}>{SITE.phone}</a>
             </h3>
             <h6>{SITE.name}</h6>
-            <h6>Marketing for trades and home services</h6>
+            <h6>{SITE.tagline}</h6>
           </div>
 
           <nav className="dm-col dm-links" aria-label="Site">

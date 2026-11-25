@@ -3,11 +3,11 @@ import { SITE } from "./lib/site";
 
 /**
  * The social preview, drawn in code: black on white, one oversized line of
- * type, the proposition underneath and the guarantee in a solid ink bar.
+ * type, the proposition underneath and the tagline in a solid ink bar.
  * Static, so it is generated once at build time like the rest of the site.
  */
 export const dynamic = "force-static";
-export const alt = "PVA Media: marketing for trades and home service companies";
+export const alt = "PVA Media, your growth partner";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -81,7 +81,7 @@ export default async function OpengraphImage() {
               maxWidth: 900,
             }}
           >
-            Marketing, AI automation and websites for trades and home service companies.
+            Advertising and websites that bring in customers, and every inquiry answered, followed up and booked.
           </div>
         </div>
 
@@ -96,7 +96,7 @@ export default async function OpengraphImage() {
             borderRadius: 999,
           }}
         >
-          60% more enquiries in 90 days, or you don{"’"}t pay
+          {SITE.tagline}
         </div>
       </div>
     ),

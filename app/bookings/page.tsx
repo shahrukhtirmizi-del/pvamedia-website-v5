@@ -52,18 +52,7 @@ export default function BookingsPage() {
         </Reveal>
 
         <Reveal delay={140} className="min-w-0 lg:col-start-1 lg:row-start-2">
-          <div
-            className="max-w-[46ch] p-6 lg:mt-11"
-            style={{ borderRadius: "var(--radius-tile)", border: "1px solid var(--line-strong)" }}
-          >
-            <h2 className="font-display text-[19px] font-semibold">Our 60-day money-back guarantee</h2>
-            <p className="mt-3 text-[15px] leading-relaxed" style={{ color: "var(--ink-60)" }}>
-              If we don{"’"}t deliver the results within 60 days of your ads going
-              live, you get every dollar of our fees back.
-            </p>
-          </div>
-
-          <ul className="mt-8 space-y-4">
+          <ul className="space-y-4 lg:mt-11">
             {TICKS.map((item) => (
               <li key={item} className="flex items-start gap-3 text-[15px]">
                 <Check

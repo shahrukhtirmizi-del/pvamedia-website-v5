@@ -1,9 +1,10 @@
 import SettleStack, { type SettleStackCard } from "../motion/SettleStack";
-import { PACKAGES } from "../../lib/site";
+import Reveal from "../ui/Reveal";
+import { PACKAGES, AD_SPEND_NOTE } from "../../lib/site";
 
 /**
- * Sits directly under the services intro: CardStoryScroll names each
- * service, this opens each package up to show what it includes.
+ * Sits directly under the services intro: CardStoryScroll names each part of
+ * the system, this opens each package up to show what it includes.
  */
 
 /** Stroke paths in a 24 box, one per PACKAGES entry by index. */
@@ -35,7 +36,7 @@ const TILTS = [
 const cards: SettleStackCard[] = PACKAGES.map((pkg, i) => ({
   title: pkg.name,
   kicker: `0${i + 1}`,
-  lead: `For: ${pkg.forLine}`,
+  lead: pkg.forLine,
   listLabel: pkg.builds ? `Everything in ${pkg.builds}, plus:` : undefined,
   body: pkg.items.join("\n"),
   items: pkg.items,
@@ -46,15 +47,25 @@ const cards: SettleStackCard[] = PACKAGES.map((pkg, i) => ({
 
 export default function ServiceIncludes() {
   return (
-    <SettleStack
-      cards={cards}
-      headline="What each package includes"
-      frontTitle="What's inside"
-      frontTag={`${PACKAGES.length} packages`}
-      frontBody="Four packages, one system. Each one builds on the last. Keep scrolling to open each one up."
-      // the component's own top chrome would sit under the site nav
-      markLabel=""
-      hintLabel="Scroll to open the stack"
-    />
+    <>
+      <SettleStack
+        cards={cards}
+        headline="What each package includes"
+        frontTitle="What's inside"
+        frontTag={`${PACKAGES.length} packages`}
+        frontBody="Four packages, one system. Each one includes everything in the one before. Keep scrolling to open each one up."
+        // the component's own top chrome would sit under the site nav
+        markLabel=""
+        hintLabel="Scroll to open the stack"
+      />
+      <Reveal>
+        <p
+          className="mx-auto max-w-[52ch] px-5 pt-16 text-center text-[16px] leading-relaxed md:px-8 md:text-[18px]"
+          style={{ color: "var(--ink-60)" }}
+        >
+          {AD_SPEND_NOTE}
+        </p>
+      </Reveal>
+    </>
   );
 }

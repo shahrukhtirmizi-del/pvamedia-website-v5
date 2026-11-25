@@ -27,10 +27,10 @@ import type { ClientTestimonial } from "../../lib/site";
  *    a click on a card, the arrow keys and the progress dots are the only
  *    ways to move, so the page scrolls normally over this section.
  *
- * Per the client's decision: no category label, no "x / 10" index — only
- * the quote, the client's first name + surname initial (`displayName`,
- * never the full `name`), and the company name blurred with a short note
- * on why.
+ * Per the client's decision: no "x / 10" index. Each card is the quote, a
+ * blurred name and company, and the client's package. The text under the
+ * blur is meaningless on purpose, because CSS blur leaves it readable in the
+ * page source.
  */
 
 export interface CircularCardDeckProps {
@@ -38,6 +38,9 @@ export interface CircularCardDeckProps {
   kicker?: string;
   heading?: string;
 }
+
+const BLURRED_NAME = "Xxxxx Xxxxxxx";
+const BLURRED_COMPANY = "Xxxxxxxx Xxxxx";
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 const wrapIndex = (value: number, total: number) => ((value % total) + total) % total;
@@ -168,6 +171,7 @@ export default function CircularCardDeck({
       <div className="ccd-heading">
         <span>{kicker}</span>
         <h2 className="font-display">{heading}</h2>
+        <p>Client names and companies are blurred for confidentiality.</p>
       </div>
 
       <div
@@ -211,7 +215,7 @@ export default function CircularCardDeck({
 
               return (
                 <button
-                  key={testimonial.company + testimonial.displayName}
+                  key={testimonial.quote}
                   type="button"
                   ref={(card) => {
                     cardRefs.current[index] = card;
@@ -229,8 +233,8 @@ export default function CircularCardDeck({
                   onClick={() => moveTo(index)}
                   aria-label={
                     isActive
-                      ? `Testimonial from ${testimonial.displayName}. Select to view the next one.`
-                      : `Show testimonial from ${testimonial.displayName}`
+                      ? `Testimonial ${index + 1}, ${testimonial.package} client. Select to view the next one.`
+                      : `Show testimonial ${index + 1}, ${testimonial.package} client`
                   }
                   aria-current={isActive ? "true" : undefined}
                   tabIndex={isVisible ? 0 : -1}
@@ -239,13 +243,9 @@ export default function CircularCardDeck({
                     <p>{"“"}{testimonial.quote}{"”"}</p>
                   </blockquote>
                   <footer>
-                    <strong>{testimonial.displayName}</strong>
-                    <span className="ccd-company">
-                      <span className="ccd-company-name" aria-hidden="true">
-                        {testimonial.company}
-                      </span>
-                      <small>Client identity blurred by request</small>
-                    </span>
+                    <strong className="ccd-blur" aria-hidden="true">{BLURRED_NAME}</strong>
+                    <span className="ccd-blur ccd-company" aria-hidden="true">{BLURRED_COMPANY}</span>
+                    <small>{testimonial.package} client</small>
                   </footer>
                 </button>
               );
@@ -256,11 +256,11 @@ export default function CircularCardDeck({
         <div className="ccd-dots" aria-label="Choose a testimonial">
           {testimonials.map((testimonial, index) => (
             <button
-              key={`dot-${testimonial.company}-${testimonial.displayName}`}
+              key={testimonial.quote}
               type="button"
               className="ccd-dot"
               onClick={() => moveTo(index)}
-              aria-label={`Show testimonial from ${testimonial.displayName}`}
+              aria-label={`Show testimonial ${index + 1}, ${testimonial.package} client`}
               aria-current={activeIndex === index ? "true" : undefined}
             >
               <span />
@@ -282,6 +282,7 @@ export default function CircularCardDeck({
         .ccd-heading { position: relative; z-index: 10; max-width: 1240px; margin: 0 auto clamp(28px, 5vh, 56px); padding: 0 clamp(20px, 4vw, 64px); }
         .ccd-heading span { display: block; font-size: 11px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-45); }
         .ccd-heading h2 { margin: 12px 0 0; font-size: clamp(30px, 4.2vw, 56px); line-height: 1.02; font-weight: 700; color: var(--ink); max-width: 9ch; }
+        .ccd-heading p { margin: 16px 0 0; font-size: 14px; color: var(--ink-60); }
 
         .ccd-coverflow { position: relative; width: 100%; min-height: 560px; outline: none; }
         .ccd-scene-3d { position: relative; width: 100%; height: clamp(420px, 56vh, 620px); perspective: 1500px; perspective-origin: 50% 46%; cursor: grab; touch-action: pan-y; user-select: none; }
@@ -313,9 +314,9 @@ export default function CircularCardDeck({
         }
         .ccd-card footer { display: flex; flex-direction: column; gap: 6px; margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.2); }
         .ccd-card footer strong { font-family: var(--font-display), var(--font-sans), sans-serif; font-size: clamp(13px, 1.05cqw, 16px); font-weight: 700; letter-spacing: -.01em; }
-        .ccd-company { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
-        .ccd-company-name { filter: blur(5px); user-select: none; font-size: 13px; opacity: .8; }
-        .ccd-company small { font-size: 10.5px; letter-spacing: .02em; opacity: .55; }
+        .ccd-blur { filter: blur(5px); user-select: none; }
+        .ccd-company { font-size: 13px; opacity: .8; }
+        .ccd-card footer small { margin-top: 4px; font-size: 12px; letter-spacing: .02em; opacity: .75; }
 
         .ccd-dots { position: relative; z-index: 10; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: clamp(20px, 4vh, 40px); }
         .ccd-dot { width: 22px; height: 22px; display: grid; place-items: center; padding: 0; border: 0; background: transparent; cursor: pointer; }

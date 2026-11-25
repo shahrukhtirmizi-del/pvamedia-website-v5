@@ -5,11 +5,11 @@ import { SITE } from "../lib/site";
 export const metadata: Metadata = {
   title: "Terms and conditions",
   description:
-    "The terms that apply to using the PVA Media website and to the services we provide.",
+    "The terms that apply to using the PVA Media website and to the growth partner services we provide.",
   alternates: { canonical: "/terms" },
 };
 
-const UPDATED = "10 September 2026";
+const UPDATED = "25 November 2026";
 
 export default function TermsPage() {
   return (
@@ -26,39 +26,31 @@ export default function TermsPage() {
           ],
         },
         {
-          heading: "Enquiries and quotes",
+          heading: "Inquiries and quotes",
           body: [
-            "Submitting the booking form is an enquiry, not an order, and does not create a contract. Nothing on this site is an offer capable of acceptance.",
-            "Prices shown on this site, including AI Receptionist plan prices, are indicative and quoted in US dollars. The price that applies to you is the one set out in the written proposal we send after your call. Quotes are valid for 30 days unless stated otherwise.",
+            "Submitting the booking form is an inquiry, not an order, and does not create a contract. Nothing on this site is an offer capable of acceptance.",
+            "The price that applies to you is the one set out in the written proposal we send after your call. Quotes are valid for 30 days unless stated otherwise.",
           ],
         },
         {
           heading: "Services and timelines",
           body: [
-            "The five day build timeline runs from the point we have everything we need from you: content, photography, brand assets, domain access, and sign-off on the direction. Delays in providing those move the timeline accordingly.",
-            "Search rankings, advertising results and enquiry volume depend on factors outside our control, including competitor activity, seasonality and changes to search engines. Except for the guarantee set out below, we do not promise a particular position or volume.",
-          ],
-        },
-        {
-          heading: "The 60 day guarantee",
-          body: [
-            "We guarantee a 60% increase in enquiries within 90 days of your new site going live, measured against the 90 days immediately before launch. If we do not achieve it, you do not pay for the build.",
-            "The guarantee applies where you have taken the website build with local SEO, tracking has been in place for the full comparison period, and you have not paused, restricted or materially changed the work during it. It also requires that enquiries are answered, since we cannot count a lead you never responded to.",
-            "To claim, email us within 30 days of the end of the 90 day period and we will review the tracking together. Ongoing fees already incurred for hosting, advertising spend and third party services are not refundable.",
+            "Any launch timeline we give you runs from the point we have everything we need from you: content, photography, brand assets, domain access, and sign-off on the direction. Delays in providing those move the timeline accordingly.",
+            "Search rankings, advertising results and inquiry volume depend on factors outside our control, including competitor activity, seasonality and changes to search engines. We do not promise a particular position or volume.",
           ],
         },
         {
           heading: "Payment",
           body: [
-            "Setup fees are payable before work begins unless the proposal says otherwise. Monthly fees are billed in advance and continue until cancelled.",
-            "Monthly services can be cancelled with 30 days written notice. Advertising spend paid to Google, Meta or any other platform is separate from our fees and is not refundable by us.",
+            "Setup fees are payable before work begins unless the proposal says otherwise. Monthly fees are billed in advance and continue until canceled.",
+            "Monthly services can be canceled with 30 days written notice. Advertising spend is paid directly to Google, Meta or any other platform from accounts in your name. It is separate from our fees and is not refundable by us.",
             "We may suspend services on accounts more than 14 days overdue, after telling you first.",
           ],
         },
         {
           heading: "Ownership",
           body: [
-            "On full payment, you own the website design, the written content we produce for you, and your domain. You keep ownership of anything you supply to us.",
+            "On full payment, you own the website design, the written content we produce for you, and your domain. Your ad accounts and their data stay in your name throughout. You keep ownership of anything you supply to us.",
             "We keep ownership of our underlying tools, code libraries, templates and processes, and of anything we build for use across multiple clients. We may show completed work in our portfolio unless you ask us in writing not to.",
           ],
         },
@@ -73,6 +65,7 @@ export default function TermsPage() {
           heading: "Governing law and contact",
           body: [
             "These terms are governed by the laws of England and Wales, and the courts of England and Wales have exclusive jurisdiction.",
+            `${SITE.name} is the trading name of ${SITE.company.legalName}, company number ${SITE.company.number}, registered office ${SITE.company.address}.`,
             `Questions about these terms can go to ${SITE.email} or ${SITE.phone}.`,
           ],
         },

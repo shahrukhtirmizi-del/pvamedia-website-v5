@@ -122,19 +122,19 @@ export default function OnboardingForm() {
 
       <Card step={1} title="Business basics" intro="How the business is known and how to reach it.">
         <Grid>
-          <Input label="Legal or trading business name" name="business_name" required error={errors.business_name} autoComplete="organization" placeholder="Cedar Grounds Co." />
+          <Input label="Legal or trading business name" name="business_name" required error={errors.business_name} autoComplete="organization" placeholder="Cedar Studio" />
           <Input label="Business phone number" name="business_phone" type="tel" required error={errors.business_phone} autoComplete="tel" placeholder="(512) 555 0148" />
           <Input label="Business address" name="business_address" autoComplete="street-address" placeholder="2130 Fern Street, Austin, TX 78704" className="sm:col-span-2" />
-          <Input label="License or registration number" name="license_number" placeholder="TX LI 0027481" />
-          <Input label="Website domain" name="domain" type="url" placeholder="https://cedargrounds.com" />
+          <Input label="License or registration number" name="license_number" placeholder="TX 0027481" />
+          <Input label="Website domain" name="domain" type="url" placeholder="https://cedarstudio.com" />
           <Textarea label="Business hours" name="business_hours" rows={3} placeholder="Mon to Fri 7am to 6pm, Sat 8am to 1pm, closed Sunday" className="sm:col-span-2" />
         </Grid>
       </Card>
 
       <Card step={2} title="Services and pricing rules" intro="What you do, what costs extra, and what should never be promised.">
-        <Textarea label="Full list of services offered" name="services" rows={5} placeholder="Lawn maintenance, hardscaping, irrigation install and repair, seasonal clean-ups, outdoor lighting" />
-        <Textarea label="Services with special pricing rules" name="pricing_rules" rows={4} helper="Diagnostic fees, minimum charges, travel fees, anything a caller should be told up front." placeholder="Irrigation diagnostic is $95, waived if the repair goes ahead. $150 minimum on any call-out." />
-        <Textarea label="Services NOT offered" name="services_not_offered" rows={3} helper="Anything the receptionist must never promise or quote for." placeholder="Tree removal over 20ft, pool construction, snow clearing" />
+        <Textarea label="Full list of services offered" name="services" rows={5} placeholder="Initial consultations, one-off appointments, ongoing plans, group sessions" />
+        <Textarea label="Services with special pricing rules" name="pricing_rules" rows={4} helper="Diagnostic fees, minimum charges, travel fees, anything a caller should be told up front." placeholder="The first consultation fee is waived if the customer goes ahead. Weekend appointments cost extra." />
+        <Textarea label="Services NOT offered" name="services_not_offered" rows={3} helper="Anything the receptionist must never promise or quote for." placeholder="Weekend home visits, overseas customers, same-day appointments" />
       </Card>
 
       <Card step={3} title="Service area" intro="Where you work, and where you do not.">
@@ -143,22 +143,22 @@ export default function OnboardingForm() {
       </Card>
 
       <Card step={4} title="Call handling preferences" intro="How the receptionist should sort, route and speak.">
-        <Textarea label="How urgent calls should be identified" name="urgent_calls" rows={4} placeholder="Burst irrigation line, flooding, a tree down on a structure, anything the caller says is an emergency" />
-        <Textarea label="Call types that should transfer to a human, and the number to transfer to" name="transfer_rules" rows={4} placeholder="Existing customers with a complaint, commercial contract enquiries, anything over $10k. Transfer to Marcus on (512) 555 0199." />
-        <Textarea label="Preferred greeting, or phrasing to use and avoid" name="greeting" rows={4} placeholder={"Open with: Thanks for calling Cedar Grounds, how can I help? Say estimate, not quote. Never say cheap."} />
+        <Textarea label="How urgent calls should be identified" name="urgent_calls" rows={4} placeholder="A same-day cancellation, a safety concern, anything the caller says cannot wait until tomorrow" />
+        <Textarea label="Call types that should transfer to a human, and the number to transfer to" name="transfer_rules" rows={4} placeholder="Existing customers with a complaint, large commercial inquiries, anyone asking for a manager. Transfer to Marcus on (512) 555 0199." />
+        <Textarea label="Preferred greeting, or phrasing to use and avoid" name="greeting" rows={4} placeholder={"Open with: Thanks for calling Cedar Studio, how can I help? Say consultation, not sales call. Never say cheap."} />
       </Card>
 
       <Card step={5} title="Calendar and booking" intro="Where bookings land and the rules around them.">
         <Grid>
-          <Input label="Calendar system used" name="calendar_system" placeholder="Google Calendar, Jobber, Housecall Pro" />
+          <Input label="Calendar system used" name="calendar_system" placeholder="Google Calendar, Outlook, Acuity" />
           <Input label="Who needs booking visibility" name="booking_visibility" placeholder="Marcus (owner), Dana (office)" />
-          <Textarea label="Booking rules" name="booking_rules" rows={4} helper="Minimum notice, buffers, days off, slot lengths." placeholder="24 hours minimum notice. Estimates are 45 minutes, no bookings before 8am or after 5pm, nothing on Sundays." className="sm:col-span-2" />
+          <Textarea label="Booking rules" name="booking_rules" rows={4} helper="Minimum notice, buffers, days off, slot lengths." placeholder="24 hours minimum notice. Consultations are 45 minutes, no bookings before 8am or after 5pm, nothing on Sundays." className="sm:col-span-2" />
         </Grid>
       </Card>
 
-      <Card step={6} title="Branding" intro="Colours, voice and assets.">
+      <Card step={6} title="Branding" intro="Colors, voice and assets.">
         <Grid>
-          <Input label="Brand colours or hex codes" name="brand_colors" placeholder="#1F5233 green, #F4EFE6 cream" />
+          <Input label="Brand colors or hex codes" name="brand_colors" placeholder="#1F5233 green, #F4EFE6 cream" />
           <Input label="Tone preference" name="tone" placeholder="Warm and plain-spoken, not corporate" />
         </Grid>
         <Note>
@@ -171,7 +171,7 @@ export default function OnboardingForm() {
       </Card>
 
       <Card step={7} title="Website details" intro="Access, hosting, and what carries over.">
-        <Textarea label="Domain registrar and access details" name="registrar_access" rows={3} helper="Where the domain is held and who has the login. Do not paste passwords here; we will arrange access securely." placeholder="GoDaddy, account under marcus@cedargrounds.com" />
+        <Textarea label="Domain registrar and access details" name="registrar_access" rows={3} helper="Where the domain is held and who has the login. Do not paste passwords here; we will arrange access securely." placeholder="GoDaddy, account under marcus@cedarstudio.com" />
         <Input label="Current hosting provider" name="hosting" placeholder="Wix, Squarespace, GoDaddy hosting, none" />
         <Textarea label="Pages needed beyond the standard set" name="extra_pages" rows={3} helper="Standard: home, services, work, about, contact." placeholder="Commercial services, financing, careers" />
         <Textarea label="Content that must be reused" name="reuse_content" rows={3} placeholder="Our current about page copy, the reviews section, the FAQ" />
@@ -180,8 +180,8 @@ export default function OnboardingForm() {
       <Card step={8} title="Billing" intro="Who the invoices go to.">
         <Grid>
           <Input label="Billing contact name" name="billing_name" required error={errors.billing_name} autoComplete="name" placeholder="Dana Whitfield" />
-          <Input label="Billing contact email" name="billing_email" type="email" required error={errors.billing_email} autoComplete="email" placeholder="accounts@cedargrounds.com" />
-          <Input label="Name on card for Stripe" name="card_name" autoComplete="cc-name" placeholder="Cedar Grounds Co. LLC" className="sm:col-span-2" />
+          <Input label="Billing contact email" name="billing_email" type="email" required error={errors.billing_email} autoComplete="email" placeholder="accounts@cedarstudio.com" />
+          <Input label="Name on card for Stripe" name="card_name" autoComplete="cc-name" placeholder="Cedar Studio LLC" className="sm:col-span-2" />
         </Grid>
       </Card>
 

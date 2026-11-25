@@ -1,6 +1,7 @@
 import SplitCurtainPreloader from "./motion/SplitCurtainPreloader";
 import ScrollExpandMedia from "./motion/ScrollExpansionHero";
 import HeroBackdrop from "./fx/HeroBackdrop";
+import HowWeWork from "./sections/HowWeWork";
 import PainPoints from "./sections/PainPoints";
 import CardStoryScroll from "./motion/CardStoryScroll";
 import ServiceIncludes from "./sections/ServiceIncludes";
@@ -14,12 +15,20 @@ const structuredData = {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
   name: SITE.name,
+  legalName: SITE.company.legalName,
+  identifier: SITE.company.number,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "163 Argyle Avenue, Whitton",
+    addressLocality: "London",
+    postalCode: "TW3 2LP",
+    addressCountry: "GB",
+  },
   url: SITE.domain,
   email: SITE.email,
-  telephone: SITE.phone,
-  description:
-    "A UK marketing agency specialising in trades and home service companies: local SEO, paid advertising, AI receptionists and AI automation agents, backed by websites built to convert.",
-  areaServed: { "@type": "Country", name: "United Kingdom" },
+  telephone: SITE.phoneHref,
+  description: SITE.description,
+  areaServed: { "@type": "Country", name: "United States" },
   slogan: SITE.tagline,
 };
 
@@ -61,16 +70,25 @@ export default function HomePage() {
             logo=""
             menuLabel=""
             cardTitle="PVA Media"
-            tags={["Local SEO", "Paid ads", "AI automation"]}
+            tags={["Advertising", "Websites", "24/7 replies"]}
             heroImage="/images/hero/preloader-bg.png"
             footerLeft="Scroll"
-            footerRight="Trades marketing specialists"
+            footerRight={SITE.tagline}
           />
         }
-      />
+      >
+        <p
+          className="font-display mx-auto max-w-[30ch] text-balance text-center font-semibold"
+          style={{ fontSize: "clamp(24px, 3.2vw, 42px)", lineHeight: 1.16 }}
+        >
+          Your growth partner. We bring in new customers with advertising and websites built to
+          convert, then make sure every inquiry is answered, followed up and booked.
+        </p>
+      </ScrollExpandMedia>
 
       <CardStoryScroll />
       <ServiceIncludes />
+      <HowWeWork />
       <PainPoints />
       <CircularCardDeck testimonials={CLIENT_TESTIMONIALS} />
       <Results />

@@ -44,32 +44,29 @@ const serif = Source_Serif_4({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.domain),
   title: {
-    default: "PVA Media | Specialist Marketing for Trades and Home Services",
-    template: "%s | PVA Media",
+    default: SITE.title,
+    template: "%s | PVA Media, Your Growth Partner",
   },
-  description:
-    "Specialists in local SEO, paid ads and AI automation for trades and home service companies, with websites built to convert. 60% more enquiries in 90 days, or you don't pay.",
+  description: SITE.description,
   keywords: [
-    "trades marketing agency",
-    "home service marketing",
-    "local SEO for trades",
-    "trades lead generation",
-    "AI automation for trades",
+    "growth partner",
+    "growth partner for service businesses",
+    "advertising for service businesses",
+    "websites built to convert",
+    "24/7 virtual receptionist",
   ],
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     url: SITE.domain,
     siteName: SITE.name,
-    title: "PVA Media | Specialist Marketing for Trades and Home Services",
-    description:
-      "We take trades and home service companies from 3 booked jobs a month to 12, without lifting a finger.",
+    title: SITE.title,
+    description: SITE.description,
   },
   twitter: {
     card: "summary_large_image",
-    title: "PVA Media | Specialist Marketing for Trades and Home Services",
-    description:
-      "We take trades and home service companies from 3 booked jobs a month to 12, without lifting a finger.",
+    title: SITE.title,
+    description: SITE.description,
   },
   robots: { index: true, follow: true },
   verification: { other: { "facebook-domain-verification": "4i5j5h8bgn3y19wydgvcgus33lvbbh" } },

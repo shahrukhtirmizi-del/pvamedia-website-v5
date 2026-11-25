@@ -8,7 +8,7 @@ import Reveal from "../components/ui/Reveal";
  */
 export const metadata: Metadata = {
   title: "Onboarding",
-  description: "Tell us about your business so we can set up your site and receptionist.",
+  description: "Tell PVA Media, your growth partner, about your business so we can set up your site and receptionist.",
   robots: { index: false, follow: false, nocache: true },
 };
 

@@ -7,8 +7,9 @@ import HomePage from "../components/HomePage";
  * canonical stays on the home page, since this is the same document.
  */
 export const metadata: Metadata = {
-  title: "Services",
-  description: "Specialist marketing, websites, an AI receptionist and AI automation agents for trades and home service companies.",
+  title: "The PVA Growth System",
+  description:
+    "The PVA Growth System from your growth partner: advertising, websites, a 24/7 virtual receptionist, instant replies and follow-up, and reporting, run as one system.",
   alternates: { canonical: "/" },
 };
 

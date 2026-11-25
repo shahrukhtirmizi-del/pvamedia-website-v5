@@ -7,7 +7,7 @@ import { SITE } from "../lib/site";
 
 export const metadata: Metadata = {
   title: "Thank you",
-  description: "Your details are with PVA Media. Pick a time for your free 30 minute call.",
+  description: "Your details are with PVA Media, your growth partner. Pick a time for your free 30 minute call.",
   robots: { index: false, follow: true },
   alternates: { canonical: "/thank-you" },
 };

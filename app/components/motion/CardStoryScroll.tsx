@@ -23,8 +23,9 @@ const CSS = `
 
 .kex-scroll-scene {
   position: relative;
-  height: 560vh;
-  height: 560svh;
+  /* the stage itself plus 658svh of travel; see TRAVEL */
+  height: 758vh;
+  height: 758svh;
   background: #0A0A0A;
 }
 
@@ -287,7 +288,7 @@ const CSS = `
   }
 
   .kex-card-title {
-    /* long single words (RECEPTIONIST, AUTOMATION) have to fit a phone */
+    /* long single words (RECEPTIONIST, ADVERTISING) have to fit a phone */
     font-size: clamp(34px, 10.5vw, 108px);
     overflow-wrap: anywhere;
   }
@@ -344,7 +345,7 @@ type CardStyle = CSSProperties & {
 };
 
 /**
- * One colour set per SERVICES entry, by index. Alternating light and dark so
+ * One colour set per SERVICES entry, by index, repeating. Alternating light and dark so
  * each card reads clearly as it lands over the one before it.
  */
 const CARD_COLORS: Array<Pick<Card, "bg" | "text" | "muted" | "numberColor">> = [
@@ -377,12 +378,15 @@ const CARD_COLORS: Array<Pick<Card, "bg" | "text" | "muted" | "numberColor">> = 
 const cards: Card[] = SERVICES.map((service, index) => ({
   number: `0${index + 1}`,
   // the big number and title already name the service; the line above
-  // them says what we specialise in
-  kicker: service.specialism,
+  // them says what it is for
+  kicker: service.kicker,
   title: service.name,
-  descriptionLines: service.shortLines,
-  ...CARD_COLORS[index],
+  descriptionLines: service.lines,
+  ...CARD_COLORS[index % CARD_COLORS.length],
 }));
+
+/** How far the scene scrolls while pinned, in svh: about 99 per card. */
+const TRAVEL = 658;
 
 const clamp = (value: number, min: number, max: number) =>
   Math.min(max, Math.max(min, value));
@@ -458,7 +462,7 @@ export default function CardStoryScroll() {
       const progress = currentProgress.current;
 
       if (heroTitleRef.current) {
-        const heroLift = clamp(progress / 0.24, 0, 1);
+        const heroLift = clamp((progress * TRAVEL) / 110, 0, 1);
 
         heroTitleRef.current.style.transform = `
           translate3d(0, ${lerp(0, -110, heroLift)}px, 0)
@@ -475,8 +479,8 @@ export default function CardStoryScroll() {
           The first card fully covers the dark hero.
           Each next card fully covers the previous card.
         */
-        const start = 0.08 + index * 0.215;
-        const end = start + 0.22;
+        const start = (37 + index * 99) / TRAVEL;
+        const end = start + 101 / TRAVEL;
 
         const raw = clamp((progress - start) / (end - start), 0, 1);
         const eased = easeOutCubic(raw);
@@ -556,9 +560,11 @@ export default function CardStoryScroll() {
               {/* the intro line lifts away with the title */}
               <div ref={heroTitleRef} className="kex-hero-head">
                 <h1 className="kex-hero-title">
-                  OUR
+                  The PVA
                   <br />
-                  SERVICES
+                  Growth
+                  <br />
+                  System
                 </h1>
                 <p className="kex-hero-intro">{SERVICES_INTRO}</p>
               </div>

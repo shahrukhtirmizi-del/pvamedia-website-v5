@@ -87,13 +87,13 @@ export default function PainPoints() {
   }, []);
 
   return (
-    <section className="ps-section" aria-label="What holds trades businesses back">
+    <section className="ps-section" aria-label="What holds businesses back">
       <style>{CSS}</style>
 
       <div className="ps-head">
         <Reveal>
           <h2 className="font-display ps-headline">
-            Most trades businesses don{"’"}t have a work problem. They have a marketing problem.
+            Most businesses don{"’"}t have a demand problem. They have a follow-through problem.
           </h2>
         </Reveal>
       </div>
@@ -150,7 +150,7 @@ export default function PainPoints() {
         <HandWrittenTitle
           eyebrow="The fix"
           title={PAIN_CLOSER}
-          subtitle="We specialise in search, ads, follow-up and booking for trades, and run them as one joined-up system instead of five tools that never talk to each other."
+          subtitle="The PVA Growth System runs advertising, websites, replies, follow-up and booking as one joined-up system, instead of five tools that never talk to each other."
         />
       </div>
     </section>

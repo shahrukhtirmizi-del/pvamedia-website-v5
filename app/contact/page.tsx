@@ -8,7 +8,8 @@ import HomePage from "../components/HomePage";
  */
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Book a free 30 minute call with PVA Media.",
+  description:
+    "Book a free 30-minute call with PVA Media, your growth partner. We look at where your customers come from today and what it would take to bring in more.",
   alternates: { canonical: "/" },
 };
 
