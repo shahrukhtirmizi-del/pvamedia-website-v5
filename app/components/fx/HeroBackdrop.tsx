@@ -6,8 +6,7 @@ import PlumeField from "../motion/PlumeField";
 /**
  * The fluid ink field, fixed behind the whole page at z-index -1: under
  * every in-flow section, over the page ground. It runs everywhere, not just
- * behind the hero — any section painting its own opaque background (the
- * Cinematic Accordion, the dark CardStoryScroll cards, and so on) already
+ * behind the hero — any section painting its own opaque background already
  * occludes it naturally at that z-index, so nothing extra is needed there.
  *
  * It stays at full opacity only while the hero (#top) is in view. Past that
@@ -34,7 +33,7 @@ export default function HeroBackdrop({ subtle = false }: { subtle?: boolean }) {
   return (
     <div
       aria-hidden
-      className="pointer-events-none fixed inset-0 z-[-1]"
+      className="pointer-events-none fixed inset-x-0 top-0 z-[-1] h-lvh"
       style={{
         opacity: heroVisible ? 1 : 0.16,
         transition: "opacity 0.5s ease",

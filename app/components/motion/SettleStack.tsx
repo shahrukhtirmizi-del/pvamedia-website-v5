@@ -47,6 +47,8 @@ const easeOutBack = (t: number) => {
   return 1 + (c + 1) * u * u * u + c * u * u;
 };
 
+const STACKED = "(max-width: 800px), (pointer: coarse)";
+
 const FLIP_START = 0.3;
 const FLIP_END = 0.46;
 const DISMISS_START = 0.52;
@@ -85,6 +87,26 @@ export default function SettleStack({
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const cardMode = new URLSearchParams(window.location.search).has("card");
     const count = cards.length;
+
+    // Phones and tablets: the cards are native sticky panels (see the
+    // stylesheet) and nothing runs per scroll frame. They only share the
+    // tallest one's height, so none peeks out from behind the next, and a
+    // stack taller than the screen pins by its foot so no text is cut off.
+    if (!cardMode && window.matchMedia(STACKED).matches) {
+      const panels = backRefs.current.filter((el) => el !== null);
+      const fit = () => {
+        panels.forEach((el) => (el.style.minHeight = "0px"));
+        const tall = Math.max(...panels.map((el) => el.offsetHeight));
+        panels.forEach((el) => {
+          el.style.minHeight = `${tall}px`;
+          el.style.setProperty("--h", `${tall}px`);
+        });
+      };
+      // the headline changes size with the page width and once fonts load
+      const ro = new ResizeObserver(fit);
+      if (headlineRef.current) ro.observe(headlineRef.current);
+      return () => ro.disconnect();
+    }
 
     const apply = (p: number) => {
       // 1 — deck rises in, headline lifts away
@@ -170,7 +192,10 @@ export default function SettleStack({
         if (shown !== target) raf = requestAnimationFrame(tick);
       };
       const wake = () => {
-        if (!raf) raf = requestAnimationFrame(tick);
+        if (raf) return;
+        // off screen (clamped at either end) there is nothing to write
+        measure();
+        if (target !== shown) raf = requestAnimationFrame(tick);
       };
       window.addEventListener("scroll", wake, { passive: true });
       window.addEventListener("resize", wake);
@@ -365,16 +390,27 @@ const css = `
     .st-card{width:70%;min-width:0;}
   }
   .st-card{overflow:hidden;}
-  /* phones: a taller, wider card and tighter rows so the longest list fits */
-  @media (max-width:640px){
-    /* a finger covers ground faster than a wheel: less track per card */
-    .st-track{height:620vh;height:620svh;}
-    .st-card{width:88%;height:min(calc(100vh - 160px),640px);height:min(calc(100svh - 160px),640px);}
-    .st-back:has(.st-listcard){padding:1.25rem 1.15rem 1rem;}
-    .st-listcard h3{font-size:1.3rem;margin-bottom:.5rem;}
-    .st-card p.st-lead{font-size:.78rem;margin-bottom:.6rem;}
-    .st-list{--row:clamp(.12rem,calc((100svh - 600px) * .02),.34rem);}
-    .st-list li{font-size:.76rem;padding-left:1.05rem;}
-    .st-list li::before{top:calc(var(--row) + .48rem);width:.45rem;}
+
+  /* PHONES AND TABLETS: native sticky stacking. Every card is in normal flow
+     and slides over the last at the finger's own speed, with no script, 3D or
+     blending involved. Keep the query in step with STACKED. */
+  @media (max-width:800px),(pointer:coarse){
+    .st-track{height:auto;}
+    .st-stage{position:static;height:auto;overflow:visible;perspective:none;}
+    .st-headline{position:static;padding:6rem 1.25rem 2.5rem;}
+    .st-headline h2{width:100%;}
+    .st-chrome{display:none;}
+    .st-deck{position:static;transform-style:flat;
+      padding:0 1.25rem 2rem;max-width:600px;margin:0 auto;}
+    .st-card{position:sticky;left:auto;width:100%;height:auto;min-height:min(70svh,460px);
+      top:min(84px,calc(100svh - var(--h,0px) - 16px));
+      margin-bottom:1.25rem;transform:none!important;opacity:1!important;backface-visibility:visible;will-change:auto;
+      box-shadow:0 -14px 34px -22px rgba(0,0,0,.35);}
+    .st-back:has(.st-listcard){padding:1.4rem 1.25rem 1.25rem;}
+    .st-listcard{flex:1;height:auto;}
+    .st-listhead{padding-bottom:1.1rem;}
+    .st-listcard h3{font-size:1.5rem;}
+    .st-list{--row:.34rem;}
+    .st-list li{font-size:.84rem;}
   }
 `;

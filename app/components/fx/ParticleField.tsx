@@ -374,7 +374,12 @@ export default function ParticleField({
       drawStar(t);
     }
 
+    let timer = 0;
     let lastDraw = 0;
+    let lastScroll = -Infinity;
+    const onScroll = () => {
+      lastScroll = performance.now();
+    };
     function frameLoop(now: number) {
       if (disposed) return;
       if (!visible && !fixed) {
@@ -384,11 +389,16 @@ export default function ParticleField({
       // nothing at all while the intro has the screen
       // 60 frames a second on desktop; phones draw every other frame
       const interval = coarse ? (fixed ? 50 : 30) : fixed ? 15 : 0;
-      if (!introPlaying() && now - lastDraw >= interval) {
+      // phones hold the picture still while the page is moving under it
+      const held = coarse && now - lastScroll < 160;
+      if (!introPlaying() && !held && now - lastDraw >= interval) {
         lastDraw = now;
         draw(now);
       }
-      raf = requestAnimationFrame(frameLoop);
+      // a timer between frames on phones: a bare rAF loop would wake the whole
+      // page on every refresh, including mid-scroll
+      if (coarse) timer = window.setTimeout(() => (raf = requestAnimationFrame(frameLoop)), interval);
+      else raf = requestAnimationFrame(frameLoop);
     }
 
     resize();
@@ -412,14 +422,17 @@ export default function ParticleField({
       draw(0);
     } else {
       window.addEventListener("pointermove", onPointerMove, { passive: true });
+      if (coarse) window.addEventListener("scroll", onScroll, { passive: true });
       raf = requestAnimationFrame(frameLoop);
     }
 
     return () => {
       disposed = true;
+      clearTimeout(timer);
       ro.disconnect();
       io.disconnect();
       window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("scroll", onScroll);
       if (raf) cancelAnimationFrame(raf);
     };
     // frame is an object literal at call sites; compare by its parts

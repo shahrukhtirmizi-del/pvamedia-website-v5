@@ -8,6 +8,7 @@ import {
   type CSSProperties,
   type ReactNode,
 } from "react";
+import { isCoarse } from "../../lib/device";
 
 type GradientStop = {
   offset: number;
@@ -103,6 +104,14 @@ function ChromaticFooter({
     const glow = glowRef.current;
     if (!glow) return;
 
+    // phones: the glow simply sits at the foot of the footer, so it never
+    // rides the address bar or repaints with the scroll
+    if (isCoarse()) {
+      glow.style.transform = "none";
+      glow.style.willChange = "auto";
+      return;
+    }
+
     const doc = glow.ownerDocument;
     const win = doc.defaultView ?? window;
     const reducedMotion = win.matchMedia(
@@ -178,7 +187,7 @@ function ChromaticFooter({
       <div
         ref={glowRef}
         aria-hidden="true"
-        className="pointer-events-none fixed inset-x-0 bottom-0 z-0"
+        className="pointer-events-none fixed inset-x-0 bottom-0 z-0 pointer-coarse:absolute"
         style={{
           height: glowHeight,
           transform: `translateZ(0) scaleY(${clamp(restingScale)})`,

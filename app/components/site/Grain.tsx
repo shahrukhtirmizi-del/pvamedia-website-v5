@@ -10,7 +10,7 @@ export default function Grain() {
   return (
     <div
       aria-hidden
-      className="pointer-events-none fixed inset-0 z-[60]"
+      className="pointer-events-none fixed inset-0 z-[60] pointer-coarse:hidden"
       style={{
         opacity: 0.055,
         backgroundImage:

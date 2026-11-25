@@ -4,6 +4,7 @@ import { useEffect, useRef, type CSSProperties } from "react";
 import Reveal from "../ui/Reveal";
 import HandWrittenTitle from "../motion/HandWrittenTitle";
 import { PAIN_POINTS, PAIN_CLOSER } from "../../lib/site";
+import { isCoarse } from "../../lib/device";
 
 /**
  * Sticky stacking cards, adapted from the client-supplied reference. Each
@@ -47,7 +48,10 @@ export default function PainPoints() {
   const cardRefs = useRef<(HTMLElement | null)[]>([]);
 
   useEffect(() => {
+    // phones keep the native sticky stack and skip the scroll-driven scale
+    if (isCoarse()) return;
     let raf = 0;
+    let last = -1;
 
     const update = () => {
       raf = 0;
@@ -63,6 +67,8 @@ export default function PainPoints() {
 
       // written straight to each card, so scrolling never re-renders React
       const progress = clamp(next, 0, CARDS.length - 0.1);
+      if (progress === last) return;
+      last = progress;
       cardRefs.current.forEach((card, index) => {
         if (!card) return;
         const depth = clamp(progress - index, 0, 3);
@@ -204,7 +210,6 @@ const CSS = `
     color: #FFFFFF;
     transform-origin: 50% 0%;
     transform: translateY(calc(var(--depth, 0) * var(--peek-lift) * -1)) scale(var(--card-scale, 1));
-    will-change: transform;
     box-shadow: inset 0 0 0 1px rgba(255,255,255,.04), 0 -18px 40px -24px rgba(0,0,0,.45);
   }
 

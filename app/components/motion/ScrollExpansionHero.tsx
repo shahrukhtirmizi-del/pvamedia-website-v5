@@ -186,8 +186,15 @@ function ScrollExpandMedia({
       }
 
       const shift = p * (viewport.w < 768 ? 180 : 150)
-      firstWords.current.forEach((el) => el && (el.style.transform = `translate3d(-${shift}vw, 0, 0)`))
-      restWords.current.forEach((el) => el && (el.style.transform = `translate3d(${shift}vw, 0, 0)`))
+      // once the words have slid off, hide them so nothing is left to blend
+      const gone = shift > 110 ? "hidden" : ""
+      const slide = (el: HTMLSpanElement | null, dir: string) => {
+        if (!el) return
+        el.style.transform = `translate3d(${dir}${shift}vw, 0, 0)`
+        el.style.visibility = gone
+      }
+      firstWords.current.forEach((el) => slide(el, "-"))
+      restWords.current.forEach((el) => slide(el, ""))
 
       // everything on the stage except the frame, as an even-odd cut-out
       if (inkLayerRef.current) {
@@ -410,18 +417,11 @@ function ScrollExpandMedia({
                 <span className="text-center text-[11px] font-semibold uppercase tracking-[0.32em]">
                   Scroll
                 </span>
-                <motion.span
-                  className="h-1.5 w-1.5 rounded-full"
+                {/* CSS, not script: a scripted loop here redrew the whole page
+                    every frame, long after the hint was hidden */}
+                <span
+                  className={`h-1.5 w-1.5 rounded-full ${hintVisible ? "hero-hint-dot" : ""}`}
                   style={{ background: "var(--ink)" }}
-                  animate={{
-                    y: [0, 6, 0],
-                    opacity: [0.35, 1, 0.35],
-                  }}
-                  transition={{
-                    duration: 1.8,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
                 />
               </div>
             </motion.div>

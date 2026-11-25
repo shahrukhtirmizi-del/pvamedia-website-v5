@@ -8,7 +8,7 @@ import ParticleField from "../fx/ParticleField";
  */
 export default function Atmosphere() {
   return (
-    <div aria-hidden className="pointer-events-none fixed inset-0 z-[-1]">
+    <div aria-hidden className="pointer-events-none fixed inset-x-0 top-0 z-[-1] h-lvh">
       <ParticleField density={2.6} fixed maxDpr={1} />
       {/* a soft vignette so the middle of the page reads a shade deeper */}
       <div

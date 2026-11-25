@@ -3,7 +3,6 @@ import ScrollExpandMedia from "./motion/ScrollExpansionHero";
 import HeroBackdrop from "./fx/HeroBackdrop";
 import HowWeWork from "./sections/HowWeWork";
 import PainPoints from "./sections/PainPoints";
-import CardStoryScroll from "./motion/CardStoryScroll";
 import ServiceIncludes from "./sections/ServiceIncludes";
 import CircularCardDeck from "./motion/CircularCardDeck";
 import Results from "./sections/Results";
@@ -86,7 +85,6 @@ export default function HomePage() {
         </p>
       </ScrollExpandMedia>
 
-      <CardStoryScroll />
       <ServiceIncludes />
       <HowWeWork />
       <PainPoints />

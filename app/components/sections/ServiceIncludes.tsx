@@ -3,8 +3,8 @@ import Reveal from "../ui/Reveal";
 import { PACKAGES, AD_SPEND_NOTE } from "../../lib/site";
 
 /**
- * Sits directly under the services intro: CardStoryScroll names each part of
- * the system, this opens each package up to show what it includes.
+ * Sits directly under the hero and opens each package up to show what it
+ * includes. The /services address lands here.
  */
 
 /** Stroke paths in a 24 box, one per PACKAGES entry by index. */
@@ -47,7 +47,7 @@ const cards: SettleStackCard[] = PACKAGES.map((pkg, i) => ({
 
 export default function ServiceIncludes() {
   return (
-    <>
+    <div id="services">
       <SettleStack
         cards={cards}
         headline="What each package includes"
@@ -66,6 +66,6 @@ export default function ServiceIncludes() {
           {AD_SPEND_NOTE}
         </p>
       </Reveal>
-    </>
+    </div>
   );
 }

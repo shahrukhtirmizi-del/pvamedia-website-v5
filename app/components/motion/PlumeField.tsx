@@ -306,6 +306,7 @@ export default function PlumeField({
       // sections; a scrolling finger shouldn't keep the solver busy for it
       if (coarse && reducedRef.current) return;
       moveTo(e.clientX, e.clientY);
+      wake();
     };
     if (!isCard) window.addEventListener("pointermove", onPointer);
 
@@ -314,12 +315,13 @@ export default function PlumeField({
     const onSplat = (e: Event) => {
       const d = (e as CustomEvent<PlumeSplat>).detail;
       if (d) queued.push(d);
+      wake();
     };
     window.addEventListener(PLUME_SPLAT, onSplat);
 
     // Ink fades below the display threshold well within a second of the last
     // splat, after which every pass draws an empty field. Past this long
-    // without input the loop skips the solver; the canvas keeps its (empty)
+    // without input the loop sleeps; the canvas keeps its (empty)
     // last frame, and the next splat wakes it.
     const IDLE_MS = 1500;
     let lastInput = -Infinity;
@@ -420,7 +422,7 @@ export default function PlumeField({
       last = now;
 
       // off screen, or hidden behind the home page's intro curtain (see
-      // lib/intro.ts): keep the loop alive but skip the solver entirely
+      // lib/intro.ts): skip the solver entirely
       const html = document.documentElement;
       const behindCurtain =
         html.getAttribute("data-intro") === "playing" &&
@@ -429,7 +431,7 @@ export default function PlumeField({
       if (!activeRef.current || behindCurtain || idle) {
         queued.length = 0;
         mouse.moved = false;
-        raf = requestAnimationFrame(loop);
+        raf = 0; // sleep; the next input wakes it
         return;
       }
 
@@ -464,6 +466,9 @@ export default function PlumeField({
       render();
       raf = requestAnimationFrame(loop);
     };
+    function wake() {
+      if (!raf) raf = requestAnimationFrame(loop);
+    }
     loop();
 
     const onResize = () => {

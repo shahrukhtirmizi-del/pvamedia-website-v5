@@ -228,6 +228,7 @@ export default function CircularCardDeck({
                     opacity: isVisible ? (isActive ? 1 : 0.72) : 0,
                     filter: isActive ? "none" : `brightness(${Math.max(0.6, 0.85 - distance * 0.08)})`,
                     zIndex: 20 - distance,
+                    visibility: isVisible ? "visible" : "hidden",
                     pointerEvents: isVisible ? "auto" : "none",
                   }}
                   onClick={() => moveTo(index)}
@@ -326,6 +327,7 @@ export default function CircularCardDeck({
         .ccd-hint { position: relative; z-index: 10; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 14px; color: var(--ink-45); font-size: 9px; letter-spacing: .16em; pointer-events: none; }
         .ccd-hint i { width: 16px; height: 1px; background: currentColor; }
 
+        @media (pointer: coarse) { .ccd-card { will-change: auto; } }
         @media (max-width: 700px) {
           .ccd-heading h2 { font-size: 30px; }
           .ccd-card blockquote p { font-size: 14px; line-height: 1.48; }

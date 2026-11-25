@@ -529,3 +529,15 @@ html[data-intro="playing"] [data-site-nav] {
     opacity: 1 !important;
   }
 }
+
+/* the dot beside the hero's scroll hint */
+.hero-hint-dot {
+  animation: hero-hint 0.9s ease-in-out infinite alternate;
+}
+@keyframes hero-hint {
+  from { transform: translateY(0); opacity: 0.35; }
+  to { transform: translateY(6px); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-hint-dot { animation: none; }
+}
