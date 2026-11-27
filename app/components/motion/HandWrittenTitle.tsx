@@ -136,8 +136,8 @@ export default function HandWrittenTitle({ title, subtitle, eyebrow }: HandWritt
 
           <motion.h2
             className="font-serif-display hw-title"
-            initial={reduced ? false : { opacity: 0, y: 24, filter: "blur(8px)" }}
-            animate={shown ? { opacity: 1, y: 0, filter: "blur(0px)" } : undefined}
+            initial={reduced ? false : { opacity: 0, y: 24 }}
+            animate={shown ? { opacity: 1, y: 0 } : undefined}
             transition={{ delay: 0.55, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
           >
             {title}

@@ -29,7 +29,7 @@ export const SITE = {
 };
 
 export const NAV = [
-  { label: "Packages", href: "/services" },
+  { label: "Services", href: "/services" },
   { label: "Results", href: "/results" },
   { label: "Contact", href: "/contact" },
 ];
@@ -86,6 +86,65 @@ export const PAIN_POINTS = [
 
 export const PAIN_CLOSER =
   "We fix that with one growth system that keeps working while you work.";
+
+/* -------------------------------------------------------------------------- */
+
+export type Service = {
+  name: string;
+  /** The line over the service's card: what this part of the system is for. */
+  kicker: string;
+  /** Two scannable lines instead of one dense sentence. */
+  lines: [string, string];
+};
+
+/** The parts of The PVA Growth System, in the order a customer meets them. */
+export const SERVICES: Service[] = [
+  {
+    name: "Advertising",
+    kicker: "Brings people in",
+    lines: [
+      "Google search, Google Verified where eligible, and Facebook & Instagram.",
+      "YouTube and video, retargeting and Microsoft (Bing) ads on larger plans. Google Business Profile and local SEO on higher plans.",
+    ],
+  },
+  {
+    name: "Websites and landing pages",
+    kicker: "Turns visits into inquiries",
+    lines: ["Fast, mobile-first,", "built to turn visitors into inquiries and bookings."],
+  },
+  {
+    name: "24/7 virtual receptionist",
+    kicker: "Answers day and night",
+    lines: [
+      "Answers calls and web inquiries day and night,",
+      "qualifies them and books them in.",
+    ],
+  },
+  {
+    name: "Instant replies and follow-up",
+    kicker: "Keeps every inquiry moving",
+    lines: [
+      "Chat and text replies within 60 seconds, 24/7, with missed-call text-back.",
+      "Follow-up until people book, appointment reminders, review requests, and follow-up of past customers and previous inquiries.",
+    ],
+  },
+  {
+    name: "Tracking and reporting",
+    kicker: "Shows what is working",
+    lines: [
+      "Call tracking, with every inquiry traced to where it came from.",
+      "Won customers fed back to Google and Meta so the ads learn, plus regular reports and strategy calls.",
+    ],
+  },
+  {
+    name: "Recruiting campaigns",
+    kicker: "Helps you hire",
+    lines: ["Job ads for businesses that need to hire,", "available as an add-on."],
+  },
+];
+
+export const SERVICES_INTRO =
+  "Six parts that work as one system. Our packages bring them together, adding more of each as you move up.";
 
 /* -------------------------------------------------------------------------- */
 

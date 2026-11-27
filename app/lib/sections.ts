@@ -8,7 +8,7 @@
  */
 export const SECTION_ROUTES = [
   { path: "/", id: "top", label: "Home" },
-  { path: "/services", id: "services", label: "Packages" },
+  { path: "/services", id: "services", label: "Services" },
   { path: "/results", id: "results", label: "Results" },
   { path: "/contact", id: "contact", label: "Contact" },
 ] as const;

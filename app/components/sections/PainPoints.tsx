@@ -52,17 +52,26 @@ export default function PainPoints() {
     if (isCoarse()) return;
     let raf = 0;
     let last = -1;
+    let stickyTop = 96;
+    let step = 400;
+
+    // read once (and on resize), not per frame: getComputedStyle forces a
+    // full style pass every time it is called mid-scroll
+    const measure = () => {
+      const stack = stackRef.current;
+      if (!stack) return;
+      const vars = getComputedStyle(stack);
+      stickyTop = parseFloat(vars.getPropertyValue("--sticky-top")) || 96;
+      step = parseFloat(vars.getPropertyValue("--stack-step")) || 400;
+      last = -1;
+    };
 
     const update = () => {
       raf = 0;
       const stack = stackRef.current;
       if (!stack) return;
 
-      const rect = stack.getBoundingClientRect();
-      const pageTop = rect.top + window.scrollY;
-      const vars = getComputedStyle(stack);
-      const stickyTop = parseFloat(vars.getPropertyValue("--sticky-top")) || 96;
-      const step = parseFloat(vars.getPropertyValue("--stack-step")) || 400;
+      const pageTop = stack.getBoundingClientRect().top + window.scrollY;
       const next = (window.scrollY - (pageTop - stickyTop)) / step;
 
       // written straight to each card, so scrolling never re-renders React
@@ -72,8 +81,9 @@ export default function PainPoints() {
       cardRefs.current.forEach((card, index) => {
         if (!card) return;
         const depth = clamp(progress - index, 0, 3);
-        card.style.setProperty("--card-scale", `${1 - depth * 0.022}`);
-        card.style.setProperty("--depth", `${depth}`);
+        // the transform itself, not inherited custom properties, which made
+        // every element inside the card recalculate its style each frame
+        card.style.transform = `translateY(calc(${depth} * var(--peek-lift) * -1)) scale(${1 - depth * 0.022})`;
       });
     };
 
@@ -81,13 +91,19 @@ export default function PainPoints() {
       if (!raf) raf = requestAnimationFrame(update);
     };
 
+    const onResize = () => {
+      measure();
+      requestUpdate();
+    };
+
+    measure();
     update();
     window.addEventListener("scroll", requestUpdate, { passive: true });
-    window.addEventListener("resize", requestUpdate);
+    window.addEventListener("resize", onResize);
 
     return () => {
       window.removeEventListener("scroll", requestUpdate);
-      window.removeEventListener("resize", requestUpdate);
+      window.removeEventListener("resize", onResize);
       if (raf) cancelAnimationFrame(raf);
     };
   }, []);
@@ -211,6 +227,11 @@ const CSS = `
     transform-origin: 50% 0%;
     transform: translateY(calc(var(--depth, 0) * var(--peek-lift) * -1)) scale(var(--card-scale, 1));
     box-shadow: inset 0 0 0 1px rgba(255,255,255,.04), 0 -18px 40px -24px rgba(0,0,0,.45);
+  }
+  /* desktop scales the cards on scroll: their own layer means a transform
+     change moves pixels instead of repainting the card */
+  @media (pointer: fine) {
+    .ps-card { will-change: transform; }
   }
 
   .ps-top {

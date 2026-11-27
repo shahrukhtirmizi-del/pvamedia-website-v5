@@ -302,7 +302,9 @@ export default function CircularCardDeck({
           transform-style: preserve-3d; transform-origin: center; backface-visibility: hidden;
           box-shadow: 0 24px 60px rgba(10,10,10,.22);
           transition: transform 640ms cubic-bezier(.22,1,.36,1), opacity 640ms cubic-bezier(.22,1,.36,1), filter 640ms cubic-bezier(.22,1,.36,1), box-shadow 640ms cubic-bezier(.22,1,.36,1);
-          will-change: transform, opacity, filter;
+          /* no filter here: a reserved filter surface per 3D card is costly,
+             and brightness only changes when the active card does */
+          will-change: transform, opacity;
         }
         .ccd-card.is-active { box-shadow: 0 40px 90px rgba(10,10,10,.32); }
         .ccd-card:focus-visible { outline: 2px solid #FFFFFF; outline-offset: -8px; }

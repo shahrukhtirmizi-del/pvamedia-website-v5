@@ -385,6 +385,11 @@ const css = `
   .st-hint::before{content:"";display:inline-block;width:22px;height:1px;
     background:currentColor;margin-right:10px;vertical-align:middle;}
 
+  /* short screens: a wider card so the longest list still fits its height */
+  @media (max-height:760px){
+    .st-card{width:clamp(380px,46vw,500px);}
+    .st-back:has(.st-listcard){padding:1.4rem 1.5rem 1.2rem;}
+  }
   @media (max-width:1000px){
     .st-headline h2{width:86%;}
     .st-card{width:70%;min-width:0;}
